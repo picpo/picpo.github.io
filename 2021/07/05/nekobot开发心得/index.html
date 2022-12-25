@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+  <link rel="mask-icon" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"picpo.top","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="0x00写在前面 开一个帖，记录一下Nekobot的开发心得吧（主要是自己认为比较重要的某些功能的代码实现方法，写给自己，以免忘记）  不过，如果笔记里的这些内容对你有所帮助，那就更好了2333.  0x01通过Get方式请求来获取网页源码 1 2 3 4 5 6 7 8 9 10   fun httpget(url: String): String? {         val client &#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nekobot开发心得">
+<meta property="og:url" content="https://picpo.top/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/index.html">
+<meta property="og:site_name" content="PiCpo的阁楼">
+<meta property="og:description" content="0x00写在前面 开一个帖，记录一下Nekobot的开发心得吧（主要是自己认为比较重要的某些功能的代码实现方法，写给自己，以免忘记）  不过，如果笔记里的这些内容对你有所帮助，那就更好了2333.  0x01通过Get方式请求来获取网页源码 1 2 3 4 5 6 7 8 9 10   fun httpget(url: String): String? {         val client &#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203015.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203912.png">
+<meta property="article:published_time" content="2021-07-04T16:14:06.000Z">
+<meta property="article:modified_time" content="2022-12-25T14:03:39.192Z">
+<meta property="article:author" content="PiCpo">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Mirai">
+<meta property="article:tag" content="野生技术协会">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png">
+
+<link rel="canonical" href="https://picpo.top/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Nekobot开发心得 | PiCpo的阁楼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">PiCpo的阁楼</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://picpo.top/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/33993624?s=400&u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&v=4">
+      <meta itemprop="name" content="PiCpo">
+      <meta itemprop="description" content="猜猜里面有什么(=・ω・=)">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PiCpo的阁楼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nekobot开发心得
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-05 00:14:06" itemprop="dateCreated datePublished" datetime="2021-07-05T00:14:06+08:00">2021-07-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-25 22:03:39" itemprop="dateModified" datetime="2022-12-25T22:03:39+08:00">2022-12-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>开一个帖，记录一下Nekobot的开发心得吧（主要是自己认为比较重要的某些功能的代码实现方法，写给自己，以免忘记）</p>
+<p>不过，如果笔记里的这些内容对你有所帮助，那就更好了2333.</p>
+<h2 id="0x01通过Get方式请求来获取网页源码"><a href="#0x01通过Get方式请求来获取网页源码" class="headerlink" title="0x01通过Get方式请求来获取网页源码"></a>0x01通过Get方式请求来获取网页源码</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">fun httpget(url: String): String? &#123;</span><br><span class="line">        val client = OkHttpClient()</span><br><span class="line">        val request = Request.Builder().get()</span><br><span class="line">            .url(url)</span><br><span class="line">            .build()</span><br><span class="line">        val call = client.newCall(request)</span><br><span class="line">        val response = call.execute()</span><br><span class="line">        val HTML = response.body?.string()</span><br><span class="line">        return HTML</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>肯定要有的，不然网页api以及爬虫都做不了了</p>
+<h2 id="0x02读取本地文件夹的文件名"><a href="#0x02读取本地文件夹的文件名" class="headerlink" title="0x02读取本地文件夹的文件名"></a>0x02读取本地文件夹的文件名</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fun getImgList(path: String): MutableList&lt;String&gt; &#123;</span><br><span class="line">            val files: MutableList&lt;String&gt; = mutableListOf()</span><br><span class="line">            val fileTree: FileTreeWalk = File(path).walk()</span><br><span class="line">            fileTree.maxDepth(1)</span><br><span class="line">                .filter &#123; it.isFile &#125;</span><br><span class="line">                .forEach &#123; files.add(it.name) &#125;</span><br><span class="line">            return files</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>示例是读取本地文件夹的图片，通过类似的思路做了个黑名单读取</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fun getList(path: String): MutableList&lt;Long&gt; &#123;</span><br><span class="line">            val files: MutableList&lt;Long&gt; = mutableListOf()</span><br><span class="line">            val fileTree: FileTreeWalk = File(path).walk()</span><br><span class="line">            fileTree.maxDepth(1)</span><br><span class="line">                .filter &#123; it.isFile &#125;</span><br><span class="line">                .forEach &#123; files.add(it.name.toLong()) &#125;</span><br><span class="line">            return files</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>读取时转换为id（类型为Long），一般来说这个添加方式比修改服务器上的黑名单列表文件内容方便多了，我只要新建个文件，文件名为屏蔽的id就是了；想要移除，删掉就是了。</p>
+<p>为什么不在QQ上直接指示机器人屏蔽某个QQid？对不起，我对本人的编程水平极不自信，虽然源文件泄露导致发现漏洞然后攻击的可能性极微。但是给mirai以root权限对服务器的文件进行创建删除写入，我不太敢这样做。</p>
+<p>顺便一提.filter是选择器而.forEach是循环，类似与if和for，不过咱只有在这块使用了这个kotlin推荐（？）使用的选择语句和循环语句，其他地方一般就是if和for，有的时候还是when（选择语句），语法相当混乱（捂脸）</p>
+<h2 id="0x03获取网络资源并转换为流"><a href="#0x03获取网络资源并转换为流" class="headerlink" title="0x03获取网络资源并转换为流"></a>0x03获取网络资源并转换为流</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//获取网络图片</span><br><span class="line">fun getNetImg(urlstr: String): InputStream? &#123;</span><br><span class="line">        val url = URL(urlstr)</span><br><span class="line">//        return try &#123;  实有异常了再说</span><br><span class="line">        return url.openConnection().getInputStream()</span><br><span class="line">//        &#125;catch(err:java.io.IOException)&#123;</span><br><span class="line">//            null</span><br><span class="line">//        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>学会这个的契机是想发送网络上的图片来着的</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203015.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203912.png" alt=""></p>
+<p><a target="_blank" rel="noopener" href="https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97">https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97</a></p>
+<p>就是这个思路，另外提一下mirai的具体食用方法吧</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">getNetImg(imgurl).use &#123;</span><br><span class="line">                        if (it != null) &#123;</span><br><span class="line">//方法一，最原始的发送图片的方法，就是先uploadImage 然后sendMessage</span><br><span class="line">                            val img = it.toExternalResource()</span><br><span class="line">                            group.sendMessage(group.uploadImage(img))</span><br><span class="line">//方法二，sendImage相当于先进行uploadImage然后再sendMessage</span><br><span class="line">                            group.sendImage(img)</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="0x05发送语音"><a href="#0x05发送语音" class="headerlink" title="0x05发送语音"></a>0x05发送语音</h2><p>其实也没啥，不过注意，<strong>只支持 <code>amr</code> 和 <code>silk</code> 格式</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">group.sendMessage(File(&quot;$&#123;voiceDir&#125;Av845256252.silk&quot;).toExternalResource().uploadAsVoice(group))</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>PiCpo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://picpo.top/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/" title="Nekobot开发心得">https://picpo.top/2021/07/05/nekobot开发心得/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Mirai/" rel="tag"># Mirai</a>
+              <a href="/tags/%E9%87%8E%E7%94%9F%E6%8A%80%E6%9C%AF%E5%8D%8F%E4%BC%9A/" rel="tag"># 野生技术协会</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/18/%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%EF%BC%8C%E7%94%A8vscode%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9/" rel="prev" title="右键菜单，用VSCode打开文件和文件夹">
+      <i class="fa fa-chevron-left"></i> 右键菜单，用VSCode打开文件和文件夹
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/19/ubuntu18%E4%BB%A5%E4%B8%8A%E7%B3%BB%E7%BB%9F64%E4%BD%8D%E7%9A%84glibc%E7%9A%84payload%E8%B0%83%E7%94%A8system%E5%87%BD%E6%95%B0%E6%97%B6%EF%BC%8C%E6%89%80%E9%9C%80%E6%B3%A8%E6%84%8F%E7%9A%84%E5%A0%86/" rel="next" title="Ubuntu18以上系统64位的glibc的payload调用system函数时，所需注意的堆栈平衡问题">
+      Ubuntu18以上系统64位的glibc的payload调用system函数时，所需注意的堆栈平衡问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">0x00写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01%E9%80%9A%E8%BF%87Get%E6%96%B9%E5%BC%8F%E8%AF%B7%E6%B1%82%E6%9D%A5%E8%8E%B7%E5%8F%96%E7%BD%91%E9%A1%B5%E6%BA%90%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">0x01通过Get方式请求来获取网页源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02%E8%AF%BB%E5%8F%96%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%A4%B9%E7%9A%84%E6%96%87%E4%BB%B6%E5%90%8D"><span class="nav-number">3.</span> <span class="nav-text">0x02读取本地文件夹的文件名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03%E8%8E%B7%E5%8F%96%E7%BD%91%E7%BB%9C%E8%B5%84%E6%BA%90%E5%B9%B6%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%B5%81"><span class="nav-number">4.</span> <span class="nav-text">0x03获取网络资源并转换为流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05%E5%8F%91%E9%80%81%E8%AF%AD%E9%9F%B3"><span class="nav-number">5.</span> <span class="nav-text">0x05发送语音</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="PiCpo"
+      src="https://avatars.githubusercontent.com/u/33993624?s=400&u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&v=4">
+  <p class="site-author-name" itemprop="name">PiCpo</p>
+  <div class="site-description" itemprop="description">猜猜里面有什么(=・ω・=)</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/picpo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;picpo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:picpo@proton.me" title="E-Mail → mailto:picpo@proton.me" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/picpo_dot" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;picpo_dot" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+
+<a href="https://icp.gov.moe/?keyword=20220176" target="_blank">萌ICP备20220176号</a>
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PiCpo</span>
+</div>
+<div>
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span> 
+<script> 
+    var now = new Date(); 
+    function createtime() {
+    var grt= new Date("7/15/2018 12:00:00");
+    //此处修改你的建站时间或者网站上线时间 
+    now.setTime(now.getTime()+250); 
+    days = (now - grt ) / 1000 / 60 / 60 / 24; 
+    dnum = Math.floor(days); hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); 
+    hnum = Math.floor(hours); 
+    if(String(hnum).length ==1 ){
+        hnum = "0" + hnum;
+    } 
+    minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+    mnum = Math.floor(minutes); if(String(mnum).length ==1 )
+    {
+       mnum = "0" + mnum;
+    } 
+    seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+    snum = Math.round(seconds);
+    if(String(snum).length ==1 ){snum = "0" + snum;} 
+    document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+    document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+} 
+    setInterval("createtime()",250); 
+</script>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

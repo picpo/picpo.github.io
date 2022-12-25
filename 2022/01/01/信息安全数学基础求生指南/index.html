@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+  <link rel="mask-icon" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"picpo.top","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="感受 先说感受，还就是那个崭新出厂，所以考试前三天才开始学非常痛苦，因为这书真的看不下去  数论部分概念比较简单，但是涉及的计算很多，学到原根解方程那块才知道很多难的点考试是不会考的  抽代部分看书已经看不懂了，建议配合哈工大的网课食用基础概念，考试会考多项式环那块的简单证明和简单计算，其他就是证明了  那那么多证明我哪知道考哪些？会有透题的，或许是自己老师，或许是别的老师，总之保持消息畅通  最">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《信息安全数学基础》求生指南">
+<meta property="og:url" content="https://picpo.top/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="PiCpo的阁楼">
+<meta property="og:description" content="感受 先说感受，还就是那个崭新出厂，所以考试前三天才开始学非常痛苦，因为这书真的看不下去  数论部分概念比较简单，但是涉及的计算很多，学到原根解方程那块才知道很多难的点考试是不会考的  抽代部分看书已经看不懂了，建议配合哈工大的网课食用基础概念，考试会考多项式环那块的简单证明和简单计算，其他就是证明了  那那么多证明我哪知道考哪些？会有透题的，或许是自己老师，或许是别的老师，总之保持消息畅通  最">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-1c5b8f5bc3f4f9b7.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-4b4af8c1d3aec647.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-5.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-6.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-7.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-8.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-9.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-10.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-11.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-12.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-13.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-14.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-16.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-17.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-18.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-19.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-42dcdb0faf2b942e.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-fd544bdbcc16e431.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-20.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-21.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-22.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-23.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-24.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-25.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-26.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-27.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-28.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-29.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-31.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-32.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-33.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-34.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-35.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-36.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-37.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-38.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-39.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-40.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-41.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-42.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-43.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-44.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-44.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-a533c22c7fe0b427.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-de5a4e15e741a962.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-29e78ea361a2f365.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-45.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-35ca3a779c250841.png">
+<meta property="article:published_time" content="2022-01-01T11:48:18.000Z">
+<meta property="article:modified_time" content="2022-12-25T15:52:31.165Z">
+<meta property="article:author" content="PiCpo">
+<meta property="article:tag" content="求生指南">
+<meta property="article:tag" content="我爱学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png">
+
+<link rel="canonical" href="https://picpo.top/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《信息安全数学基础》求生指南 | PiCpo的阁楼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">PiCpo的阁楼</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://picpo.top/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/33993624?s=400&u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&v=4">
+      <meta itemprop="name" content="PiCpo">
+      <meta itemprop="description" content="猜猜里面有什么(=・ω・=)">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PiCpo的阁楼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《信息安全数学基础》求生指南
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-01 19:48:18" itemprop="dateCreated datePublished" datetime="2022-01-01T19:48:18+08:00">2022-01-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-25 23:52:31" itemprop="dateModified" datetime="2022-12-25T23:52:31+08:00">2022-12-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png" alt=""></p>
+<h2 id="感受"><a href="#感受" class="headerlink" title="感受"></a>感受</h2><p>先说感受，还就是那个崭新出厂，所以考试前三天才开始学非常痛苦，因为这书真的看不下去</p>
+<p>数论部分概念比较简单，但是涉及的计算很多，学到原根解方程那块才知道很多难的点考试是不会考的</p>
+<p>抽代部分看书已经看不懂了，建议配合哈工大的网课食用基础概念，考试会考多项式环那块的简单证明和简单计算，其他就是证明了</p>
+<p>那那么多证明我哪知道考哪些？会有透题的，或许是自己老师，或许是别的老师，总之保持消息畅通</p>
+<p>最后综测80，3.0，算是很满意的成绩了，虽然考试期间有两道计算题我铸币了，算错了好几次最后还是放弃了。</p>
+<h2 id="第一章-整数的可除性"><a href="#第一章-整数的可除性" class="headerlink" title="第一章 整数的可除性"></a>第一章 整数的可除性</h2><p>欧几里得除法</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-1c5b8f5bc3f4f9b7.png" alt=""></p>
+<h3 id="最大公因数"><a href="#最大公因数" class="headerlink" title="最大公因数"></a>最大公因数</h3><p>所有公因数中最大的那个整数，记作 ( a1，…，an )</p>
+<h3 id="最小公倍数"><a href="#最小公倍数" class="headerlink" title="最小公倍数"></a>最小公倍数</h3><p>所有公倍数中最小的那个正整数，记作 [ a1，…，an ]</p>
+<h3 id="整除的进一步性质"><a href="#整除的进一步性质" class="headerlink" title="整除的进一步性质"></a>整除的进一步性质</h3><p>① 若 c ab、(a，c) = 1，则 c b<br>② 若 p 是素数，p ab，则 p a 或 p b<br>③ 若 a₁，a₂，…，an 是 D 的公倍数，则 D [ a1，…，an ]</p>
+<h3 id="真因数"><a href="#真因数" class="headerlink" title="真因数"></a>真因数</h3><p>不包括这个数本身的所有因数，例如 6 的真因数是 1、2、3</p>
+<h3 id="整数分解定理"><a href="#整数分解定理" class="headerlink" title="整数分解定理"></a>整数分解定理</h3><p>若 n a² - b²，n 不整除 a+b、a-b</p>
+<p>则 (n，a+b)、(n，a-b) 是 n 的真因数</p>
+<h3 id="π-x"><a href="#π-x" class="headerlink" title="π (x)"></a>π (x)</h3><p>表示不超过 x 的素数个数，例如 π (2) = 1，π (10) = 4</p>
+<p>素数定理</p>
+<p>lim(x-&gt;∞) π(x) / x / lnx = 1</p>
+<h2 id="第二章-同余"><a href="#第二章-同余" class="headerlink" title="第二章 同余"></a>第二章 同余</h2><h3 id="同余"><a href="#同余" class="headerlink" title="同余"></a>同余</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-4b4af8c1d3aec647.png" alt=""></p>
+<h3 id="剩余类"><a href="#剩余类" class="headerlink" title="剩余类"></a>剩余类</h3><p>Ca = { c c∈Z，c ≡ a (mod m) }</p>
+<p>Ca 叫做模 m 的剩余类，c 叫做该类的剩余</p>
+<h3 id="完全剩余系"><a href="#完全剩余系" class="headerlink" title="完全剩余系"></a>完全剩余系</h3><p>r0，r1，… ，rm-1 是模 m 的完全剩余系充要条件：r 的模 m 两两不同余</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-1.png" alt=""></p>
+<h3 id="两个模的完全剩余系"><a href="#两个模的完全剩余系" class="headerlink" title="两个模的完全剩余系"></a>两个模的完全剩余系</h3><p>(m1, m2) = 1，若 k1、k2 遍历模 m1、m2 的完全剩余系</p>
+<p>则 k1·m2 + k2·m1 也遍历模 m1、m2 的完全剩余系</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-1.png" alt=""></p>
+<h3 id="多个模的完全剩余系"><a href="#多个模的完全剩余系" class="headerlink" title="多个模的完全剩余系"></a>多个模的完全剩余系</h3><p>(m1, … , mx) = 1，若 ki 遍历模 mi 的完全剩余系</p>
+<p>则 k1(m2m3…mx) + k2(m1m3…mx) + … + kx(m1m2…mx-1) 也遍历模 mi 的完全剩余系</p>
+<h3 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h3><p>整数 1, 2, … , m-1 中与 m 互素的个数叫做欧拉函数，记作：φ(m)</p>
+<p>例如：m = 10，则 1, 3, 7, 9 与 10 互素，φ(m) = 4</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-3.png" alt=""></p>
+<h3 id="欧拉函数性质"><a href="#欧拉函数性质" class="headerlink" title="欧拉函数性质"></a>欧拉函数性质</h3><p>φ(mn) = φ(m) φ(n)</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-4.png" alt=""></p>
+<p>若 p、q 是素数，则 φ(pq) = pq - p - q + 1</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-5.png" alt=""></p>
+<p>若 m = p1^α1 … pk^αk</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-6.png" alt=""></p>
+<p>也就是</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-7.png" alt=""></p>
+<h3 id="简化剩余系"><a href="#简化剩余系" class="headerlink" title="简化剩余系"></a>简化剩余系</h3><p>和剩余系概念差不多，但是得<strong>和m互素</strong>，也就是 φ (x)的具体值</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-8.png" alt=""></p>
+<h3 id="两个模的简化剩余系"><a href="#两个模的简化剩余系" class="headerlink" title="两个模的简化剩余系"></a>两个模的简化剩余系</h3><p>(m1, m2) = 1，若 k1、k2 遍历模 m1、m2 的简化剩余系</p>
+<p>则 k1·m2 + k2·m1 也遍历模 m1、m2 的简化剩余系</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-9.png" alt=""></p>
+<h3 id="欧拉定理，费马小定理，Wilson-定理"><a href="#欧拉定理，费马小定理，Wilson-定理" class="headerlink" title="欧拉定理，费马小定理，Wilson 定理"></a>欧拉定理，费马小定理，Wilson 定理</h3><p>欧拉定理</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-10.png" alt=""></p>
+<p>费马小定理</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-11.png" alt=""></p>
+<p>也就是说 a^(p-1)≡1(mod p)</p>
+<p>Wilson 定理</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-12.png" alt=""></p>
+<h3 id="模模重复平方计算法"><a href="#模模重复平方计算法" class="headerlink" title="模模重复平方计算法"></a>模模重复平方计算法</h3><p>先拆解指数，a=1</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-13.png" alt=""></p>
+<p>b不停的平方运算，a根据01进行相乘</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-14.png" alt=""></p>
+<h2 id="第三章-同余式"><a href="#第三章-同余式" class="headerlink" title="第三章 同余式"></a>第三章 同余式</h2><h3 id="一次同余式求解"><a href="#一次同余式求解" class="headerlink" title="一次同余式求解"></a>一次同余式求解</h3><p>例题</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-16.png" alt=""></p>
+<p>解的个数k</p>
+<h3 id="中国剩余定理"><a href="#中国剩余定理" class="headerlink" title="中国剩余定理"></a>中国剩余定理</h3><p>通式</p>
+<p>对方程组</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-17.png" alt=""></p>
+<p>求M</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-18.png" alt=""></p>
+<p>根据MM‘ ≡1(mod m) 求M’</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-19.png" alt=""></p>
+<p>例题</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-42dcdb0faf2b942e.png" alt=""></p>
+<h3 id="中国剩余定理的应用"><a href="#中国剩余定理的应用" class="headerlink" title="中国剩余定理的应用"></a>中国剩余定理的应用</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-fd544bdbcc16e431.png" alt=""></p>
+<h3 id="高次同余式的解数和解法"><a href="#高次同余式的解数和解法" class="headerlink" title="高次同余式的解数和解法"></a>高次同余式的解数和解法</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-20.png" alt=""></p>
+<p>至于解法，特几把烦人，我也没上过课所以不知道课上有没有讲，但好像考纲不考</p>
+<p>高次同余式的提升属于是学了就会会了又忘，逆天😭😭😭</p>
+<h3 id="素数模的同余式"><a href="#素数模的同余式" class="headerlink" title="素数模的同余式"></a>素数模的同余式</h3><p>素数模同余式的简化</p>
+<p>先化简</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-21.png" alt=""></p>
+<p>然后直接验算就行</p>
+<p>例题</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-22.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-23.png" alt=""></p>
+<p>同余式的解数不超过他的次数</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-24.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-25.png" alt=""></p>
+<p>需要将多项式变成首1</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-26.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-27.png" alt=""></p>
+<h2 id="第四章-二次同余式，平方剩余"><a href="#第四章-二次同余式，平方剩余" class="headerlink" title="第四章 二次同余式，平方剩余"></a>第四章 二次同余式，平方剩余</h2><h3 id="一般二次同余式"><a href="#一般二次同余式" class="headerlink" title="一般二次同余式"></a>一般二次同余式</h3><p>x ² ≡ a (mod m) ，(a , m) = 1</p>
+<p>若同余式有解，则 a 叫做模 m 的平方剩余，否则 a 叫做模 m 的平方非剩余</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-28.png" alt=""></p>
+<h3 id="模为奇素数"><a href="#模为奇素数" class="headerlink" title="模为奇素数"></a>模为奇素数</h3><p>x ² ≡ a (mod p) ，(a , p) = 1 ，p 是奇素数</p>
+<p>判别条件</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-29.png" alt=""></p>
+<p>并且</p>
+<p>(a1 , p) = 1 ，(a2 , p) = 1 ，p 是奇素数<br>① 若 a1 是模 p 的平方剩余、a2 是模 p 的平方剩余，则 a1 · a2 是模 p 的平方剩余<br>② 若 a1 是模 p 的平方剩余、a2 是模 p 的平方非剩余，则 a1 · a2 是模 p 的平方非剩余<br>③ 若 a1 是模 p 的平方非剩余、a2 是模 p 的平方非剩余，则 a1 · a2 是模 p 的平方剩余</p>
+<h3 id="勒让德符号"><a href="#勒让德符号" class="headerlink" title="勒让德符号"></a>勒让德符号</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-31.png" alt=""></p>
+<p>p为奇素数时</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-32.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-33.png" alt=""></p>
+<p>对于a==2</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-34.png" alt=""></p>
+<p>对于a!=2，可以用二次互反律和周期性</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-35.png" alt=""></p>
+<p>例题</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-36.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-37.png" alt=""></p>
+<h3 id="雅可比符号"><a href="#雅可比符号" class="headerlink" title="雅可比符号"></a>雅可比符号</h3><p>当m为合数时</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-38.png" alt=""></p>
+<p>引理</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-39.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-40.png" alt=""></p>
+<h3 id="模平方根"><a href="#模平方根" class="headerlink" title="模平方根"></a>模平方根</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-41.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-42.png" alt=""></p>
+<p>剩下的白兰咯~</p>
+<h2 id="第五章-原根，指标"><a href="#第五章-原根，指标" class="headerlink" title="第五章 原根，指标"></a>第五章 原根，指标</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-43.png" alt=""></p>
+<p>若 (a,m) = 1，e 是满足 a^e ≡ 1 (mod m) 的最小正整数<br>则 e 叫 a 对模 m 的指数，记作 ordm (a)<br>若 ordm (a) = φ(m)，则 a 叫模 m 的原根</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-44.png" alt=""></p>
+<h3 id="指数性质"><a href="#指数性质" class="headerlink" title="指数性质"></a>指数性质</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-44.png" alt=""></p>
+<h3 id="指数构造"><a href="#指数构造" class="headerlink" title="指数构造"></a>指数构造</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-a533c22c7fe0b427.png" alt=""></p>
+<h3 id="原根"><a href="#原根" class="headerlink" title="原根"></a>原根</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-de5a4e15e741a962.png" alt=""></p>
+<h3 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-29e78ea361a2f365.png" alt=""></p>
+<p>例题</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-45.png" alt=""></p>
+<h2 id="第八章-群"><a href="#第八章-群" class="headerlink" title="第八章 群"></a>第八章 群</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-35ca3a779c250841.png" alt=""></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>PiCpo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://picpo.top/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/" title="《信息安全数学基础》求生指南">https://picpo.top/2022/01/01/信息安全数学基础求生指南/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/" rel="tag"># 求生指南</a>
+              <a href="/tags/%E6%88%91%E7%88%B1%E5%AD%A6%E4%B9%A0/" rel="tag"># 我爱学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/" rel="prev" title="Fastjson对JSON字符串、对象及数组进行转换">
+      <i class="fa fa-chevron-left"></i> Fastjson对JSON字符串、对象及数组进行转换
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/04/%E3%80%8A%E9%A9%AC%E5%85%8B%E6%80%9D%E4%B8%BB%E4%B9%89%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E3%80%8B%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/" rel="next" title="《马克思主义基本原理》求生指南">
+      《马克思主义基本原理》求生指南 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%84%9F%E5%8F%97"><span class="nav-number">1.</span> <span class="nav-text">感受</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E6%95%B4%E6%95%B0%E7%9A%84%E5%8F%AF%E9%99%A4%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">第一章 整数的可除性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E5%85%AC%E5%9B%A0%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">最大公因数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E5%85%AC%E5%80%8D%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">最小公倍数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E9%99%A4%E7%9A%84%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%80%A7%E8%B4%A8"><span class="nav-number">2.3.</span> <span class="nav-text">整除的进一步性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%9F%E5%9B%A0%E6%95%B0"><span class="nav-number">2.4.</span> <span class="nav-text">真因数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E5%88%86%E8%A7%A3%E5%AE%9A%E7%90%86"><span class="nav-number">2.5.</span> <span class="nav-text">整数分解定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%CF%80-x"><span class="nav-number">2.6.</span> <span class="nav-text">π (x)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%90%8C%E4%BD%99"><span class="nav-number">3.</span> <span class="nav-text">第二章 同余</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E4%BD%99"><span class="nav-number">3.1.</span> <span class="nav-text">同余</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%A9%E4%BD%99%E7%B1%BB"><span class="nav-number">3.2.</span> <span class="nav-text">剩余类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%85%A8%E5%89%A9%E4%BD%99%E7%B3%BB"><span class="nav-number">3.3.</span> <span class="nav-text">完全剩余系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA%E6%A8%A1%E7%9A%84%E5%AE%8C%E5%85%A8%E5%89%A9%E4%BD%99%E7%B3%BB"><span class="nav-number">3.4.</span> <span class="nav-text">两个模的完全剩余系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E6%A8%A1%E7%9A%84%E5%AE%8C%E5%85%A8%E5%89%A9%E4%BD%99%E7%B3%BB"><span class="nav-number">3.5.</span> <span class="nav-text">多个模的完全剩余系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0"><span class="nav-number">3.6.</span> <span class="nav-text">欧拉函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0%E6%80%A7%E8%B4%A8"><span class="nav-number">3.7.</span> <span class="nav-text">欧拉函数性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8C%96%E5%89%A9%E4%BD%99%E7%B3%BB"><span class="nav-number">3.8.</span> <span class="nav-text">简化剩余系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA%E6%A8%A1%E7%9A%84%E7%AE%80%E5%8C%96%E5%89%A9%E4%BD%99%E7%B3%BB"><span class="nav-number">3.9.</span> <span class="nav-text">两个模的简化剩余系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A7%E6%8B%89%E5%AE%9A%E7%90%86%EF%BC%8C%E8%B4%B9%E9%A9%AC%E5%B0%8F%E5%AE%9A%E7%90%86%EF%BC%8CWilson-%E5%AE%9A%E7%90%86"><span class="nav-number">3.10.</span> <span class="nav-text">欧拉定理，费马小定理，Wilson 定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%A8%A1%E9%87%8D%E5%A4%8D%E5%B9%B3%E6%96%B9%E8%AE%A1%E7%AE%97%E6%B3%95"><span class="nav-number">3.11.</span> <span class="nav-text">模模重复平方计算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E5%90%8C%E4%BD%99%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">第三章 同余式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E6%AC%A1%E5%90%8C%E4%BD%99%E5%BC%8F%E6%B1%82%E8%A7%A3"><span class="nav-number">4.1.</span> <span class="nav-text">一次同余式求解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E5%9B%BD%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86"><span class="nav-number">4.2.</span> <span class="nav-text">中国剩余定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E5%9B%BD%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">4.3.</span> <span class="nav-text">中国剩余定理的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E6%AC%A1%E5%90%8C%E4%BD%99%E5%BC%8F%E7%9A%84%E8%A7%A3%E6%95%B0%E5%92%8C%E8%A7%A3%E6%B3%95"><span class="nav-number">4.4.</span> <span class="nav-text">高次同余式的解数和解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A0%E6%95%B0%E6%A8%A1%E7%9A%84%E5%90%8C%E4%BD%99%E5%BC%8F"><span class="nav-number">4.5.</span> <span class="nav-text">素数模的同余式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E4%BA%8C%E6%AC%A1%E5%90%8C%E4%BD%99%E5%BC%8F%EF%BC%8C%E5%B9%B3%E6%96%B9%E5%89%A9%E4%BD%99"><span class="nav-number">5.</span> <span class="nav-text">第四章 二次同余式，平方剩余</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%88%AC%E4%BA%8C%E6%AC%A1%E5%90%8C%E4%BD%99%E5%BC%8F"><span class="nav-number">5.1.</span> <span class="nav-text">一般二次同余式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E4%B8%BA%E5%A5%87%E7%B4%A0%E6%95%B0"><span class="nav-number">5.2.</span> <span class="nav-text">模为奇素数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8B%92%E8%AE%A9%E5%BE%B7%E7%AC%A6%E5%8F%B7"><span class="nav-number">5.3.</span> <span class="nav-text">勒让德符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%85%E5%8F%AF%E6%AF%94%E7%AC%A6%E5%8F%B7"><span class="nav-number">5.4.</span> <span class="nav-text">雅可比符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%B9%B3%E6%96%B9%E6%A0%B9"><span class="nav-number">5.5.</span> <span class="nav-text">模平方根</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E5%8E%9F%E6%A0%B9%EF%BC%8C%E6%8C%87%E6%A0%87"><span class="nav-number">6.</span> <span class="nav-text">第五章 原根，指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">6.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E6%95%B0%E6%80%A7%E8%B4%A8"><span class="nav-number">6.2.</span> <span class="nav-text">指数性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E6%95%B0%E6%9E%84%E9%80%A0"><span class="nav-number">6.3.</span> <span class="nav-text">指数构造</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E6%A0%B9"><span class="nav-number">6.4.</span> <span class="nav-text">原根</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E6%A0%87"><span class="nav-number">6.5.</span> <span class="nav-text">指标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%BE%A4"><span class="nav-number">7.</span> <span class="nav-text">第八章 群</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="PiCpo"
+      src="https://avatars.githubusercontent.com/u/33993624?s=400&u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&v=4">
+  <p class="site-author-name" itemprop="name">PiCpo</p>
+  <div class="site-description" itemprop="description">猜猜里面有什么(=・ω・=)</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/picpo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;picpo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:picpo@proton.me" title="E-Mail → mailto:picpo@proton.me" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/picpo_dot" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;picpo_dot" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+
+<a href="https://icp.gov.moe/?keyword=20220176" target="_blank">萌ICP备20220176号</a>
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PiCpo</span>
+</div>
+<div>
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span> 
+<script> 
+    var now = new Date(); 
+    function createtime() {
+    var grt= new Date("7/15/2018 12:00:00");
+    //此处修改你的建站时间或者网站上线时间 
+    now.setTime(now.getTime()+250); 
+    days = (now - grt ) / 1000 / 60 / 60 / 24; 
+    dnum = Math.floor(days); hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); 
+    hnum = Math.floor(hours); 
+    if(String(hnum).length ==1 ){
+        hnum = "0" + hnum;
+    } 
+    minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+    mnum = Math.floor(minutes); if(String(mnum).length ==1 )
+    {
+       mnum = "0" + mnum;
+    } 
+    seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+    snum = Math.round(seconds);
+    if(String(snum).length ==1 ){snum = "0" + snum;} 
+    document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+    document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+} 
+    setInterval("createtime()",250); 
+</script>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

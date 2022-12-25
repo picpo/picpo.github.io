@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+  <link rel="mask-icon" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"picpo.top","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="0x00说在前面 新学期，在社团活动室组了一台主机。打算开个远程桌面，这样我在宿舍的话，也可以访问我的主机了。  0x01方案选择 无非就以下几个方案：   1. 第三方远程桌面软件&#x2F;穿透软件来突破内网限制。这个的话属实没有必要，因为我就在学校里有这个需求，否定。  2. IPv4+端口映射。想啥呢，暴露在校园网下，这是要给x1c的大哥们冲业绩吗？否定。  3. IPv4+proxifier代理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="远程桌面（RDP）的迷思">
+<meta property="og:url" content="https://picpo.top/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/index.html">
+<meta property="og:site_name" content="PiCpo的阁楼">
+<meta property="og:description" content="0x00说在前面 新学期，在社团活动室组了一台主机。打算开个远程桌面，这样我在宿舍的话，也可以访问我的主机了。  0x01方案选择 无非就以下几个方案：   1. 第三方远程桌面软件&#x2F;穿透软件来突破内网限制。这个的话属实没有必要，因为我就在学校里有这个需求，否定。  2. IPv4+端口映射。想啥呢，暴露在校园网下，这是要给x1c的大哥们冲业绩吗？否定。  3. IPv4+proxifier代理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340599.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340193.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242341801.png">
+<meta property="article:published_time" content="2022-09-01T15:56:35.000Z">
+<meta property="article:modified_time" content="2022-12-24T15:46:23.154Z">
+<meta property="article:author" content="PiCpo">
+<meta property="article:tag" content="野生技术协会">
+<meta property="article:tag" content="RDP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340599.jpg">
+
+<link rel="canonical" href="https://picpo.top/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>远程桌面（RDP）的迷思 | PiCpo的阁楼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">PiCpo的阁楼</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://picpo.top/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/33993624?s=400&u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&v=4">
+      <meta itemprop="name" content="PiCpo">
+      <meta itemprop="description" content="猜猜里面有什么(=・ω・=)">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PiCpo的阁楼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          远程桌面（RDP）的迷思
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-09-01 23:56:35" itemprop="dateCreated datePublished" datetime="2022-09-01T23:56:35+08:00">2022-09-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-24 23:46:23" itemprop="dateModified" datetime="2022-12-24T23:46:23+08:00">2022-12-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340599.jpg" alt=""></p>
+<h2 id="0x00说在前面"><a href="#0x00说在前面" class="headerlink" title="0x00说在前面"></a>0x00说在前面</h2><p>新学期，在社团活动室组了一台主机。打算开个远程桌面，这样我在宿舍的话，也可以访问我的主机了。</p>
+<h2 id="0x01方案选择"><a href="#0x01方案选择" class="headerlink" title="0x01方案选择"></a>0x01方案选择</h2><p>无非就以下几个方案：</p>
+<ol>
+<li>第三方远程桌面软件/穿透软件来突破内网限制。这个的话属实没有必要，因为我就在学校里有这个需求，否定。</li>
+<li>IPv4+端口映射。想啥呢，暴露在校园网下，这是要给x1c的大哥们冲业绩吗？否定。</li>
+<li>IPv4+proxifier代理。这个方案是我一开始最认可的，当我搭好socks5隧道时发现，我确实可以访问192.*.*.*下的内网设备，包括我的网页服务器，pt下载机，以及别人乱七八糟的服务端API数据库接口Nas啥的，结果轮到我的主机的rdp端口，他就不行了。初步猜测可能和Windows的防火墙策略有关，但是我在网上找了半天没找到和我一样情况的人，少部分人思路和我一样，但是他们似乎没出现这么神奇的现象，否定。</li>
+<li>IPv6。这个方案是肯定可以的——我现在用的就是。学校里有自己的校园网和运营商网络，运营商网络是没法通过DHCP分配IPv6的，但是校园网是可以的。另外，社团的网也是可以的。</li>
+</ol>
+<p>IPv6的方案好就好在，我校的校园网虽然晚上会断网，但是校园网可以在未登录的情况下分配一个教育网段的地址。就算这个不行，也可以通过连接手机热点的方式，获取IPv6。注意，我校校园网不支持SLACC，安卓设备无法通过连接校园网WiFi来获取v6地址。</p>
+<p>至于客户端，我在Windows端选择的是mstsc（就是专业版自带的那个）。安卓用的是谷歌商店的RD客户端（同样微软出品）。注意，这个软件微软商店也有，但是不推荐，因为延迟远不如原生的mstsc。</p>
+<h2 id="0x02实测表现"><a href="#0x02实测表现" class="headerlink" title="0x02实测表现"></a>0x02实测表现</h2><p>总的来说还是非常不错的，44ms。其实这是最高延迟了，测到过26ms的。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340193.png" alt=""></p>
+<h2 id="0x03优化"><a href="#0x03优化" class="headerlink" title="0x03优化"></a>0x03优化</h2><h3 id="1-突破30fps限制"><a href="#1-突破30fps限制" class="headerlink" title="1.突破30fps限制"></a>1.突破30fps限制</h3><p>打开Windows<code>注册表编辑器 (regedit.exe)</code>，找到以下子项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations</span><br></pre></td></tr></table></figure>
+<p>右击新建一个<code>DWORD(32-bit)值</code>的项，改名为<code>DWMFRAMEINTERVAL</code>，修改为十进制下的15。</p>
+<p>为什么？因为这个时候的帧率限制为1000/15，也就是66FPS。</p>
+<p>结束后保存重启，可以远程桌面登录后，通过一些测试fps的网站来测试，你会发现fps不是之前30而是60或者更高了。</p>
+<h3 id="2-显卡加速"><a href="#2-显卡加速" class="headerlink" title="2.显卡加速"></a>2.显卡加速</h3><p>打开远程主机上的组策略（Win+R打开运行，输入<code>gpedit.msc</code>）</p>
+<p>依次找到计算机配置-&gt;管理模板-&gt;Windows组件-&gt;远程桌面服务-&gt;远程桌面会话主机-&gt;远程会话环境</p>
+<p>在右边选择<strong>将硬件图形适配器应用于所有远程桌面服务会话</strong></p>
+<p>同时也可以打开<strong>配置远程桌面连接的H.264/AVC硬件编码</strong></p>
+<p>其实这没啥太大用处，具体原因接着说。</p>
+<h2 id="0x04游戏玩家的十字路口"><a href="#0x04游戏玩家的十字路口" class="headerlink" title="0x04游戏玩家的十字路口"></a>0x04游戏玩家的十字路口</h2><p>首先我们要明白：<strong>微软RDP是不支持独显的。有需要远程玩游戏的话，需要第三方的远程桌面、远程遥控软件才行。</strong></p>
+<p>在我们连接到远程桌面时，打开任务管理器，会发现独显是可以正常显示的。但是这并不代表你可以打游戏或者开blender啥的。那么这是怎么回事呢？</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242341801.png" alt=""></p>
+<p>如果你在这时打开游戏，你会发现一些游戏确实可以打开。比如我打开文明6，帧率只有30+，cpu频率暴增到3.99GHz，占用暴增40%，显卡摆烂在3%一动不动，这和在本机打开后的表现天差地别。而像apex，那就根本打不开了。注意，这和有无集显没有关系，我是12400F，照样可以显示，说明是有个虚拟显卡的。</p>
+<p>当然，NVidia也注意到了这一点，于是推出了nvidia-opengl-rdp——恕我直言，这个驱动几乎没什么作用……都什么年代了，还在用传统OpenGL。DirectX有人说是原生支持了，我觉得他在放屁，要是真的原生支持我怎么可能出现以上情况？</p>
+<p>官网下载需要登陆注册developer账号，我找到个第三方的百度网盘下载，不大就0.3M大小。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">链接：https://pan.baidu.com/s/1HKy\_Q\_rZx1oy3kq4XO0AuA  </span><br><span class="line">提取码：pntw</span><br></pre></td></tr></table></figure>
+<p>至于想玩游戏嘛……可以试试其他的软件，可能在延迟方面不如微软原生的mstsc，也有是游戏识别的限制。这些东西，等我以后试到了再做反馈吧。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>PiCpo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://picpo.top/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/" title="远程桌面（RDP）的迷思">https://picpo.top/2022/09/01/远程桌面（rdp）的迷思/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%87%8E%E7%94%9F%E6%8A%80%E6%9C%AF%E5%8D%8F%E4%BC%9A/" rel="tag"># 野生技术协会</a>
+              <a href="/tags/RDP/" rel="tag"># RDP</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/07/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%B1%BB%E5%9E%8B%E6%B8%97%E9%80%8F/" rel="prev" title="记一次文件上传类型渗透">
+      <i class="fa fa-chevron-left"></i> 记一次文件上传类型渗透
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/" rel="next" title="解决Vmware中Ubuntu22.04的vm-tools无法安装的问题">
+      解决Vmware中Ubuntu22.04的vm-tools无法安装的问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00%E8%AF%B4%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">0x00说在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01%E6%96%B9%E6%A1%88%E9%80%89%E6%8B%A9"><span class="nav-number">2.</span> <span class="nav-text">0x01方案选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02%E5%AE%9E%E6%B5%8B%E8%A1%A8%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">0x02实测表现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03%E4%BC%98%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">0x03优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%AA%81%E7%A0%B430fps%E9%99%90%E5%88%B6"><span class="nav-number">4.1.</span> <span class="nav-text">1.突破30fps限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%98%BE%E5%8D%A1%E5%8A%A0%E9%80%9F"><span class="nav-number">4.2.</span> <span class="nav-text">2.显卡加速</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04%E6%B8%B8%E6%88%8F%E7%8E%A9%E5%AE%B6%E7%9A%84%E5%8D%81%E5%AD%97%E8%B7%AF%E5%8F%A3"><span class="nav-number">5.</span> <span class="nav-text">0x04游戏玩家的十字路口</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="PiCpo"
+      src="https://avatars.githubusercontent.com/u/33993624?s=400&u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&v=4">
+  <p class="site-author-name" itemprop="name">PiCpo</p>
+  <div class="site-description" itemprop="description">猜猜里面有什么(=・ω・=)</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/picpo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;picpo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:picpo@proton.me" title="E-Mail → mailto:picpo@proton.me" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/picpo_dot" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;picpo_dot" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+
+<a href="https://icp.gov.moe/?keyword=20220176" target="_blank">萌ICP备20220176号</a>
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PiCpo</span>
+</div>
+<div>
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span> 
+<script> 
+    var now = new Date(); 
+    function createtime() {
+    var grt= new Date("7/15/2018 12:00:00");
+    //此处修改你的建站时间或者网站上线时间 
+    now.setTime(now.getTime()+250); 
+    days = (now - grt ) / 1000 / 60 / 60 / 24; 
+    dnum = Math.floor(days); hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); 
+    hnum = Math.floor(hours); 
+    if(String(hnum).length ==1 ){
+        hnum = "0" + hnum;
+    } 
+    minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+    mnum = Math.floor(minutes); if(String(mnum).length ==1 )
+    {
+       mnum = "0" + mnum;
+    } 
+    seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+    snum = Math.round(seconds);
+    if(String(snum).length ==1 ){snum = "0" + snum;} 
+    document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+    document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+} 
+    setInterval("createtime()",250); 
+</script>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
