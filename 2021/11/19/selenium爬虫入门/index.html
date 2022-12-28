@@ -433,9 +433,20 @@
 <div id="content" class="site-content">
 
 
+	<script src="https://cdn.jsdelivr.net/npm/@waline/client"></script>
 
 
 
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8TVRCJ3EW0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8TVRCJ3EW0');
+</script>
 
 
 
@@ -857,6 +868,16 @@ if __name__ == &#39;__main__&#39;:
 
 
 
+
+	<div id="post_comment" class="card shadow-sm">
+		<div id="waline"></div>
+<script>
+  Waline({
+	el: '#waline',
+	serverURL: 'https://br6rtrhu.api.lncldglobal.com',
+  });
+</script>
+	</div>
 
 
 <div class="post-navigation card shadow-sm"><div class="post-navigation-item post-navigation-pre"><span class="page-navigation-extra-text"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>上一篇</span><a href="/2021/11/27/%E8%AE%B0%E4%B8%80%E6%AC%A1flask%E5%90%8E%E7%AB%AF%E8%A2%AB%E6%B8%97%E9%80%8F%E7%9A%84%E7%BB%8F%E5%8E%86/" rel="prev"> 记一次Flask后端被渗透的经历</a></div><div class="post-navigation-item post-navigation-next"><span class="page-navigation-extra-text">下一篇 <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></span><a href="/2021/11/04/dockerflask%E6%9E%84%E5%BB%BA%E5%90%8E%E7%AB%AF%E7%9A%84%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/" rel="next"> Docker+Flask构建后端的踩坑记录</a></div></div>

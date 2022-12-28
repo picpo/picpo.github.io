@@ -296,21 +296,6 @@ if __name__ == &#39;__main__&#39;:
       </tags>
   </entry>
   <entry>
-    <title>Github代理</title>
-    <url>/2022/10/08/github%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252133062.jpg" alt=""></p>
-<p>clash别忘了开LAN</p>
-<pre><code>git config --global http.proxy protocol://127.0.0.1:7890
-</code></pre>]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>git</tag>
-        <tag>github</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>git cz和合乎Angular规范的git commit message</title>
     <url>/2022/02/13/git-cz%E5%92%8C%E5%90%88%E4%B9%8Eangular%E8%A7%84%E8%8C%83%E7%9A%84git-commit-message/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242334513.jpg" alt=""></p>
@@ -376,8 +361,23 @@ This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
         <category>野生技术协会</category>
       </categories>
       <tags>
-        <tag>git</tag>
         <tag>Angular</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Github代理</title>
+    <url>/2022/10/08/github%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252133062.jpg" alt=""></p>
+<p>clash别忘了开LAN</p>
+<pre><code>git config --global http.proxy protocol://127.0.0.1:7890
+</code></pre>]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
+        <tag>github</tag>
       </tags>
   </entry>
   <entry>
@@ -451,6 +451,42 @@ fun getNetImg(urlstr: String): InputStream? &#123;
         <tag>Kotlin</tag>
         <tag>Java</tag>
         <tag>Mirai</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>stable-diffusion-webui的食用方法</title>
+    <url>/2022/10/08/stable-diffusion-webui%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252157828.png" alt=""></p>
+<h2 id="0x01-Anaconda安装"><a href="#0x01-Anaconda安装" class="headerlink" title="0x01 Anaconda安装"></a>0x01 Anaconda安装</h2><p>这个没啥好说的，主要是要记住你的安装路径</p>
+<h2 id="0x02-安装CUDA"><a href="#0x02-安装CUDA" class="headerlink" title="0x02 安装CUDA"></a>0x02 安装CUDA</h2><p>到官网：</p>
+<pre><code>https://developer.nvidia.com/cuda-downloads?target_os=Windows&amp;target_arch=x86_64&amp;target_version=10&amp;target_type=exe_local
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158948.png" alt=""></p>
+<h2 id="0x03-安装stable-diffusion-webui"><a href="#0x03-安装stable-diffusion-webui" class="headerlink" title="0x03 安装stable-diffusion-webui"></a>0x03 安装stable-diffusion-webui</h2><h3 id="1-sd-webui"><a href="#1-sd-webui" class="headerlink" title="1.sd-webui"></a>1.sd-webui</h3><pre><code>git clone https://github.com/sd-webui/stable-diffusion-webui.git
+</code></pre><p>安装后按他所说的在根目录建立<strong>custom-conda-path.txt</strong>，并写上自己的Anaconda根目录</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158626.png" alt=""></p>
+<p>下载模型文件，放在<strong>\stable-diffusion-webui\models\ldm\stable-diffusion-v1</strong>下</p>
+<p>其实也可以mklink，不过我没试过，因为我的novelaileak文件在下载盘里，下载盘是个远古机械，速度不是很快</p>
+<h3 id="2-另一个更好的web-ui"><a href="#2-另一个更好的web-ui" class="headerlink" title="2.另一个更好的web-ui"></a>2.另一个更好的web-ui</h3><p>这个更好，可以过滤一些negative prompt</p>
+<pre><code>git clone  https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
+</code></pre><p>安装过程过于缓慢，建议先pip安装他的requirements.txt</p>
+<h3 id="3-泄露模型"><a href="#3-泄露模型" class="headerlink" title="3.泄露模型"></a>3.泄露模型</h3><p>我这里用的是novelaileak的，你也可以用其他的</p>
+<pre><code>magnet:?xt=urn:btih:5bde442da86265b670a3e5ea3163afad2c6f8ecc&amp;dn=novelaileak&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2F9.rarbg.com%3A2810%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A6969%2Fannounce&amp;tr=http%3A%2F%2Ftracker.openbittorrent.com%3A80%2Fannounce&amp;tr=udp%3A%2F%2Fopentracker.i2p.rocks%3A6969%2Fannounce
+</code></pre><p>第二版（125G）</p>
+<pre><code>magnet:?xt=urn:btih:a20087e7807f28476dd7b0b2e0174981709d89cd&amp;dn=novelaileakpt2&amp;tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&amp;tr=http%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&amp;tr=https%3a%2f%2ftracker.nanoha.org%3a443%2fannounce
+</code></pre><p>今天流出的新版本，效果更好但是空间占用更大</p>
+<h2 id="0x04-食用"><a href="#0x04-食用" class="headerlink" title="0x04 食用"></a>0x04 食用</h2><p>到根目录，运行一下webui的cmd，会自动安装环境</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
+<p>我的GTX1060 6G生成速度不是很快，我这有块Tesla p4，不知道加上去会不会加快点速度</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
+<p>更多关键词请见：</p>
+<p><a href="https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords">https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords</a></p>
+<p><a href="https://gelbooru.com/index.php?page=tags&amp;s=list">https://gelbooru.com/index.php?page=tags&amp;s=list</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
       </tags>
   </entry>
   <entry>
@@ -644,87 +680,6 @@ if __name__ == &#39;__main__&#39;:
       </tags>
   </entry>
   <entry>
-    <title>stable-diffusion-webui的食用方法</title>
-    <url>/2022/10/08/stable-diffusion-webui%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252157828.png" alt=""></p>
-<h2 id="0x01-Anaconda安装"><a href="#0x01-Anaconda安装" class="headerlink" title="0x01 Anaconda安装"></a>0x01 Anaconda安装</h2><p>这个没啥好说的，主要是要记住你的安装路径</p>
-<h2 id="0x02-安装CUDA"><a href="#0x02-安装CUDA" class="headerlink" title="0x02 安装CUDA"></a>0x02 安装CUDA</h2><p>到官网：</p>
-<pre><code>https://developer.nvidia.com/cuda-downloads?target_os=Windows&amp;target_arch=x86_64&amp;target_version=10&amp;target_type=exe_local
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158948.png" alt=""></p>
-<h2 id="0x03-安装stable-diffusion-webui"><a href="#0x03-安装stable-diffusion-webui" class="headerlink" title="0x03 安装stable-diffusion-webui"></a>0x03 安装stable-diffusion-webui</h2><h3 id="1-sd-webui"><a href="#1-sd-webui" class="headerlink" title="1.sd-webui"></a>1.sd-webui</h3><pre><code>git clone https://github.com/sd-webui/stable-diffusion-webui.git
-</code></pre><p>安装后按他所说的在根目录建立<strong>custom-conda-path.txt</strong>，并写上自己的Anaconda根目录</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158626.png" alt=""></p>
-<p>下载模型文件，放在<strong>\stable-diffusion-webui\models\ldm\stable-diffusion-v1</strong>下</p>
-<p>其实也可以mklink，不过我没试过，因为我的novelaileak文件在下载盘里，下载盘是个远古机械，速度不是很快</p>
-<h3 id="2-另一个更好的web-ui"><a href="#2-另一个更好的web-ui" class="headerlink" title="2.另一个更好的web-ui"></a>2.另一个更好的web-ui</h3><p>这个更好，可以过滤一些negative prompt</p>
-<pre><code>git clone  https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
-</code></pre><p>安装过程过于缓慢，建议先pip安装他的requirements.txt</p>
-<h3 id="3-泄露模型"><a href="#3-泄露模型" class="headerlink" title="3.泄露模型"></a>3.泄露模型</h3><p>我这里用的是novelaileak的，你也可以用其他的</p>
-<pre><code>magnet:?xt=urn:btih:5bde442da86265b670a3e5ea3163afad2c6f8ecc&amp;dn=novelaileak&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2F9.rarbg.com%3A2810%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A6969%2Fannounce&amp;tr=http%3A%2F%2Ftracker.openbittorrent.com%3A80%2Fannounce&amp;tr=udp%3A%2F%2Fopentracker.i2p.rocks%3A6969%2Fannounce
-</code></pre><p>第二版（125G）</p>
-<pre><code>magnet:?xt=urn:btih:a20087e7807f28476dd7b0b2e0174981709d89cd&amp;dn=novelaileakpt2&amp;tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&amp;tr=http%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&amp;tr=https%3a%2f%2ftracker.nanoha.org%3a443%2fannounce
-</code></pre><p>今天流出的新版本，效果更好但是空间占用更大</p>
-<h2 id="0x04-食用"><a href="#0x04-食用" class="headerlink" title="0x04 食用"></a>0x04 食用</h2><p>到根目录，运行一下webui的cmd，会自动安装环境</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
-<p>我的GTX1060 6G生成速度不是很快，我这有块Tesla p4，不知道加上去会不会加快点速度</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
-<p>更多关键词请见：</p>
-<p><a href="https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords">https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords</a></p>
-<p><a href="https://gelbooru.com/index.php?page=tags&amp;s=list">https://gelbooru.com/index.php?page=tags&amp;s=list</a></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Web网页小项目——天气预报Web页面的踩坑笔记</title>
-    <url>/2021/01/23/web%E7%BD%91%E9%A1%B5%E5%B0%8F%E9%A1%B9%E7%9B%AE%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5web%E9%A1%B5%E9%9D%A2/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252141067.jpg" alt=""></p>
-<p>寒假是个学习和提升技能的好时机，今年寒假我就参加了SAST2020前端组的WOC（Winter Of Code）项目，来借此好时机来锻炼自己的开发能力。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252142254.png" alt=""></p>
-<p>目前第一阶段我是写了一个天气预报Web页面，本以为，不就用ajax调用个api吗，在处理一下数据，调一个好看的式样，不就大功告成了吗？确实，理论上是这么简单，但是实际花了我三天时间，才写出了这么个小小的demo。很多东西根本不是我想象的那么简单的，我是踩一个坑学一些新东西，才做好一个模块的（悲）。</p>
-<h2 id="一、json跨域问题"><a href="#一、json跨域问题" class="headerlink" title="一、json跨域问题"></a>一、json跨域问题</h2><p>第一天就是和这个api斗智斗勇的一天，本来我在网上找到了百度定位api，进展颇为顺利，就是百度api配上谷歌内核的浏览器（比如chrome，qq浏览器），它的具体定位就很不准，而且比较慢，但是定位到城市还是没有问题的。后来要找个天气预报的api，这里选择了心知天气api，选了十五天试用套餐，一共可接入10000次。嘛，我就写个小demo，问题不大，又不是长期用。</p>
-<p>一开始我一直使用的是json调用方式，结果浏览器可以直接访问，但是用到我写的项目里，用jQuery的getJSON（“xxx”）发现获取不到数据。我一直以为自己的js代码哪里出了问题，知道晚上我才发现：json跨域的话，现在的浏览器会自动拦截。</p>
-<h3 id="（一）何为跨域？"><a href="#（一）何为跨域？" class="headerlink" title="（一）何为跨域？"></a>（一）何为跨域？</h3><p><strong>只要协议，端口，域名有一个不同，即为跨域！</strong></p>
-<p>首先，先了解浏览器有一个很重要安全性限制，即为同源策略：不同域的客户端脚本在无明确授权的情况下不能读些对方资源。</p>
-<p>然而，当进行一些api接口调用时，那肯定不可避免地需要进行跨域操作，这时候“同源策略”就显得过于苛刻。</p>
-<h3 id="（二）怎样解决"><a href="#（二）怎样解决" class="headerlink" title="（二）怎样解决"></a>（二）怎样解决</h3><p>我又花了一晚上的时间去百度这个方法那个方法，发现纯前端的话，json是根本行不通的，但我仍不死心，去请教了一下前段组的大仙贝：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143365.jpg" alt=""></p>
-<p>好，这波我死心了，老老实实用jsonp吧（悲）</p>
-<p>好在心知天气本身就有jsonp的调用方式，也有官方的demo。就是比较麻烦，这其中涉及密钥+公钥生成签名验证的机制，我硬着头皮的学习了一下，试着自己搞了一下，最后竟然成功了。好耶耶耶耶耶耶耶耶耶耶！</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143816.jpg" alt=""></p>
-<h2 id="二、Echarts绘制与适配问题"><a href="#二、Echarts绘制与适配问题" class="headerlink" title="二、Echarts绘制与适配问题"></a>二、Echarts绘制与适配问题</h2><p>Echarts是一个使用 JavaScript 实现的开源可视化库，涵盖各行业图表，非常的不错。但是这里还是踩到了两个坑：</p>
-<h3 id="（一）Echarts无法绘制图标"><a href="#（一）Echarts无法绘制图标" class="headerlink" title="（一）Echarts无法绘制图标"></a>（一）Echarts无法绘制图标</h3><p>当我打开网页调试时，控制台传入了如下错误：【Echarts】Uncaught TypeError: Cannot read property ‘getAttribute’ of null</p>
-<p>一开始我还以为是Echarts cdn解析出了错，后来才得知，Echarts是没有找到所要绘制的div，不是说我没有在HTML里写到它，而是js在body生成前就调用了，所以才会出现获取不到属性。解决方法就是把js扔到页脚：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144259.png" alt=""></p>
-<h3 id="（二）Echarts适配问题"><a href="#（二）Echarts适配问题" class="headerlink" title="（二）Echarts适配问题"></a>（二）Echarts适配问题</h3><p>这个就有点麻烦了，当你设置div的width为100%时，愚蠢的Echarts会自动识别为100px，其效果极其鬼畜：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144298.png" alt=""></p>
-<p>那咋办？网上给的方案都是echarts初始化之前再用js获取当前屏幕的大小，然后再给他设置宽度就可以了。而我只接给他设了个90vw的具体长度，问题也能解决（</p>
-<p>总的来说踩了不少的坑，当然也学了不少东西，比如ajax+jquery，bootstrap4的响应式界面搭建，当然啊，调css的过程也是坠痛苦的。</p>
-<p>项目地址：<a href="https://github.com/picpo/weather-demo">https://github.com/picpo/weather-demo</a></p>
-<p>大家可以将里面的key换成自己的玩玩，因为我的次数也估计只剩下6000多次了。</p>
-<ul>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145373.png" alt=""></p>
-</li>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145325.png" alt=""></p>
-</li>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252146972.png" alt=""></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>ajax</tag>
-        <tag>bootstrap</tag>
-        <tag>jQuery</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Ubuntu18以上系统64位的glibc的payload调用system函数时，所需注意的堆栈平衡问题</title>
     <url>/2021/07/19/ubuntu18%E4%BB%A5%E4%B8%8A%E7%B3%BB%E7%BB%9F64%E4%BD%8D%E7%9A%84glibc%E7%9A%84payload%E8%B0%83%E7%94%A8system%E5%87%BD%E6%95%B0%E6%97%B6%EF%BC%8C%E6%89%80%E9%9C%80%E6%B3%A8%E6%84%8F%E7%9A%84%E5%A0%86/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252147635.jpg" alt=""></p>
@@ -795,36 +750,169 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </tags>
   </entry>
   <entry>
-    <title>《汇编语言程序设计》求生指南</title>
-    <url>/2022/11/14/%E3%80%8A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png" alt=""></p>
-<h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><ol>
-<li>BCD码转换<br>1010—-1111是非法BCD码</li>
-<li>真值数和补码数之间的转换<br>正数的补码等于本身，负数的补码等于反码+1</li>
-<li>n位字长的有符号数、无符号数的数值范围<br>设机器数字长=n, 则n位补码数<br>其真值范围为 －2n-1 ～ +2n-1－1<br>无符号数其数值范围为 0 ～ 2n－1</li>
-<li>常用ASCII码范围：<br>0:48<br>A:65<br>a:97<br>(space):32<br>(回车):13</li>
-<li>C标表示进位，O标表示溢出</li>
-<li>冯诺依曼架构：<strong>运算器、控制器、存储器、输入、输出</strong><br>CPU：运算器和控制器</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image.png" alt=""></p>
-<h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><ol>
-<li>基本结构寄存器的名称、位长和作用<br>通用寄存器: AX, BX, CX, DX, SI（源变址）, DI（目的变址）, BP（基址指针）<br>段寄存器: CS, SS, DS, ES, FS, GS<br>指针寄存器: IP（指令指针）, SP（堆栈指针）<br>标志寄存器: FLAGS<br>15位标志分为两类: 状态标志和控制标志<br>6种状态标志：CF（进位） OF（溢出） ZF（全零） PF（最后一字节1为偶数为1） AF（辅助进位标志） SF（记录最高位的位值）</li>
-<li>80486的工作模式：实地址模式和保护虚拟地址模式<br>80486的三个存贮地址空间：逻辑空间、线性空间和物理空间<br>逻辑地址：即逻辑上的地址，实模式下由“段基地址+段内偏移”组成;保护模式下由“段选择符+段内偏移”组成。<br>线性地址：逻辑地址经分段机制后就成线性地址，它是平坦的;如果不启用分页，那么此线性地址即物理地址。<br>物理地址：线性地址经分页转换后就成了物理地址。<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-1.png" alt=""></li>
-<li>实地址模式下，物理地址的形成<br><strong>物理地址=段基址*16+偏移地址</strong><br><strong>内存容量=末地址-首地址+1</strong><br><strong>末地址=首地址+（字数-1）*2 末地址</strong></li>
-</ol>
-<h2 id="第三章"><a href="#第三章" class="headerlink" title="第三章"></a>第三章</h2><ol>
-<li>源程序中的语句类型<br>一个完整的源程序应包含2类语句:<br>指令性语句（符号指令）、指示性语句(伪指令)</li>
-<li>80486的寻址方式486有3类7种寻址方式<br>立即寻址方式：获得立即数<br>寄存器寻址方式：获得寄存器操作数<br>存储器操作数寻址方式：获得存储器操作数（内存操作数）</li>
-<li>内存寻址方式 16位寻址规定可使用的寄存器<br>直接寻址<br>寄存器间接寻址 [BX],[BP],[SI],[DI]。段寄存器：[间址寄存器]，某单元的物理地址=段寄存器内容×16+间址寄存器<br>基址寻址 [BX+位移量],[BP＋位移量]。段寄存器:[基址寄存器+位移量]。物理地址=段寄存器内容×16+基址寄存器+位移量<br>变址寻址 [SI+位移量],[DI+位移量]。<br>基址+变址寻址 [BX+SI],[BX+DI],[BP+SI]，[BP+DI]</li>
-<li>常用伪指令<br>数据字义伪指令 DB DW DD（一字节二字节四字节）<br>等值伪指令 EQU =</li>
-<li>常用运算符<br>$运算符：当前汇编计数器的值。通常$-地址，可以求长度<br>SEG运算符：获取段的基地址，SEG DATA<br>OFFSET运算符：相对于段首的基地址<br>PTR运算符：修改属性<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-2.png" alt=""></li>
-<li>目标程序的生成<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425716_POWERPNT_1065x313.png" alt=""></li>
-<li><p>16进制数加法及标志位的影响<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425885_POWERPNT_1101x202.png" alt="">80486基本指令集<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426216_POWERPNT_1132x505.png" alt="">  </p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426445_POWERPNT_1002x554.png" alt="">  </p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426487_POWERPNT_1014x818.png" alt=""></p>
+    <title>Web网页小项目——天气预报Web页面的踩坑笔记</title>
+    <url>/2021/01/23/web%E7%BD%91%E9%A1%B5%E5%B0%8F%E9%A1%B9%E7%9B%AE%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5web%E9%A1%B5%E9%9D%A2/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252141067.jpg" alt=""></p>
+<p>寒假是个学习和提升技能的好时机，今年寒假我就参加了SAST2020前端组的WOC（Winter Of Code）项目，来借此好时机来锻炼自己的开发能力。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252142254.png" alt=""></p>
+<p>目前第一阶段我是写了一个天气预报Web页面，本以为，不就用ajax调用个api吗，在处理一下数据，调一个好看的式样，不就大功告成了吗？确实，理论上是这么简单，但是实际花了我三天时间，才写出了这么个小小的demo。很多东西根本不是我想象的那么简单的，我是踩一个坑学一些新东西，才做好一个模块的（悲）。</p>
+<h2 id="一、json跨域问题"><a href="#一、json跨域问题" class="headerlink" title="一、json跨域问题"></a>一、json跨域问题</h2><p>第一天就是和这个api斗智斗勇的一天，本来我在网上找到了百度定位api，进展颇为顺利，就是百度api配上谷歌内核的浏览器（比如chrome，qq浏览器），它的具体定位就很不准，而且比较慢，但是定位到城市还是没有问题的。后来要找个天气预报的api，这里选择了心知天气api，选了十五天试用套餐，一共可接入10000次。嘛，我就写个小demo，问题不大，又不是长期用。</p>
+<p>一开始我一直使用的是json调用方式，结果浏览器可以直接访问，但是用到我写的项目里，用jQuery的getJSON（“xxx”）发现获取不到数据。我一直以为自己的js代码哪里出了问题，知道晚上我才发现：json跨域的话，现在的浏览器会自动拦截。</p>
+<h3 id="（一）何为跨域？"><a href="#（一）何为跨域？" class="headerlink" title="（一）何为跨域？"></a>（一）何为跨域？</h3><p><strong>只要协议，端口，域名有一个不同，即为跨域！</strong></p>
+<p>首先，先了解浏览器有一个很重要安全性限制，即为同源策略：不同域的客户端脚本在无明确授权的情况下不能读些对方资源。</p>
+<p>然而，当进行一些api接口调用时，那肯定不可避免地需要进行跨域操作，这时候“同源策略”就显得过于苛刻。</p>
+<h3 id="（二）怎样解决"><a href="#（二）怎样解决" class="headerlink" title="（二）怎样解决"></a>（二）怎样解决</h3><p>我又花了一晚上的时间去百度这个方法那个方法，发现纯前端的话，json是根本行不通的，但我仍不死心，去请教了一下前段组的大仙贝：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143365.jpg" alt=""></p>
+<p>好，这波我死心了，老老实实用jsonp吧（悲）</p>
+<p>好在心知天气本身就有jsonp的调用方式，也有官方的demo。就是比较麻烦，这其中涉及密钥+公钥生成签名验证的机制，我硬着头皮的学习了一下，试着自己搞了一下，最后竟然成功了。好耶耶耶耶耶耶耶耶耶耶！</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143816.jpg" alt=""></p>
+<h2 id="二、Echarts绘制与适配问题"><a href="#二、Echarts绘制与适配问题" class="headerlink" title="二、Echarts绘制与适配问题"></a>二、Echarts绘制与适配问题</h2><p>Echarts是一个使用 JavaScript 实现的开源可视化库，涵盖各行业图表，非常的不错。但是这里还是踩到了两个坑：</p>
+<h3 id="（一）Echarts无法绘制图标"><a href="#（一）Echarts无法绘制图标" class="headerlink" title="（一）Echarts无法绘制图标"></a>（一）Echarts无法绘制图标</h3><p>当我打开网页调试时，控制台传入了如下错误：【Echarts】Uncaught TypeError: Cannot read property ‘getAttribute’ of null</p>
+<p>一开始我还以为是Echarts cdn解析出了错，后来才得知，Echarts是没有找到所要绘制的div，不是说我没有在HTML里写到它，而是js在body生成前就调用了，所以才会出现获取不到属性。解决方法就是把js扔到页脚：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144259.png" alt=""></p>
+<h3 id="（二）Echarts适配问题"><a href="#（二）Echarts适配问题" class="headerlink" title="（二）Echarts适配问题"></a>（二）Echarts适配问题</h3><p>这个就有点麻烦了，当你设置div的width为100%时，愚蠢的Echarts会自动识别为100px，其效果极其鬼畜：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144298.png" alt=""></p>
+<p>那咋办？网上给的方案都是echarts初始化之前再用js获取当前屏幕的大小，然后再给他设置宽度就可以了。而我只接给他设了个90vw的具体长度，问题也能解决（</p>
+<p>总的来说踩了不少的坑，当然也学了不少东西，比如ajax+jquery，bootstrap4的响应式界面搭建，当然啊，调css的过程也是坠痛苦的。</p>
+<p>项目地址：<a href="https://github.com/picpo/weather-demo">https://github.com/picpo/weather-demo</a></p>
+<p>大家可以将里面的key换成自己的玩玩，因为我的次数也估计只剩下6000多次了。</p>
+<ul>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145373.png" alt=""></p>
 </li>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145325.png" alt=""></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252146972.png" alt=""></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>ajax</tag>
+        <tag>bootstrap</tag>
+        <tag>jQuery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>《毛泽东思想和中国特色社会主义理论体系概论》求生指南</title>
+    <url>/2022/11/06/%E3%80%8A%E6%AF%9B%E6%B3%BD%E4%B8%9C%E6%80%9D%E6%83%B3%E5%92%8C%E4%B8%AD%E5%9B%BD%E7%89%B9%E8%89%B2%E7%A4%BE%E4%BC%9A%E4%B8%BB%E4%B9%89%E7%90%86%E8%AE%BA%E4%BD%93%E7%B3%BB%E6%A6%82%E8%AE%BA%E3%80%8B/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png" alt=""></p>
+<h2 id="考题分布"><a href="#考题分布" class="headerlink" title="考题分布"></a>考题分布</h2><p>单选题10*1分=10分</p>
+<p>名词解释4*5分=20分</p>
+<p>简答题：4*10=40分</p>
+<p>材料分析题：2*15=30分</p>
+<h2 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a><strong>名词解释</strong></h2><ol>
+<li>实事求是：实事求是，就是一切从实际出发，理论联系实际，坚持实践中检验真理和发展真理。毛泽东指出：实事就是客观存在的一切事务，是就是客观事物的内部联系，即规律，求就是要求去研究</li>
+<li>群众路线：一切为了群众，一切依靠群众，从群众中来，到群众中去，把党的正确主张变成群众自觉的行动</li>
+<li>独立自主：坚持独立思考走自己的路，坚定不移地<strong>维护民族独立</strong>、<strong>捍卫国家主权</strong>，把立足点放在依靠自己的力量基础上，同时积极争取外援，开展国际文化经济交流，学习一切国外<strong>对我们有益的先进</strong>事物</li>
+<li>新民主主义革命的总路线：无产阶级领导的，人民大众的，反对<strong>帝国主义，封建主义，官僚资本主义的革命</strong>（三座大山）</li>
+<li>党在过渡时期的总路线：从新中国成立——&gt;社会主义改造基本完成，这是过渡时期。是在相当长的一段时间内逐步实现国家社会主义工业化，并逐渐对农业手工业<strong>资本主义</strong>工商业社会主义改造</li>
+<li>毛泽东思想：是马克思主义中国化<strong>第一个重大理论成果</strong>，是马克思列宁主义<strong>在中国的运用和发展</strong>，是被实践证明的了中国革命与建设的正确理论原则和经验总结，是中国共产党集体智慧结晶，是党必须长期坚持的指导思想</li>
+<li>三步走战略：1987年4月，邓小平提出，10月确定<br>1981—-&gt;1990，国民生产总值比1980翻一番，解决温饱问题<br>1991—-&gt;20世纪末，再翻一倍，达到小康水平<br>到21世纪中叶，<strong>人均</strong>国民生产总值达到中等发达国家水平，人民生活富裕，基本实现现代化，继续前进</li>
+<li>社会主义初级阶段理论：初级阶段指我国生产力落后、商品经济不发达的条件下建设社会主义必然要经历的阶段，就是从社会主义—-&gt;社会主义现代化基本完成的阶段</li>
+<li>一国两制：在祖国统一的前提下，国家主体实行社会主义制度，港澳台保持原有社会制度和生活方式长期不变</li>
+<li>依法治国：广大人民群众在党的领导下，依照宪法和法律法规，通过各种途径和形式管理<strong>国家事务</strong>，管理<strong>经济文化事业</strong>，管理<strong>社会事务</strong>，保证国家各项工作都依法进行，逐步实现社会主义民主的<strong>制度化和法律化</strong>，使这种<strong>制度和法律</strong>不因<strong>领导人的改变</strong>而改变，不因<strong>领导人看法和注意力改变</strong>而改</li>
 </ol>
-<h2 id="第四章"><a href="#第四章" class="headerlink" title="第四章"></a>第四章</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-3-1024x461.png" alt=""></p>
+<h2 id="简答题"><a href="#简答题" class="headerlink" title="简答题"></a>简答题</h2><h3 id="毛泽东思想形成和发展的社会历史条件"><a href="#毛泽东思想形成和发展的社会历史条件" class="headerlink" title="毛泽东思想形成和发展的社会历史条件"></a>毛泽东思想形成和发展的社会历史条件</h3><ol>
+<li>19世纪末20世纪初，世界进入帝国主义和无产阶级革命时代</li>
+<li>十月革命的胜利开启世界无产阶级革命的新时代。他将中国反帝反封建的民主革命，从<strong>旧的世界资产阶级民主革命</strong>的一部分，转变为<strong>新的世界无产阶级社会主义革命</strong>的一部分</li>
+<li>十月革命送来了马克思列宁主义，中国革命有了科学的指导思想</li>
+<li>中国革命胜利后，经历了二次大战后两大阵营的对立斗争，西方国家不仅封锁禁运而且力求和平演变，毛泽东思想便是从这样的社会历史背景下形成发展的</li>
+<li>中国共产党领导人民进行<strong>革命和建设的成功实践</strong>是毛泽东思想形成发展的<strong>实践基础</strong></li>
+</ol>
+<h3 id="毛泽东思想活的灵魂和历史地位"><a href="#毛泽东思想活的灵魂和历史地位" class="headerlink" title="毛泽东思想活的灵魂和历史地位"></a>毛泽东思想活的灵魂和历史地位</h3><p>活的灵魂：实事求是，群众路线，独立自主</p>
+<p>历史地位：</p>
+<ol>
+<li>马克思主义中国化的第一个重大理论成果</li>
+<li>是中国革命和建设的科学指南</li>
+<li>是中国共产党和人民的宝贵精神财富</li>
+</ol>
+<h3 id="土地革命、武装斗争、农村革命根据地建设-三者之间的联系"><a href="#土地革命、武装斗争、农村革命根据地建设-三者之间的联系" class="headerlink" title="土地革命、武装斗争、农村革命根据地建设 三者之间的联系"></a>土地革命、武装斗争、农村革命根据地建设 三者之间的联系</h3><ol>
+<li>土地革命是民主革命的主要内容</li>
+<li>武装斗争是中国革命的主要形式，是农村革命根据地建设和土地革命的强有力保证</li>
+<li>农村革命根据地是中国革命的战略阵地，是进行武装斗争和开展土地革命的依托</li>
+<li>党的领导下，实现了<strong>三者的密切结合和有机统一</strong></li>
+</ol>
+<h3 id="新民主主义革命基本纲领"><a href="#新民主主义革命基本纲领" class="headerlink" title="新民主主义革命基本纲领"></a>新民主主义革命基本纲领</h3><ol>
+<li>政治：推翻帝国主义和封建主义统治，建立一个以无产阶级领导、工农联盟为基础的、各个革命阶级联合专政的新民主主义的共和国</li>
+<li>经济：没收封建地主的土地归农民，没收官僚资产阶级的垄断资本归新民主主义的国家所有，保护民族工商业</li>
+<li>文化：无产阶级领导的人民大众的<strong>反帝反封建文化</strong>，民族的科学的大众的文化</li>
+</ol>
+<h3 id="新民主主义革命的三大法宝和相互关系"><a href="#新民主主义革命的三大法宝和相互关系" class="headerlink" title="新民主主义革命的三大法宝和相互关系"></a>新民主主义革命的三大法宝和相互关系</h3><p>三大法宝：统一战线，武装斗争，党的建设</p>
+<p>相互关系：统一战线和武装斗争中国革命的两个基本特点，是战胜敌人的基本武器。统一战线是实行武装斗争的统一战线，武装斗争是统一战线的中心支柱，党的组织则是掌握这两个武器的英勇战士</p>
+<h3 id="社会主义改造的经验"><a href="#社会主义改造的经验" class="headerlink" title="社会主义改造的经验"></a>社会主义改造的经验</h3><ol>
+<li>社会主义工业建设和社会主义改造同时进行</li>
+<li>积极引导，逐步过渡</li>
+<li>和平方法改造</li>
+</ol>
+<h3 id="社会主义基本制度确立的重大意义"><a href="#社会主义基本制度确立的重大意义" class="headerlink" title="社会主义基本制度确立的重大意义"></a>社会主义<strong><em>基本</em></strong>制度确立的重大意义</h3><p>是中国历史上最深刻最伟大的社会变革，为当今中国奠定了制度基础，也为中特社的建立创新提供了重要前提</p>
+<ol>
+<li>极大地提高了<strong>工人阶级和广大劳动人民</strong>的积极性和创造性，极大促进了生产力发展</li>
+<li>使广大人民真正成为国家主人</li>
+<li>使占全球人口四分之一的东方大国进入了社会主义社会，进一步改变了世界政治经济格局，增强了社会主义力量，对世界和平的维护产生了重要影响</li>
+<li>是马克思列宁主义<strong>关于社会主义革命理论</strong>在中国的正确应用和创造性发展的结果，不仅再次证明了马克思列宁主义的真理性，而且以其独特的理论原则和经验总结<strong>丰富和发展了科学社会主义</strong></li>
+</ol>
+<h3 id="党对社会主义建设道路初步探索的重大意义"><a href="#党对社会主义建设道路初步探索的重大意义" class="headerlink" title="党对社会主义建设道路初步探索的重大意义"></a>党对社会主义建设道路初步探索的重大意义</h3><ol>
+<li>巩固和发展了我国的社会主义</li>
+<li>为开创中特社提供了宝贵经验、理论准备、物质基础</li>
+<li>丰富了科学社会主义的理论和实践</li>
+</ol>
+<h3 id="初步探索的经验教训"><a href="#初步探索的经验教训" class="headerlink" title="初步探索的经验教训"></a>初步探索的经验教训</h3><ol>
+<li>必须把马克思主义和中国实际相结合，探索符合中国的道路</li>
+<li>必须正确认识社会主义的主要和次要矛盾，集中力量发展生产力</li>
+<li>必须从实际出发，建设速度和规模要与国力相适应，不能急于求成</li>
+<li>必须发展社会主义民主，健全社会主义法制</li>
+<li>坚持党的民主集中制和集体领导制度，加强执政党建设</li>
+<li>必须坚持对外开放，借鉴和吸收人类文明成果建设社会主义，不能关起门来搞建设</li>
+</ol>
+<h3 id="邓小平理论形成的历史社会条件"><a href="#邓小平理论形成的历史社会条件" class="headerlink" title="邓小平理论形成的历史社会条件"></a>邓小平理论形成的历史社会条件</h3><ol>
+<li>时代背景：和平与发展成为时代主题</li>
+<li>历史根据：社会主义建设的经验教训</li>
+<li>现实依据：改革开放和现代化建设</li>
+</ol>
+<h3 id="三步走"><a href="#三步走" class="headerlink" title="三步走"></a>三步走</h3><p>同上</p>
+<h3 id="和平统一一国两制的基本内容"><a href="#和平统一一国两制的基本内容" class="headerlink" title="和平统一一国两制的基本内容"></a>和平统一一国两制的基本内容</h3><ol>
+<li>坚持一个中国</li>
+<li>两制并存</li>
+<li>港澳台高度自治</li>
+<li>尽最大努力争取和平统一，但不承诺放弃使用武力</li>
+<li>解决台湾问题，实现祖国完全统一，寄希望于台湾人民</li>
+</ol>
+<h3 id="简述“改革是中国第二次革命”"><a href="#简述“改革是中国第二次革命”" class="headerlink" title="简述“改革是中国第二次革命”"></a>简述“改革是中国第二次革命”</h3><ol>
+<li>改革是社会主义社会发展的直接动力。社会主义社会的基本矛盾仍然是生产力和生产关系、上层建筑和经济基础之间的矛盾，这些矛盾推动了社会主义社会的发展。在社会主义社会，改革从根本上改变束缚生产力发展的经济体制，促进生产力的发展，从而解决了发展动力的问题</li>
+<li>改革是一次新的革命，不是也不允许否定和抛弃我们建立起来的社会主义基本制度，他是社会主义制度的自我完善和发展</li>
+<li>改革不是一个阶级推翻另一个阶级的革命，也不是原因经济体制的细枝末节修补，而是对体制的根本性变革。他的实质和目标，是要从根本上改变束缚我国生产力发展的经济体制，建立一个充满生机和活力的社会主义新经济体制，同时相应地改革政治体制和其他方面的体制，以实现社会主义现代化</li>
+</ol>
+<h3 id="邓小平理论的历史地位"><a href="#邓小平理论的历史地位" class="headerlink" title="邓小平理论的历史地位"></a>邓小平理论的历史地位</h3><ol>
+<li>马克思列宁主义、毛泽东思想的<strong>继承与发展</strong></li>
+<li>中特社理论体系的<strong>开篇之作</strong></li>
+<li><strong>改革开放和社会主义现代化建设的科学指南</strong></li>
+</ol>
+<h3 id="三个代表的社会历史条件"><a href="#三个代表的社会历史条件" class="headerlink" title="三个代表的社会历史条件"></a>三个代表的社会历史条件</h3><ol>
+<li>时代背景：冷战后对国际局势的科学判断的基础上形成的。世界多极化和经济全球化的趋势在曲折中发展，和平与发展仍是时代的主题</li>
+<li>是科学判断党的历史方位和总结历史经验的基础上提出来的</li>
+<li>是在建设中特社伟大实践的基础上形成的。就是对过程中各种出现的实际问题中形成和发展的</li>
+</ol>
+<h3 id="三个代表"><a href="#三个代表" class="headerlink" title="三个代表"></a>三个代表</h3><ol>
+<li>始终代表中国先进生产力的发展要求</li>
+<li>始终代表中国先进文化的前进方向</li>
+<li>始终代表中国最广大人民的根本利益</li>
+</ol>
+<h3 id="科学发展观的的社会历史条件"><a href="#科学发展观的的社会历史条件" class="headerlink" title="科学发展观的的社会历史条件"></a>科学发展观的的社会历史条件</h3><ol>
+<li>是把深刻把握我国基本国情和新的阶段性特征的基础上形成和发展的</li>
+<li>是总结改开特别是十六大以来实践经验的基础上形成和发展的</li>
+<li>是深刻分析国际形势、顺应世界发展趋势、借鉴国外发展经验的基础上形成和发展的</li>
+</ol>
+<h3 id="科学发展观的科学内涵和精神实质"><a href="#科学发展观的科学内涵和精神实质" class="headerlink" title="科学发展观的科学内涵和精神实质"></a>科学发展观的科学内涵和精神实质</h3><p>内涵：</p>
+<ol>
+<li><strong>推动经济发展</strong>是第一要义</li>
+<li><strong>以人为本</strong>是核心立场</li>
+<li><strong>全面协调可持续</strong>是基本要求</li>
+<li><strong>统筹兼顾</strong>是根本方法</li>
+</ol>
+<p>实质：</p>
+<p>解放思想、实事求是、与时俱进、求真务实</p>
 ]]></content>
       <categories>
         <category>我爱学习</category>
@@ -1135,124 +1223,36 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </tags>
   </entry>
   <entry>
-    <title>《毛泽东思想和中国特色社会主义理论体系概论》求生指南</title>
-    <url>/2022/11/06/%E3%80%8A%E6%AF%9B%E6%B3%BD%E4%B8%9C%E6%80%9D%E6%83%B3%E5%92%8C%E4%B8%AD%E5%9B%BD%E7%89%B9%E8%89%B2%E7%A4%BE%E4%BC%9A%E4%B8%BB%E4%B9%89%E7%90%86%E8%AE%BA%E4%BD%93%E7%B3%BB%E6%A6%82%E8%AE%BA%E3%80%8B/</url>
+    <title>《汇编语言程序设计》求生指南</title>
+    <url>/2022/11/14/%E3%80%8A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png" alt=""></p>
-<h2 id="考题分布"><a href="#考题分布" class="headerlink" title="考题分布"></a>考题分布</h2><p>单选题10*1分=10分</p>
-<p>名词解释4*5分=20分</p>
-<p>简答题：4*10=40分</p>
-<p>材料分析题：2*15=30分</p>
-<h2 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a><strong>名词解释</strong></h2><ol>
-<li>实事求是：实事求是，就是一切从实际出发，理论联系实际，坚持实践中检验真理和发展真理。毛泽东指出：实事就是客观存在的一切事务，是就是客观事物的内部联系，即规律，求就是要求去研究</li>
-<li>群众路线：一切为了群众，一切依靠群众，从群众中来，到群众中去，把党的正确主张变成群众自觉的行动</li>
-<li>独立自主：坚持独立思考走自己的路，坚定不移地<strong>维护民族独立</strong>、<strong>捍卫国家主权</strong>，把立足点放在依靠自己的力量基础上，同时积极争取外援，开展国际文化经济交流，学习一切国外<strong>对我们有益的先进</strong>事物</li>
-<li>新民主主义革命的总路线：无产阶级领导的，人民大众的，反对<strong>帝国主义，封建主义，官僚资本主义的革命</strong>（三座大山）</li>
-<li>党在过渡时期的总路线：从新中国成立——&gt;社会主义改造基本完成，这是过渡时期。是在相当长的一段时间内逐步实现国家社会主义工业化，并逐渐对农业手工业<strong>资本主义</strong>工商业社会主义改造</li>
-<li>毛泽东思想：是马克思主义中国化<strong>第一个重大理论成果</strong>，是马克思列宁主义<strong>在中国的运用和发展</strong>，是被实践证明的了中国革命与建设的正确理论原则和经验总结，是中国共产党集体智慧结晶，是党必须长期坚持的指导思想</li>
-<li>三步走战略：1987年4月，邓小平提出，10月确定<br>1981—-&gt;1990，国民生产总值比1980翻一番，解决温饱问题<br>1991—-&gt;20世纪末，再翻一倍，达到小康水平<br>到21世纪中叶，<strong>人均</strong>国民生产总值达到中等发达国家水平，人民生活富裕，基本实现现代化，继续前进</li>
-<li>社会主义初级阶段理论：初级阶段指我国生产力落后、商品经济不发达的条件下建设社会主义必然要经历的阶段，就是从社会主义—-&gt;社会主义现代化基本完成的阶段</li>
-<li>一国两制：在祖国统一的前提下，国家主体实行社会主义制度，港澳台保持原有社会制度和生活方式长期不变</li>
-<li>依法治国：广大人民群众在党的领导下，依照宪法和法律法规，通过各种途径和形式管理<strong>国家事务</strong>，管理<strong>经济文化事业</strong>，管理<strong>社会事务</strong>，保证国家各项工作都依法进行，逐步实现社会主义民主的<strong>制度化和法律化</strong>，使这种<strong>制度和法律</strong>不因<strong>领导人的改变</strong>而改变，不因<strong>领导人看法和注意力改变</strong>而改</li>
+<h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><ol>
+<li>BCD码转换<br>1010—-1111是非法BCD码</li>
+<li>真值数和补码数之间的转换<br>正数的补码等于本身，负数的补码等于反码+1</li>
+<li>n位字长的有符号数、无符号数的数值范围<br>设机器数字长=n, 则n位补码数<br>其真值范围为 －2n-1 ～ +2n-1－1<br>无符号数其数值范围为 0 ～ 2n－1</li>
+<li>常用ASCII码范围：<br>0:48<br>A:65<br>a:97<br>(space):32<br>(回车):13</li>
+<li>C标表示进位，O标表示溢出</li>
+<li>冯诺依曼架构：<strong>运算器、控制器、存储器、输入、输出</strong><br>CPU：运算器和控制器</li>
 </ol>
-<h2 id="简答题"><a href="#简答题" class="headerlink" title="简答题"></a>简答题</h2><h3 id="毛泽东思想形成和发展的社会历史条件"><a href="#毛泽东思想形成和发展的社会历史条件" class="headerlink" title="毛泽东思想形成和发展的社会历史条件"></a>毛泽东思想形成和发展的社会历史条件</h3><ol>
-<li>19世纪末20世纪初，世界进入帝国主义和无产阶级革命时代</li>
-<li>十月革命的胜利开启世界无产阶级革命的新时代。他将中国反帝反封建的民主革命，从<strong>旧的世界资产阶级民主革命</strong>的一部分，转变为<strong>新的世界无产阶级社会主义革命</strong>的一部分</li>
-<li>十月革命送来了马克思列宁主义，中国革命有了科学的指导思想</li>
-<li>中国革命胜利后，经历了二次大战后两大阵营的对立斗争，西方国家不仅封锁禁运而且力求和平演变，毛泽东思想便是从这样的社会历史背景下形成发展的</li>
-<li>中国共产党领导人民进行<strong>革命和建设的成功实践</strong>是毛泽东思想形成发展的<strong>实践基础</strong></li>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image.png" alt=""></p>
+<h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><ol>
+<li>基本结构寄存器的名称、位长和作用<br>通用寄存器: AX, BX, CX, DX, SI（源变址）, DI（目的变址）, BP（基址指针）<br>段寄存器: CS, SS, DS, ES, FS, GS<br>指针寄存器: IP（指令指针）, SP（堆栈指针）<br>标志寄存器: FLAGS<br>15位标志分为两类: 状态标志和控制标志<br>6种状态标志：CF（进位） OF（溢出） ZF（全零） PF（最后一字节1为偶数为1） AF（辅助进位标志） SF（记录最高位的位值）</li>
+<li>80486的工作模式：实地址模式和保护虚拟地址模式<br>80486的三个存贮地址空间：逻辑空间、线性空间和物理空间<br>逻辑地址：即逻辑上的地址，实模式下由“段基地址+段内偏移”组成;保护模式下由“段选择符+段内偏移”组成。<br>线性地址：逻辑地址经分段机制后就成线性地址，它是平坦的;如果不启用分页，那么此线性地址即物理地址。<br>物理地址：线性地址经分页转换后就成了物理地址。<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-1.png" alt=""></li>
+<li>实地址模式下，物理地址的形成<br><strong>物理地址=段基址*16+偏移地址</strong><br><strong>内存容量=末地址-首地址+1</strong><br><strong>末地址=首地址+（字数-1）*2 末地址</strong></li>
 </ol>
-<h3 id="毛泽东思想活的灵魂和历史地位"><a href="#毛泽东思想活的灵魂和历史地位" class="headerlink" title="毛泽东思想活的灵魂和历史地位"></a>毛泽东思想活的灵魂和历史地位</h3><p>活的灵魂：实事求是，群众路线，独立自主</p>
-<p>历史地位：</p>
-<ol>
-<li>马克思主义中国化的第一个重大理论成果</li>
-<li>是中国革命和建设的科学指南</li>
-<li>是中国共产党和人民的宝贵精神财富</li>
+<h2 id="第三章"><a href="#第三章" class="headerlink" title="第三章"></a>第三章</h2><ol>
+<li>源程序中的语句类型<br>一个完整的源程序应包含2类语句:<br>指令性语句（符号指令）、指示性语句(伪指令)</li>
+<li>80486的寻址方式486有3类7种寻址方式<br>立即寻址方式：获得立即数<br>寄存器寻址方式：获得寄存器操作数<br>存储器操作数寻址方式：获得存储器操作数（内存操作数）</li>
+<li>内存寻址方式 16位寻址规定可使用的寄存器<br>直接寻址<br>寄存器间接寻址 [BX],[BP],[SI],[DI]。段寄存器：[间址寄存器]，某单元的物理地址=段寄存器内容×16+间址寄存器<br>基址寻址 [BX+位移量],[BP＋位移量]。段寄存器:[基址寄存器+位移量]。物理地址=段寄存器内容×16+基址寄存器+位移量<br>变址寻址 [SI+位移量],[DI+位移量]。<br>基址+变址寻址 [BX+SI],[BX+DI],[BP+SI]，[BP+DI]</li>
+<li>常用伪指令<br>数据字义伪指令 DB DW DD（一字节二字节四字节）<br>等值伪指令 EQU =</li>
+<li>常用运算符<br>$运算符：当前汇编计数器的值。通常$-地址，可以求长度<br>SEG运算符：获取段的基地址，SEG DATA<br>OFFSET运算符：相对于段首的基地址<br>PTR运算符：修改属性<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-2.png" alt=""></li>
+<li>目标程序的生成<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425716_POWERPNT_1065x313.png" alt=""></li>
+<li><p>16进制数加法及标志位的影响<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425885_POWERPNT_1101x202.png" alt="">80486基本指令集<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426216_POWERPNT_1132x505.png" alt="">  </p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426445_POWERPNT_1002x554.png" alt="">  </p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426487_POWERPNT_1014x818.png" alt=""></p>
+</li>
 </ol>
-<h3 id="土地革命、武装斗争、农村革命根据地建设-三者之间的联系"><a href="#土地革命、武装斗争、农村革命根据地建设-三者之间的联系" class="headerlink" title="土地革命、武装斗争、农村革命根据地建设 三者之间的联系"></a>土地革命、武装斗争、农村革命根据地建设 三者之间的联系</h3><ol>
-<li>土地革命是民主革命的主要内容</li>
-<li>武装斗争是中国革命的主要形式，是农村革命根据地建设和土地革命的强有力保证</li>
-<li>农村革命根据地是中国革命的战略阵地，是进行武装斗争和开展土地革命的依托</li>
-<li>党的领导下，实现了<strong>三者的密切结合和有机统一</strong></li>
-</ol>
-<h3 id="新民主主义革命基本纲领"><a href="#新民主主义革命基本纲领" class="headerlink" title="新民主主义革命基本纲领"></a>新民主主义革命基本纲领</h3><ol>
-<li>政治：推翻帝国主义和封建主义统治，建立一个以无产阶级领导、工农联盟为基础的、各个革命阶级联合专政的新民主主义的共和国</li>
-<li>经济：没收封建地主的土地归农民，没收官僚资产阶级的垄断资本归新民主主义的国家所有，保护民族工商业</li>
-<li>文化：无产阶级领导的人民大众的<strong>反帝反封建文化</strong>，民族的科学的大众的文化</li>
-</ol>
-<h3 id="新民主主义革命的三大法宝和相互关系"><a href="#新民主主义革命的三大法宝和相互关系" class="headerlink" title="新民主主义革命的三大法宝和相互关系"></a>新民主主义革命的三大法宝和相互关系</h3><p>三大法宝：统一战线，武装斗争，党的建设</p>
-<p>相互关系：统一战线和武装斗争中国革命的两个基本特点，是战胜敌人的基本武器。统一战线是实行武装斗争的统一战线，武装斗争是统一战线的中心支柱，党的组织则是掌握这两个武器的英勇战士</p>
-<h3 id="社会主义改造的经验"><a href="#社会主义改造的经验" class="headerlink" title="社会主义改造的经验"></a>社会主义改造的经验</h3><ol>
-<li>社会主义工业建设和社会主义改造同时进行</li>
-<li>积极引导，逐步过渡</li>
-<li>和平方法改造</li>
-</ol>
-<h3 id="社会主义基本制度确立的重大意义"><a href="#社会主义基本制度确立的重大意义" class="headerlink" title="社会主义基本制度确立的重大意义"></a>社会主义<strong><em>基本</em></strong>制度确立的重大意义</h3><p>是中国历史上最深刻最伟大的社会变革，为当今中国奠定了制度基础，也为中特社的建立创新提供了重要前提</p>
-<ol>
-<li>极大地提高了<strong>工人阶级和广大劳动人民</strong>的积极性和创造性，极大促进了生产力发展</li>
-<li>使广大人民真正成为国家主人</li>
-<li>使占全球人口四分之一的东方大国进入了社会主义社会，进一步改变了世界政治经济格局，增强了社会主义力量，对世界和平的维护产生了重要影响</li>
-<li>是马克思列宁主义<strong>关于社会主义革命理论</strong>在中国的正确应用和创造性发展的结果，不仅再次证明了马克思列宁主义的真理性，而且以其独特的理论原则和经验总结<strong>丰富和发展了科学社会主义</strong></li>
-</ol>
-<h3 id="党对社会主义建设道路初步探索的重大意义"><a href="#党对社会主义建设道路初步探索的重大意义" class="headerlink" title="党对社会主义建设道路初步探索的重大意义"></a>党对社会主义建设道路初步探索的重大意义</h3><ol>
-<li>巩固和发展了我国的社会主义</li>
-<li>为开创中特社提供了宝贵经验、理论准备、物质基础</li>
-<li>丰富了科学社会主义的理论和实践</li>
-</ol>
-<h3 id="初步探索的经验教训"><a href="#初步探索的经验教训" class="headerlink" title="初步探索的经验教训"></a>初步探索的经验教训</h3><ol>
-<li>必须把马克思主义和中国实际相结合，探索符合中国的道路</li>
-<li>必须正确认识社会主义的主要和次要矛盾，集中力量发展生产力</li>
-<li>必须从实际出发，建设速度和规模要与国力相适应，不能急于求成</li>
-<li>必须发展社会主义民主，健全社会主义法制</li>
-<li>坚持党的民主集中制和集体领导制度，加强执政党建设</li>
-<li>必须坚持对外开放，借鉴和吸收人类文明成果建设社会主义，不能关起门来搞建设</li>
-</ol>
-<h3 id="邓小平理论形成的历史社会条件"><a href="#邓小平理论形成的历史社会条件" class="headerlink" title="邓小平理论形成的历史社会条件"></a>邓小平理论形成的历史社会条件</h3><ol>
-<li>时代背景：和平与发展成为时代主题</li>
-<li>历史根据：社会主义建设的经验教训</li>
-<li>现实依据：改革开放和现代化建设</li>
-</ol>
-<h3 id="三步走"><a href="#三步走" class="headerlink" title="三步走"></a>三步走</h3><p>同上</p>
-<h3 id="和平统一一国两制的基本内容"><a href="#和平统一一国两制的基本内容" class="headerlink" title="和平统一一国两制的基本内容"></a>和平统一一国两制的基本内容</h3><ol>
-<li>坚持一个中国</li>
-<li>两制并存</li>
-<li>港澳台高度自治</li>
-<li>尽最大努力争取和平统一，但不承诺放弃使用武力</li>
-<li>解决台湾问题，实现祖国完全统一，寄希望于台湾人民</li>
-</ol>
-<h3 id="简述“改革是中国第二次革命”"><a href="#简述“改革是中国第二次革命”" class="headerlink" title="简述“改革是中国第二次革命”"></a>简述“改革是中国第二次革命”</h3><ol>
-<li>改革是社会主义社会发展的直接动力。社会主义社会的基本矛盾仍然是生产力和生产关系、上层建筑和经济基础之间的矛盾，这些矛盾推动了社会主义社会的发展。在社会主义社会，改革从根本上改变束缚生产力发展的经济体制，促进生产力的发展，从而解决了发展动力的问题</li>
-<li>改革是一次新的革命，不是也不允许否定和抛弃我们建立起来的社会主义基本制度，他是社会主义制度的自我完善和发展</li>
-<li>改革不是一个阶级推翻另一个阶级的革命，也不是原因经济体制的细枝末节修补，而是对体制的根本性变革。他的实质和目标，是要从根本上改变束缚我国生产力发展的经济体制，建立一个充满生机和活力的社会主义新经济体制，同时相应地改革政治体制和其他方面的体制，以实现社会主义现代化</li>
-</ol>
-<h3 id="邓小平理论的历史地位"><a href="#邓小平理论的历史地位" class="headerlink" title="邓小平理论的历史地位"></a>邓小平理论的历史地位</h3><ol>
-<li>马克思列宁主义、毛泽东思想的<strong>继承与发展</strong></li>
-<li>中特社理论体系的<strong>开篇之作</strong></li>
-<li><strong>改革开放和社会主义现代化建设的科学指南</strong></li>
-</ol>
-<h3 id="三个代表的社会历史条件"><a href="#三个代表的社会历史条件" class="headerlink" title="三个代表的社会历史条件"></a>三个代表的社会历史条件</h3><ol>
-<li>时代背景：冷战后对国际局势的科学判断的基础上形成的。世界多极化和经济全球化的趋势在曲折中发展，和平与发展仍是时代的主题</li>
-<li>是科学判断党的历史方位和总结历史经验的基础上提出来的</li>
-<li>是在建设中特社伟大实践的基础上形成的。就是对过程中各种出现的实际问题中形成和发展的</li>
-</ol>
-<h3 id="三个代表"><a href="#三个代表" class="headerlink" title="三个代表"></a>三个代表</h3><ol>
-<li>始终代表中国先进生产力的发展要求</li>
-<li>始终代表中国先进文化的前进方向</li>
-<li>始终代表中国最广大人民的根本利益</li>
-</ol>
-<h3 id="科学发展观的的社会历史条件"><a href="#科学发展观的的社会历史条件" class="headerlink" title="科学发展观的的社会历史条件"></a>科学发展观的的社会历史条件</h3><ol>
-<li>是把深刻把握我国基本国情和新的阶段性特征的基础上形成和发展的</li>
-<li>是总结改开特别是十六大以来实践经验的基础上形成和发展的</li>
-<li>是深刻分析国际形势、顺应世界发展趋势、借鉴国外发展经验的基础上形成和发展的</li>
-</ol>
-<h3 id="科学发展观的科学内涵和精神实质"><a href="#科学发展观的科学内涵和精神实质" class="headerlink" title="科学发展观的科学内涵和精神实质"></a>科学发展观的科学内涵和精神实质</h3><p>内涵：</p>
-<ol>
-<li><strong>推动经济发展</strong>是第一要义</li>
-<li><strong>以人为本</strong>是核心立场</li>
-<li><strong>全面协调可持续</strong>是基本要求</li>
-<li><strong>统筹兼顾</strong>是根本方法</li>
-</ol>
-<p>实质：</p>
-<p>解放思想、实事求是、与时俱进、求真务实</p>
+<h2 id="第四章"><a href="#第四章" class="headerlink" title="第四章"></a>第四章</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-3-1024x461.png" alt=""></p>
 ]]></content>
       <categories>
         <category>我爱学习</category>
@@ -1456,591 +1456,6 @@ Windows Registry Editor Version 5.00
       </categories>
       <tags>
         <tag>VSCode</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在linux平台上搭建求生之路服务器</title>
-    <url>/2022/01/18/%E5%9C%A8linux%E5%B9%B3%E5%8F%B0%E4%B8%8A%E6%90%AD%E5%BB%BA%E6%B1%82%E7%94%9F%E4%B9%8B%E8%B7%AF%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242326346.png" alt=""></p>
-<p>L4D2一直是一款我特别喜欢的多人娱乐向游戏，除了MC基本上每次高中好友线上团建就是在这里面。</p>
-<p>可惜最近V社的服务器ping值令人忍无可忍，不过好在我手上有一台2核4G的服务器，开个私服应该没啥问题。</p>
-<h2 id="安装运行环境（我的是ubuntu）"><a href="#安装运行环境（我的是ubuntu）" class="headerlink" title="安装运行环境（我的是ubuntu）"></a>安装运行环境（我的是ubuntu）</h2><pre><code>sudo apt-get install lib32gcc1
-</code></pre><h2 id="下载安装steamCMD"><a href="#下载安装steamCMD" class="headerlink" title="下载安装steamCMD"></a>下载安装steamCMD</h2><pre><code>mkdir ~/Steam //创建Steam文件夹
-cd ~/Steam //进入Steam文件夹
-wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz
-tar -zxvf steamcmd_linux.tar.gz //解压
-</code></pre><p>输入</p>
-<pre><code>./steamcmd.sh
-</code></pre><p>开始下载安装</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242326169.png" alt=""></p>
-<p>会要求登录，匿名登录就行</p>
-<pre><code>login anonymous
-</code></pre><h2 id="下载L4D2服务端"><a href="#下载L4D2服务端" class="headerlink" title="下载L4D2服务端"></a>下载L4D2服务端</h2><pre><code>app_update 222860 validate
-</code></pre><p>一开始几次没连上，多试几次就行</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327693.png" alt=""></p>
-<p>退出quit</p>
-<h2 id="配置文档"><a href="#配置文档" class="headerlink" title="配置文档"></a>配置文档</h2><p>修改H键公告的标题需修改文件/home/steam/l4d2/left4dead2/host.txt，修改内容需修改/home/steam/l4d2/left4dead2/motd.txt</p>
-<p>Steam/steamapps/common/Left 4 Dead 2 Dedicated Server/left4dead2/cfg下，新建一个 server.cfg 文件</p>
-<p>战役模式</p>
-<pre><code>hostname &quot;PiCpo&#39;s L4D2&quot;
-//模式选择
-sm_cvar mp_gamemode &quot;coop&quot;
-//隐藏服务器
-sv_tags &quot;hidden&quot;
-ads_delay 45
-sv_allow_lobby_connect_only 0
-//mod一致性检查
-sv_consistency 0
-//正版服务器匹配参数限制
-sv_region 4
-sv_steamgroup &quot;&quot; //第一个组编号数字改成自己的组，其他为热门求生组
-sv_steamgroup_exclusive 1
-//人数设置
-sm_cvar sv_maxplayers 8
-sm_cvar sv_visiblemaxplayers 8
-sm_cvar sv_removehumanlimit 1
-sm_cvar sv_force_unreserved 1
-sm_cvar fps_max 300
-sm_cvar allow_all_bot_survivor_team 1
-</code></pre><p>对抗模式</p>
-<pre><code>//100tick
-sm_cvar fps_max 0
-sm_cvar net_splitpacket_maxrate 30000
-sm_cvar nb_update_frequency 0.06
-sm_cvar sv_minrate 100000
-sm_cvar sv_maxrate 101000
-sm_cvar sv_mincmdrate 100
-sm_cvar sv_maxcmdrate 100
-sm_cvar sv_minupdaterate 100
-sm_cvar sv_maxupdaterate 100
-sm_cvar sv_client_min_interp_ratio -1
-sm_cvar sv_client_max_interp_ratio 2
-sm_cvar sv_maxplayers 8
-sm_cvar sv_visiblemaxplayers 8
-sm_cvar sv_allow_lobby_connect_only 1
-
-sv_tags &quot;hidden&quot;
-sm_cvar mp_gamemode &quot;versus&quot;// 设定为对抗模式
-sv_gametypes versus// 设定为对抗模式
-sm_cvar sb_all_bot_game 1// 防止人数不足而自动关闭
-sm_cvar sb_all_bot_team 1
-sm_cvar allow_all_bot_survivor_team 1// 真人玩家死亡后由电脑玩家组队进行游戏
-sm_cvar sb_escort 1 // 强制电脑玩家紧随其后
-sm_cvar director_allow_infected_bots 0// 关闭AI特感
-sv_allow_wait_command 0// 封禁wait指令
-</code></pre><pre><code>coop //战役模式
-
-realism //写实模式
-
-versus //对抗模式
-
-teamversus //团队对抗模式
-
-mutation12 //写实对抗模式
-
-survival //生存模式
-
-scavenge //清道夫模式
-
-teamscavenge //团队清道夫模式
-
-community(1-6)&amp;&amp;mutation(1-20) //突变模式(总共26种不同内容)
-&#123;
-community1 【特感速递】 4人合作 同屏最多8特，无小丧尸，每种特感的出现时间间隔20秒，特感刷新时间0秒，所以是8个槽位同时刷，每个槽位20秒刷一个，无等待时间，不停的刷。
-community2 【感染季节】 4人合作 同屏最多8特，只有bommer和spitter两种特感，特感刷新倒计时固定20秒。无小丧尸，但是被bommer喷到、打到警报车和开机关有丧尸群。
-community3 【骑师派对】 8人对抗 特感方都是jockey，而且移动超快，无小丧尸(包括开警报后)
-community4 【梦魇】 4人合作 生存者模式，只有17个场景 同屏最多8特，战役模式设定，但无队友轮廓，场景有浓雾。
-community5 【死亡之门】 4人合作 每关开始只有药没有包，倒地即死。
-community6 【药抗】 8人对抗，只有药和针，取消高级武器，每关tank，更合理的对抗记分方式。
-mutation1 【孤身一人】 1人单机 只有一个人没有小丧尸，只有特感(除BOOMER)，倒地自起、控制的特感也会放开，但是会黑白。
-mutation2 【枪枪爆头】 4人合作 小丧尸只有爆头才会死。
-mutation3 【血流不止】 4人合作 这个模式从关卡开头就是虚血【并持续减血】，全图无包，只有靠药瓶和针维持血量。
-mutation4 【绝境求生】 4人合作 同屏最多8特，战役模式设定，每种特感的出现时间间隔20秒，特感刷新时间15秒，所以是8个槽位同时刷，每个槽位15-20秒刷一个，但特感刷新由导演系统控制，倒计时结束，不会不停的刷新。
-mutation5 【四剑客】 4人合作 一出场只有4把武士刀
-mutation7 【电锯帮】 4人合作 武器只有4个无限油的电锯
-mutation8 【铁人意志】 4人合作 团灭以后直接回到大厅，不会重新开始某个小关游戏
-mutation9 【侏儒卫队】 4人合作 玩家必须携带一个侏儒玩偶来躲避丧尸的攻击到达安全门
-mutation10 【一人救赎】 4人合作 只有一个人能终关逃生
-mutation11 【没有救赎】 8人对抗 全关没有包和药
-mutation12 【写实对抗】 8人对抗 写实模式设定的对抗
-mutation13 【清道肆虐】 8人对抗 线性清道夫，每次只有1个位置出现油桶， 每个新位置比上一个+2桶
-mutation14 【无法近身】 4人合作 全关没有近战武器，只有一把无限子弹M60和麦林手枪
-mutation15 【生存对抗】 8人对抗 使用生存模式计分规则
-mutation16 【猎人派对】 4人合作 特殊感染者都是hunter
-mutation17 【孤胆枪手】 1人单机 只有一个人一把沙鹰，特感保留bommer、witch和tank，小丧尸伤害高
-mutation18 【失血对抗】 8人对抗 所有幸存者虚血(并持续减血)，全图无包
-mutation19 【Tank!!!!!!】 8人对抗 扮演感染者方全是做tank
-mutation20 【侏儒治愈】 4人合作 所有幸存者虚血【并持续减血】，全图无包，抱着侏儒的人可以回复血量
-&#125; 
-dash Dash
-l4d1coop Left 4 Dead 1 Coop
-l4d1vs Left 4 Dead 1 Versus
-l4d1survival Left 4 Dead 1 Survival
-gunbrain GunBrain
-holdout Holdout
-shootzones Shootzones
-tankrun Tank Run
-rocketdude RocketDude
-</code></pre><p>完整版</p>
-<pre><code>//管理密码
-rcon_password &quot;0&quot;
-
-//游戏模式
-sm_cvar mp_gamemode &quot;coop&quot;
-
-//服务器人数破解
-l4d_maxplayers 4
-sv_maxplayers 4
-sv_visiblemaxplayers 4
-sv_removehumanlimit 1
-sv_force_unreserved 1
-
-//服务器难度锁定
-// Difficulty Setting: easy, normal, hard, impossible
-z_difficulty &quot;impossible&quot;
-
-//限制投票
-sm_cvar sv_allow_votes &quot;1&quot;
-
-//正版服务器匹配参数限制
-sv_region 4 
-sv_steamgroup &quot;114514&quot;
-sv_steamgroup_exclusive 0
-
-
-//插件开关 1=ON/0=OFF
-sm_advertisements_enabled 1
-
-//广告播放延时默认30s
-sm_advertisements_interval 60
-ads_delay 45
-
-//不允许正版大厅匹配到
-sv_allow_lobby_connect_only 0
-
-//地区代码:
-sm_cvar sv_region &quot;4&quot;
-
-// 作弊开关（1\0)
-sv_cheats 0  
-
-
-//关闭模型[MOD]冲突
-sm_cvar sv_consistency 0
-
-//隐藏服务器
-sv_tags hidden
-sv_tags &quot;hidden&quot;
-
-//tick
-sm_cvar fps_max 300
-sm_cvar sv_minrate 100000
-sm_cvar sv_maxrate 100000
-sm_cvar sv_minupdaterate 100
-sm_cvar sv_maxupdaterate 100
-sm_cvar sv_mincmdrate 100
-sm_cvar sv_maxcmdrate 100
-sm_cvar nb_update_frequency 0.1
-sm_cvar net_splitrate 2 
-sm_cvar net_splitpacket_maxrate 100000
-sm_cvar sv_client_min_interp_ratio 1
-sm_cvar sv_client_max_interp_ratio 1
-
-// 防止人数不足而自动关闭
-sm_cvar sb_all_bot_game 1
-
-//玩家死亡时电脑组成队伍继续游戏
-sm_cvar allow_all_bot_survivor_team 1
-</code></pre><p>幸存者参数介绍</p>
-<pre><code>队友伤害，0为关闭
-survivor_friendly_fire_factor_easy 0.2
-survivor_friendly_fire_factor_normal 0.2
-survivor_friendly_fire_factor_hard 0.4
-survivor_friendly_fire_factor_expert 0.6
-火焰伤害，0为关闭
-survivor_burn_factor_easy 0.1
-survivor_burn_factor_normal 0.2
-survivor_burn_factor_hard 0.3
-survivor_burn_factor_expert 0.5
-
-
-survivor_crouch_speed 75 蹲著的速度(默认：75 数字越大越快)
-rescue_min_dead_time &quot;3&quot; 人死掉后3秒就可以出现在任一房间给人救
-survivor_revive_health &quot;75&quot; 躺在地上被人拉起来的血量
-survivor_revive_duration &quot;1.75&quot; 拉人起来的时间1.75秒
-first_aid_kit_use_duration &quot;1&quot; 用急救包的时间 ，这里是1秒救治疗好了。
-
-sm_cvar first_aid_heal_percent &quot;1&quot; //医疗包恢复生命百分比，这里为1，即100%
-sm_cvar first_aid_kit_max_heal &quot;500&quot; //医疗包恢复生命数
-sm_cvar first_aid_kit_range &quot;200&quot; //医疗包恢复生命距离
-sm_cvar first_aid_kit_use_duration &quot;1&quot; //医疗包恢复生命所需时间（秒）
-sm_cvar z_survivor_respawn_health &quot;100&quot; //重生后的血量
-sm_cvar pain_pills_health_value &quot;100&quot; //止痛药的补血量，默认40
-sm_cvar pain_pills_decay_rate &quot;0.10&quot; //止痛药的损耗速度，默认0.34
-
-
-//丢东西的力量
-sm_cvar z_throw_force &quot;5000&quot;
-//右键推的力量，默认为25
-sm_cvar z_gun_physics_force &quot;500&quot;
-//右键推的范围
-sm_cvar z_gun_range &quot;75&quot;
-//盖特机枪冷却时间
-sm_cvar z_minigun_cooldown_time &quot;3&quot;
-//盖特机枪过热时间
-sm_cvar z_minigun_overheat_time &quot;60&quot;
-//盖特机枪攻击范围
-sm_cvar z_minigun_rate_of_fire &quot;1500&quot;
-
-
-//AI随机放置汽油弹密度（设为0就等于禁止了汽油弹）
-//sm_cvar director_molotov_density &quot;0&quot;
-//AI随机放置土制****密度（设为0就等于禁止了土制）
-//sm_cvar director_pipe_bomb_density &quot;0&quot;
-//土制****的爆炸时间
-sm_cvar pipe_bomb_timer_duration &quot;8&quot;
-
-
-sm_cvar inferno_damage 10 说明:这是火焰的燃烧秒数(明火)
-sm_cvar inferno_flame_lifetime 10 说明:这是燃烧持续的秒数(实际火焰-暗火)
-sm_cvar inferno_flame_spacing 1000 说明:这是燃烧刚开始的距离
-sm_cvar inferno_max_range 2000 说明:这是燃烧距离的最大值(最后出现火焰的最大范围)
-sm_cvar inferno_max_flames 32 说明:这是火焰扩散的次数
-
-// 队友伤害
-sm_cvar survivor_friendly_fire_factor_expert &quot;0.2&quot;
-//服务器密码
-rcon_password &quot;250631941&quot;
-
-//关闭队友投票权
-sm_cvar sv_allow_votes &quot;0&quot;
-
-//电脑BOT开枪延迟，默认0，改成10电脑BOT完全没用
-sm_cvar sb_open_fire &quot;0&quot;
-
-// 激活服务端中文名称
-sm_namehost 1
-
-//开启修改
-Sv_Cheats 0
-
-//躺下后依然可以移动
-sm_cvar survivor_allow_crawling &quot;1&quot;
-sm_cvar survivor_crawl_speed &quot;160&quot;
-
-//双重跳指令
-sm_cvar sm_doublejump_enabled &quot;0&quot;
-sm_cvar sm_doublejump_max &quot;0&quot;
-//---------------------------------------
-
-//人死掉后3秒就可以出现在任一房间给人救，默认60
-sm_cvar rescue_min_dead_time &quot;300&quot;
-
-/没有电脑BOT帮助
-sm_cvar director_no_survivor_bots &quot;0&quot;
-
-//右键速度默认 0.7 越低越快 （0.19）
-sm_cvar z_gun_swing_interval &quot;0.5&quot;
-
-//蹲下移动速度变快
-sm_cvar survivor_crouch_speed &quot;120&quot;
-
-//丢东西的力量
-sm_cvar z_throw_force &quot;1000&quot;
-
-//右键推的力量，默认为25
-sm_cvar z_gun_physics_force &quot;100&quot;
-
-//右键推的范围 默认为75
-sm_cvar z_gun_range &quot;100&quot;
-
-// 近战武器每次攻击间隔 (默认1.2秒)
-sm_cvar melee_combo_reset_time &quot;0.5&quot;
-
-// 近战武器最大推怪数量
-sm_cvar melee_collateral_shove_count &quot;20&quot;
-
-// 近战武器伤害范围数值越高能砍得越远 (默认70)
-sm_cvar melee_range &quot;180&quot;
-
-// 近战武器力量(默认20)
-sm_cvar melee_force_scalar &quot;100&quot;
-
-// 近战武器显示摆动(默认0)
-sm_cvar melee_show_swing &quot;1&quot;
-
-//生还者受伤时行走速度
-sm_cvar survivor_limp_walk_speed &quot;120&quot;
-
-倒下后到了这个数值后就会死（不确定，可能是倒下血到了1后仍然没有被队友拉起的话就会死亡）
-sm_cvar survivor_max_incapacitated_count &quot;1&quot;
-
-此数值以下称为受伤（貌似是40、20还是10忘了，血量到了这个数值后玩家就会变成瘸腿）
-sm_cvar survivor_limp_health &quot;10&quot;
-
- //口水婆吐在地面酸液的存在时间，默认10秒（PS：即受到10秒伤害。）
-sm_cvar z_spitter_high_chance &quot;30&quot;
-
-//口水婆喷吐距离半径默认900（PS：这个距离是指以spitte为起点吐向玩家的距离半径）
-sm_cvar z_spit_range &quot;1000&quot;
-
-//酸液每0.5秒加乘默认0.3的扣血量（PS：这个参数是配合上面酸液存在的时间相互使用的。酸液存在10的秒里，每半秒扣除3点血。10秒即为受到30点血的损伤，修改时须保留小数点后一位。）
-sm_cvar z_spit_latency &quot;0.9&quot;
-
-//口水婆吐出酸液之前的僵直时间默认0.1秒（PS：即口水婆原地立正过X秒后才可向玩家吐出酸液）
-sm_cvar z_spit_detonate_delay &quot;0.1&quot;
-
-// Spitter 大吐婆的移动速度
-z_spitter_speed 500
-
-//--------------------------------------------
-
-//爆炸子弹爆裂度
-sm_cvar upgrade_explosive_bullet_force &quot;800&quot;
-sm_cvar upgrade_explosive_slug_force &quot;800&quot;
-upgrade_laser_sight_spread_factor 1
-
-//榴弹炮伤害
-grenadelauncher_damage &quot;100&quot;
-
-//对其它玩家的伤害面
-grenadelauncher_ff_scale &quot;1&quot;
-
-//对自身的伤害面
-grenadelauncher_ff_scale_self &quot;1&quot;
-
-//范围伤害力
-grenadelauncher_force_kill &quot;100&quot;
-
-//绝对伤害范围,此范围内小僵尸必杀
-grenadelauncher_radius_kill &quot;100 &quot;
-
-//伤害范围冲击波大小
-grenadelauncher_radius_stumble &quot;500&quot;
-
-//是否显示伤害范围
-grenadelauncher_show_radius &quot;1&quot;
-
-//榴弹炮发射速度(默认1200）
-grenadelauncher_velocity &quot;1200&quot;
-//--------------------------------------------
-
-//每次刷新出现的胖子的数量，默认1
-sm_cvar z_boomer_limit &quot;3&quot;
-
-//每次刷新出现的烟鬼的数量
-sm_cvar z_gas_limit &quot;3&quot;
-
-//每次刷新出现的猎人的数量
-sm_cvar z_hunter_limit &quot;5&quot;
-
-// Charge同时出现数量(默认1)
-sm_cvar z_charger_limit &quot;4&quot;
-
-//最大同时出现数量
-z_jockey_limit &quot;3&quot;
-
-//口水婆最高刷新数量(已测试能用,嘿..注意不是同时在一个地点刷这么多)
-z_spitter_limit &quot;3&quot;
-
-//----------------------------------------
-
-//Boomer 胖子的生命值
-z_exploding_health &quot;2000&quot;
-
-// Charge生命(默认600)
-sm_cvar z_charger_health &quot;1200&quot;
-
-// Hunter生命(默认250)
-sm_cvar z_hunter_health &quot;600&quot;
-
-//烟鬼生命值 默认250(默认250)
-sm_cvar z_gas_health &quot;800&quot;
-
-// Jockey生命(默认325)
-sm_cvar z_jockey_health &quot;800&quot;
-
-// 大吐婆的生命值
-z_spitter_health &quot;800&quot;
-//-----------------------------------------
-
-// 设置为1，使用有效出现雾气
-sm_cvar z_fog_spawn 1
-//----------------------------------------
-
-
-//-----------------------------------------
-
-//女巫生命值，默认1000
-z_witch_health &quot;1000&quot;
-
-//女巫的发飙范围，默认200
-sm_cvar z_witch_berserk_range &quot;100&quot;
-
-//女巫的燃烧时间，烧完就死了
-sm_cvar z_witch_burn_time &quot;5&quot;
-
-//女巫的伤害，默认100
-sm_cvar z_witch_damage &quot;150&quot;
-
-//女巫对手电筒照射的反应范围，默认400
-sm_cvar z_witch_flashlight_range &quot;50&quot;
-
-//Witch 女巫的移动速度
-z_witch_speed 1000
-
-//-----------------------------------------
-
-//猎人跳跃角度
-sm_cvar hunter_pounce_max_loft_angle &quot;150&quot;
-
-//猎人爪子伤害值，默认6
-sm_cvar hunter_pz_claw_dmg &quot;50&quot;
-
-//猎人行走速度，默认300
-sm_cvar z_hunter_speed &quot;1000&quot;
-
-//猎人飞扑的速度，默认700
-sm_cvar hunter_pounce_air_speed &quot;1500&quot;
-
-//猎人飞跃距离，默认1000
-sm_cvar hunter_leap_away_give_up_range &quot;2000&quot;
-
-//猎人最长距离的飞扑仰角，默认45
-sm_cvar hunter_pounce_max_loft_angle &quot;45&quot;
-
-//猎人的扑倒范围，默认240
-sm_cvar z_hunter_claw_force &quot;800&quot;
-
-//猎人扑倒后的攻击力，默认5
-sm_cvar z_pounce_damage &quot;20&quot;
-
-//猎人扑倒持续伤害间隔，默认1
-sm_cvar z_pounce_damage_delay &quot;0.5&quot;
-
-//-----------------------------------------
-</code></pre><h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><pre><code>cd ~/Steam/steamapps/common/&quot;Left 4 Dead 2 Dedicated Server&quot;/
-screen -S coop
-./srcds_run -game left4dead2 -condebug -insecure +port 23333 +map c2m1_highway +exec server.cfg
-</code></pre><p>别忘记开防火墙里端口UDP协议</p>
-<h2 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h2><h3 id="sourcemod"><a href="#sourcemod" class="headerlink" title="sourcemod"></a>sourcemod</h3><pre><code>https://www.sourcemod.net/downloads.php?branch=stable
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327679.png" alt=""></p>
-<h3 id="metamod"><a href="#metamod" class="headerlink" title="metamod"></a><strong>metamod</strong></h3><pre><code>https://www.sourcemm.net/downloads.php?branch=stable
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327160.png" alt=""></p>
-<h3 id="L4DtoolZ"><a href="#L4DtoolZ" class="headerlink" title="L4DtoolZ"></a>L4DtoolZ</h3><pre><code>https://github.com/Accelerator74/l4dtoolz/releases
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328765.png" alt=""></p>
-<h3 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h3><p>将下载来的三个压缩包解压到一起，得到addons和cfg两个文件夹。如果得到多个文件夹，就把多余文件夹移入addons文件夹，只剩下addons和cfg两个文件夹。</p>
-<p>控制台输入<code>meta list</code>，即可查看安装是否成功</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328944.png" alt=""></p>
-<p>控制台输入<code>sm plugins list</code>，即可查看安装的插件</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328083.png" alt=""></p>
-<h2 id="安装插件（以MultiSlots多人插件为例）"><a href="#安装插件（以MultiSlots多人插件为例）" class="headerlink" title="安装插件（以MultiSlots多人插件为例）"></a>安装插件（以MultiSlots多人插件为例）</h2><p>啊，这个插件<strong><a href="https://forums.alliedmods.net/showthread.php?t=132408">MultiSlots</a></strong>搞了我半天==</p>
-<p>因为网上流传的许多是win版本的整合包，我在里面寻找，拿过去用之后发现总是给我报错，说缺失dhooks.ext.so这个运行库</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328268.png" alt=""></p>
-<p>但是整合包里全是dll，找半天才搜到</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329548.png" alt=""></p>
-<p>emmm，之后找到了放到extension里面也没用，还是同样的报错</p>
-<p>看似穷途末路了，但是还是让我找到了这个插件的最初版本</p>
-<p><a href="https://forums.alliedmods.net/showthread.php?t=132408">https://forums.alliedmods.net/showthread.php?t=132408</a></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329006.png" alt=""></p>
-<p>好耶！（所以说应该能用了）</p>
-<h2 id="添加管理员"><a href="#添加管理员" class="headerlink" title="添加管理员"></a>添加管理员</h2><p>/addons/sourcemod/configs里找admins_simple.ini</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329116.png" alt=""></p>
-<h2 id="插件推荐"><a href="#插件推荐" class="headerlink" title="插件推荐"></a>插件推荐</h2><h3 id="sourcemod的官方论坛"><a href="#sourcemod的官方论坛" class="headerlink" title="sourcemod的官方论坛"></a>sourcemod的官方论坛</h3><p><a href="http://alliedmods.net">alliedmods.net</a></p>
-<h3 id="电击器修复"><a href="#电击器修复" class="headerlink" title="电击器修复"></a>电击器修复</h3><p>这个是电击器修复，5人及以上的时候不会电起来错误的人</p>
-<p><a href="https://forums.alliedmods.net/showthread.php?p=2647018">https://forums.alliedmods.net/showthread.php?p=2647018</a></p>
-<h3 id="witch惊扰修复"><a href="#witch惊扰修复" class="headerlink" title="witch惊扰修复"></a>witch惊扰修复</h3><p>防止惊扰的witch只会找tab列表里能看到的人等等</p>
-<p><a href="https://forums.alliedmods.net/showthread.php?p=2647014">https://forums.alliedmods.net/showthread.php?p=2647014</a></p>
-<h3 id="榴弹M60正常化"><a href="#榴弹M60正常化" class="headerlink" title="榴弹M60正常化"></a>榴弹M60正常化</h3><p><a href="https://forums.alliedmods.net/showthread.php?p=2694504">https://forums.alliedmods.net/showthread.php?p=2694504</a></p>
-<h3 id="特感血量显示"><a href="#特感血量显示" class="headerlink" title="特感血量显示"></a>特感血量显示</h3><p><a href="https://forums.alliedmods.net/showthread.php?p=2694504">https://forums.alliedmods.net/showthread.php?p=2694504</a></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>ubuntu</tag>
-        <tag>求生之路</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>树莓派搭建Mirai QQ机器人</title>
-    <url>/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png" alt=""></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直以来，我都有一个搭建qq机器人的想法。可惜酷Q早已被腾讯橄榄，但好在还有Mirai这个框架。在翻出我用了五年的树莓派后，我打算在上面自己搭建一个qq机器人，以后或许还会写一写插件啥的（</p>
-<p>本文可能会时不时偶尔更新一下，做到哪步是哪步（咕咕咕预订</p>
-<p>项目地址：<a href="https://github.com/mamoe/mirai">https://github.com/mamoe/mirai</a></p>
-<h2 id="0x01下载Mirai控制台"><a href="#0x01下载Mirai控制台" class="headerlink" title="0x01下载Mirai控制台"></a>0x01下载Mirai控制台</h2><p><a href="https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md">https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md</a></p>
-<p>因为树莓派是arm架构的，所以我选择了arm的版本</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200411.png" alt=""></p>
-<p>建立文件夹，进入，并chmod一下</p>
-<pre><code>pi@raspberrypi:~/mirai $ ls
-mcl-installer-72b890d-linux-arm
-pi@raspberrypi:~/mirai $ sudo chmod +x ./mcl-installer-72b890d-linux-arm
-pi@raspberrypi:~/mirai $ ls
-mcl-installer-72b890d-linux-arm
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200451.png" alt=""></p>
-<p>然后无脑回车就是了</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200333.png" alt=""></p>
-<p>可以看到，目录下多了不少东西，先chmod运行mcl再说</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201423.png" alt=""></p>
-<p>第一次运行会初始化</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201727.png" alt=""></p>
-<h2 id="0x02下载和安装插件"><a href="#0x02下载和安装插件" class="headerlink" title="0x02下载和安装插件"></a>0x02下载和安装插件</h2><p>刚刚装好的 Mirai Console 是没有任何功能的。功能将由插件提供。</p>
-<p>Mirai 官方提供两个插件：</p>
-<ul>
-<li><a href="https://github.com/project-mirai/chat-command">chat-command</a>: 允许在聊天环境通过以 “/“ 起始的消息执行指令</li>
-<li><a href="https://github.com/project-mirai/mirai-api-http">mirai-api-http</a>：提供 HTTP 支持，允许使用其他编程语言的插件</li>
-</ul>
-<p>打开命令行 (Windows 系统按住Shift+鼠标右键，点击”在此处打开 PowerShell”),<br>可以使用 MCL 自动安装这些插件如：</p>
-<pre><code>./mcl --update-package net.mamoe:mirai-api-http --type plugin --channel stable
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201808.png" alt=""></p>
-<p>如果是 JAR 文件的插件，放入 <code>plugins</code> 即可。其他插件一般都有特殊说明如何使用，请参考它们的说明。</p>
-<h2 id="0x03使用控制台指令"><a href="#0x03使用控制台指令" class="headerlink" title="0x03使用控制台指令"></a>0x03使用控制台指令</h2><p>启动 <code>mcl.cmd</code> 就会看到控制台。在控制台可以输入指令，按回车执行这条指令。</p>
-<p>Mirai Console 内置一些指令，输入 <code>?</code> 并回车可以查看指令列表。</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>Mirai</tag>
-        <tag>树莓派</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决Gravatar头像被墙的问题</title>
-    <url>/2021/03/09/%E8%A7%A3%E5%86%B3gravatar%E5%A4%B4%E5%83%8F%E8%A2%AB%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242337275.png" alt=""></p>
-<p>2月27日凌晨，我像往常一样打开了自己的博客，来到了留言板，却发现头像无法加载出来。</p>
-<p>原先我以为只是我的网络问题，可没想到gravatar官网都打不开了，这时我意识到不太对劲了，于是打开测速网：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242338698.png" alt=""></p>
-<p>我能说什么呢？反正当时我人麻了😅</p>
-<p>当时也是事发突然，本来也没几个玩wp的朋友，所以当时没有解决的方法。今天尝试百度了一下gravatar，时间限定这一个月，查到了这篇博客，<a href="https://kzyblog.com/5247.html/comment-page-1#comment-3542">完美解决Gravatar头像被墙</a></p>
-<p>抱着尝试的心态试了一下最后一个方法，下载了个WP-China-Yes插件，安装。</p>
-<p>我○，头像又出现了！！！！！！！！！！</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>wordpress</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
-    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg" alt=""></p>
-<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
-<pre><code class="lang-shell">apt install open-vm-tools
-apt install open-vm-tools-desktop
-</code></pre>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>Vmware</tag>
       </tags>
   </entry>
   <entry>
@@ -3713,6 +3128,591 @@ void MergeSort(List *list)
       </categories>
       <tags>
         <tag>速通指南</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在linux平台上搭建求生之路服务器</title>
+    <url>/2022/01/18/%E5%9C%A8linux%E5%B9%B3%E5%8F%B0%E4%B8%8A%E6%90%AD%E5%BB%BA%E6%B1%82%E7%94%9F%E4%B9%8B%E8%B7%AF%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242326346.png" alt=""></p>
+<p>L4D2一直是一款我特别喜欢的多人娱乐向游戏，除了MC基本上每次高中好友线上团建就是在这里面。</p>
+<p>可惜最近V社的服务器ping值令人忍无可忍，不过好在我手上有一台2核4G的服务器，开个私服应该没啥问题。</p>
+<h2 id="安装运行环境（我的是ubuntu）"><a href="#安装运行环境（我的是ubuntu）" class="headerlink" title="安装运行环境（我的是ubuntu）"></a>安装运行环境（我的是ubuntu）</h2><pre><code>sudo apt-get install lib32gcc1
+</code></pre><h2 id="下载安装steamCMD"><a href="#下载安装steamCMD" class="headerlink" title="下载安装steamCMD"></a>下载安装steamCMD</h2><pre><code>mkdir ~/Steam //创建Steam文件夹
+cd ~/Steam //进入Steam文件夹
+wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz
+tar -zxvf steamcmd_linux.tar.gz //解压
+</code></pre><p>输入</p>
+<pre><code>./steamcmd.sh
+</code></pre><p>开始下载安装</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242326169.png" alt=""></p>
+<p>会要求登录，匿名登录就行</p>
+<pre><code>login anonymous
+</code></pre><h2 id="下载L4D2服务端"><a href="#下载L4D2服务端" class="headerlink" title="下载L4D2服务端"></a>下载L4D2服务端</h2><pre><code>app_update 222860 validate
+</code></pre><p>一开始几次没连上，多试几次就行</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327693.png" alt=""></p>
+<p>退出quit</p>
+<h2 id="配置文档"><a href="#配置文档" class="headerlink" title="配置文档"></a>配置文档</h2><p>修改H键公告的标题需修改文件/home/steam/l4d2/left4dead2/host.txt，修改内容需修改/home/steam/l4d2/left4dead2/motd.txt</p>
+<p>Steam/steamapps/common/Left 4 Dead 2 Dedicated Server/left4dead2/cfg下，新建一个 server.cfg 文件</p>
+<p>战役模式</p>
+<pre><code>hostname &quot;PiCpo&#39;s L4D2&quot;
+//模式选择
+sm_cvar mp_gamemode &quot;coop&quot;
+//隐藏服务器
+sv_tags &quot;hidden&quot;
+ads_delay 45
+sv_allow_lobby_connect_only 0
+//mod一致性检查
+sv_consistency 0
+//正版服务器匹配参数限制
+sv_region 4
+sv_steamgroup &quot;&quot; //第一个组编号数字改成自己的组，其他为热门求生组
+sv_steamgroup_exclusive 1
+//人数设置
+sm_cvar sv_maxplayers 8
+sm_cvar sv_visiblemaxplayers 8
+sm_cvar sv_removehumanlimit 1
+sm_cvar sv_force_unreserved 1
+sm_cvar fps_max 300
+sm_cvar allow_all_bot_survivor_team 1
+</code></pre><p>对抗模式</p>
+<pre><code>//100tick
+sm_cvar fps_max 0
+sm_cvar net_splitpacket_maxrate 30000
+sm_cvar nb_update_frequency 0.06
+sm_cvar sv_minrate 100000
+sm_cvar sv_maxrate 101000
+sm_cvar sv_mincmdrate 100
+sm_cvar sv_maxcmdrate 100
+sm_cvar sv_minupdaterate 100
+sm_cvar sv_maxupdaterate 100
+sm_cvar sv_client_min_interp_ratio -1
+sm_cvar sv_client_max_interp_ratio 2
+sm_cvar sv_maxplayers 8
+sm_cvar sv_visiblemaxplayers 8
+sm_cvar sv_allow_lobby_connect_only 1
+
+sv_tags &quot;hidden&quot;
+sm_cvar mp_gamemode &quot;versus&quot;// 设定为对抗模式
+sv_gametypes versus// 设定为对抗模式
+sm_cvar sb_all_bot_game 1// 防止人数不足而自动关闭
+sm_cvar sb_all_bot_team 1
+sm_cvar allow_all_bot_survivor_team 1// 真人玩家死亡后由电脑玩家组队进行游戏
+sm_cvar sb_escort 1 // 强制电脑玩家紧随其后
+sm_cvar director_allow_infected_bots 0// 关闭AI特感
+sv_allow_wait_command 0// 封禁wait指令
+</code></pre><pre><code>coop //战役模式
+
+realism //写实模式
+
+versus //对抗模式
+
+teamversus //团队对抗模式
+
+mutation12 //写实对抗模式
+
+survival //生存模式
+
+scavenge //清道夫模式
+
+teamscavenge //团队清道夫模式
+
+community(1-6)&amp;&amp;mutation(1-20) //突变模式(总共26种不同内容)
+&#123;
+community1 【特感速递】 4人合作 同屏最多8特，无小丧尸，每种特感的出现时间间隔20秒，特感刷新时间0秒，所以是8个槽位同时刷，每个槽位20秒刷一个，无等待时间，不停的刷。
+community2 【感染季节】 4人合作 同屏最多8特，只有bommer和spitter两种特感，特感刷新倒计时固定20秒。无小丧尸，但是被bommer喷到、打到警报车和开机关有丧尸群。
+community3 【骑师派对】 8人对抗 特感方都是jockey，而且移动超快，无小丧尸(包括开警报后)
+community4 【梦魇】 4人合作 生存者模式，只有17个场景 同屏最多8特，战役模式设定，但无队友轮廓，场景有浓雾。
+community5 【死亡之门】 4人合作 每关开始只有药没有包，倒地即死。
+community6 【药抗】 8人对抗，只有药和针，取消高级武器，每关tank，更合理的对抗记分方式。
+mutation1 【孤身一人】 1人单机 只有一个人没有小丧尸，只有特感(除BOOMER)，倒地自起、控制的特感也会放开，但是会黑白。
+mutation2 【枪枪爆头】 4人合作 小丧尸只有爆头才会死。
+mutation3 【血流不止】 4人合作 这个模式从关卡开头就是虚血【并持续减血】，全图无包，只有靠药瓶和针维持血量。
+mutation4 【绝境求生】 4人合作 同屏最多8特，战役模式设定，每种特感的出现时间间隔20秒，特感刷新时间15秒，所以是8个槽位同时刷，每个槽位15-20秒刷一个，但特感刷新由导演系统控制，倒计时结束，不会不停的刷新。
+mutation5 【四剑客】 4人合作 一出场只有4把武士刀
+mutation7 【电锯帮】 4人合作 武器只有4个无限油的电锯
+mutation8 【铁人意志】 4人合作 团灭以后直接回到大厅，不会重新开始某个小关游戏
+mutation9 【侏儒卫队】 4人合作 玩家必须携带一个侏儒玩偶来躲避丧尸的攻击到达安全门
+mutation10 【一人救赎】 4人合作 只有一个人能终关逃生
+mutation11 【没有救赎】 8人对抗 全关没有包和药
+mutation12 【写实对抗】 8人对抗 写实模式设定的对抗
+mutation13 【清道肆虐】 8人对抗 线性清道夫，每次只有1个位置出现油桶， 每个新位置比上一个+2桶
+mutation14 【无法近身】 4人合作 全关没有近战武器，只有一把无限子弹M60和麦林手枪
+mutation15 【生存对抗】 8人对抗 使用生存模式计分规则
+mutation16 【猎人派对】 4人合作 特殊感染者都是hunter
+mutation17 【孤胆枪手】 1人单机 只有一个人一把沙鹰，特感保留bommer、witch和tank，小丧尸伤害高
+mutation18 【失血对抗】 8人对抗 所有幸存者虚血(并持续减血)，全图无包
+mutation19 【Tank!!!!!!】 8人对抗 扮演感染者方全是做tank
+mutation20 【侏儒治愈】 4人合作 所有幸存者虚血【并持续减血】，全图无包，抱着侏儒的人可以回复血量
+&#125; 
+dash Dash
+l4d1coop Left 4 Dead 1 Coop
+l4d1vs Left 4 Dead 1 Versus
+l4d1survival Left 4 Dead 1 Survival
+gunbrain GunBrain
+holdout Holdout
+shootzones Shootzones
+tankrun Tank Run
+rocketdude RocketDude
+</code></pre><p>完整版</p>
+<pre><code>//管理密码
+rcon_password &quot;0&quot;
+
+//游戏模式
+sm_cvar mp_gamemode &quot;coop&quot;
+
+//服务器人数破解
+l4d_maxplayers 4
+sv_maxplayers 4
+sv_visiblemaxplayers 4
+sv_removehumanlimit 1
+sv_force_unreserved 1
+
+//服务器难度锁定
+// Difficulty Setting: easy, normal, hard, impossible
+z_difficulty &quot;impossible&quot;
+
+//限制投票
+sm_cvar sv_allow_votes &quot;1&quot;
+
+//正版服务器匹配参数限制
+sv_region 4 
+sv_steamgroup &quot;114514&quot;
+sv_steamgroup_exclusive 0
+
+
+//插件开关 1=ON/0=OFF
+sm_advertisements_enabled 1
+
+//广告播放延时默认30s
+sm_advertisements_interval 60
+ads_delay 45
+
+//不允许正版大厅匹配到
+sv_allow_lobby_connect_only 0
+
+//地区代码:
+sm_cvar sv_region &quot;4&quot;
+
+// 作弊开关（1\0)
+sv_cheats 0  
+
+
+//关闭模型[MOD]冲突
+sm_cvar sv_consistency 0
+
+//隐藏服务器
+sv_tags hidden
+sv_tags &quot;hidden&quot;
+
+//tick
+sm_cvar fps_max 300
+sm_cvar sv_minrate 100000
+sm_cvar sv_maxrate 100000
+sm_cvar sv_minupdaterate 100
+sm_cvar sv_maxupdaterate 100
+sm_cvar sv_mincmdrate 100
+sm_cvar sv_maxcmdrate 100
+sm_cvar nb_update_frequency 0.1
+sm_cvar net_splitrate 2 
+sm_cvar net_splitpacket_maxrate 100000
+sm_cvar sv_client_min_interp_ratio 1
+sm_cvar sv_client_max_interp_ratio 1
+
+// 防止人数不足而自动关闭
+sm_cvar sb_all_bot_game 1
+
+//玩家死亡时电脑组成队伍继续游戏
+sm_cvar allow_all_bot_survivor_team 1
+</code></pre><p>幸存者参数介绍</p>
+<pre><code>队友伤害，0为关闭
+survivor_friendly_fire_factor_easy 0.2
+survivor_friendly_fire_factor_normal 0.2
+survivor_friendly_fire_factor_hard 0.4
+survivor_friendly_fire_factor_expert 0.6
+火焰伤害，0为关闭
+survivor_burn_factor_easy 0.1
+survivor_burn_factor_normal 0.2
+survivor_burn_factor_hard 0.3
+survivor_burn_factor_expert 0.5
+
+
+survivor_crouch_speed 75 蹲著的速度(默认：75 数字越大越快)
+rescue_min_dead_time &quot;3&quot; 人死掉后3秒就可以出现在任一房间给人救
+survivor_revive_health &quot;75&quot; 躺在地上被人拉起来的血量
+survivor_revive_duration &quot;1.75&quot; 拉人起来的时间1.75秒
+first_aid_kit_use_duration &quot;1&quot; 用急救包的时间 ，这里是1秒救治疗好了。
+
+sm_cvar first_aid_heal_percent &quot;1&quot; //医疗包恢复生命百分比，这里为1，即100%
+sm_cvar first_aid_kit_max_heal &quot;500&quot; //医疗包恢复生命数
+sm_cvar first_aid_kit_range &quot;200&quot; //医疗包恢复生命距离
+sm_cvar first_aid_kit_use_duration &quot;1&quot; //医疗包恢复生命所需时间（秒）
+sm_cvar z_survivor_respawn_health &quot;100&quot; //重生后的血量
+sm_cvar pain_pills_health_value &quot;100&quot; //止痛药的补血量，默认40
+sm_cvar pain_pills_decay_rate &quot;0.10&quot; //止痛药的损耗速度，默认0.34
+
+
+//丢东西的力量
+sm_cvar z_throw_force &quot;5000&quot;
+//右键推的力量，默认为25
+sm_cvar z_gun_physics_force &quot;500&quot;
+//右键推的范围
+sm_cvar z_gun_range &quot;75&quot;
+//盖特机枪冷却时间
+sm_cvar z_minigun_cooldown_time &quot;3&quot;
+//盖特机枪过热时间
+sm_cvar z_minigun_overheat_time &quot;60&quot;
+//盖特机枪攻击范围
+sm_cvar z_minigun_rate_of_fire &quot;1500&quot;
+
+
+//AI随机放置汽油弹密度（设为0就等于禁止了汽油弹）
+//sm_cvar director_molotov_density &quot;0&quot;
+//AI随机放置土制****密度（设为0就等于禁止了土制）
+//sm_cvar director_pipe_bomb_density &quot;0&quot;
+//土制****的爆炸时间
+sm_cvar pipe_bomb_timer_duration &quot;8&quot;
+
+
+sm_cvar inferno_damage 10 说明:这是火焰的燃烧秒数(明火)
+sm_cvar inferno_flame_lifetime 10 说明:这是燃烧持续的秒数(实际火焰-暗火)
+sm_cvar inferno_flame_spacing 1000 说明:这是燃烧刚开始的距离
+sm_cvar inferno_max_range 2000 说明:这是燃烧距离的最大值(最后出现火焰的最大范围)
+sm_cvar inferno_max_flames 32 说明:这是火焰扩散的次数
+
+// 队友伤害
+sm_cvar survivor_friendly_fire_factor_expert &quot;0.2&quot;
+//服务器密码
+rcon_password &quot;250631941&quot;
+
+//关闭队友投票权
+sm_cvar sv_allow_votes &quot;0&quot;
+
+//电脑BOT开枪延迟，默认0，改成10电脑BOT完全没用
+sm_cvar sb_open_fire &quot;0&quot;
+
+// 激活服务端中文名称
+sm_namehost 1
+
+//开启修改
+Sv_Cheats 0
+
+//躺下后依然可以移动
+sm_cvar survivor_allow_crawling &quot;1&quot;
+sm_cvar survivor_crawl_speed &quot;160&quot;
+
+//双重跳指令
+sm_cvar sm_doublejump_enabled &quot;0&quot;
+sm_cvar sm_doublejump_max &quot;0&quot;
+//---------------------------------------
+
+//人死掉后3秒就可以出现在任一房间给人救，默认60
+sm_cvar rescue_min_dead_time &quot;300&quot;
+
+/没有电脑BOT帮助
+sm_cvar director_no_survivor_bots &quot;0&quot;
+
+//右键速度默认 0.7 越低越快 （0.19）
+sm_cvar z_gun_swing_interval &quot;0.5&quot;
+
+//蹲下移动速度变快
+sm_cvar survivor_crouch_speed &quot;120&quot;
+
+//丢东西的力量
+sm_cvar z_throw_force &quot;1000&quot;
+
+//右键推的力量，默认为25
+sm_cvar z_gun_physics_force &quot;100&quot;
+
+//右键推的范围 默认为75
+sm_cvar z_gun_range &quot;100&quot;
+
+// 近战武器每次攻击间隔 (默认1.2秒)
+sm_cvar melee_combo_reset_time &quot;0.5&quot;
+
+// 近战武器最大推怪数量
+sm_cvar melee_collateral_shove_count &quot;20&quot;
+
+// 近战武器伤害范围数值越高能砍得越远 (默认70)
+sm_cvar melee_range &quot;180&quot;
+
+// 近战武器力量(默认20)
+sm_cvar melee_force_scalar &quot;100&quot;
+
+// 近战武器显示摆动(默认0)
+sm_cvar melee_show_swing &quot;1&quot;
+
+//生还者受伤时行走速度
+sm_cvar survivor_limp_walk_speed &quot;120&quot;
+
+倒下后到了这个数值后就会死（不确定，可能是倒下血到了1后仍然没有被队友拉起的话就会死亡）
+sm_cvar survivor_max_incapacitated_count &quot;1&quot;
+
+此数值以下称为受伤（貌似是40、20还是10忘了，血量到了这个数值后玩家就会变成瘸腿）
+sm_cvar survivor_limp_health &quot;10&quot;
+
+ //口水婆吐在地面酸液的存在时间，默认10秒（PS：即受到10秒伤害。）
+sm_cvar z_spitter_high_chance &quot;30&quot;
+
+//口水婆喷吐距离半径默认900（PS：这个距离是指以spitte为起点吐向玩家的距离半径）
+sm_cvar z_spit_range &quot;1000&quot;
+
+//酸液每0.5秒加乘默认0.3的扣血量（PS：这个参数是配合上面酸液存在的时间相互使用的。酸液存在10的秒里，每半秒扣除3点血。10秒即为受到30点血的损伤，修改时须保留小数点后一位。）
+sm_cvar z_spit_latency &quot;0.9&quot;
+
+//口水婆吐出酸液之前的僵直时间默认0.1秒（PS：即口水婆原地立正过X秒后才可向玩家吐出酸液）
+sm_cvar z_spit_detonate_delay &quot;0.1&quot;
+
+// Spitter 大吐婆的移动速度
+z_spitter_speed 500
+
+//--------------------------------------------
+
+//爆炸子弹爆裂度
+sm_cvar upgrade_explosive_bullet_force &quot;800&quot;
+sm_cvar upgrade_explosive_slug_force &quot;800&quot;
+upgrade_laser_sight_spread_factor 1
+
+//榴弹炮伤害
+grenadelauncher_damage &quot;100&quot;
+
+//对其它玩家的伤害面
+grenadelauncher_ff_scale &quot;1&quot;
+
+//对自身的伤害面
+grenadelauncher_ff_scale_self &quot;1&quot;
+
+//范围伤害力
+grenadelauncher_force_kill &quot;100&quot;
+
+//绝对伤害范围,此范围内小僵尸必杀
+grenadelauncher_radius_kill &quot;100 &quot;
+
+//伤害范围冲击波大小
+grenadelauncher_radius_stumble &quot;500&quot;
+
+//是否显示伤害范围
+grenadelauncher_show_radius &quot;1&quot;
+
+//榴弹炮发射速度(默认1200）
+grenadelauncher_velocity &quot;1200&quot;
+//--------------------------------------------
+
+//每次刷新出现的胖子的数量，默认1
+sm_cvar z_boomer_limit &quot;3&quot;
+
+//每次刷新出现的烟鬼的数量
+sm_cvar z_gas_limit &quot;3&quot;
+
+//每次刷新出现的猎人的数量
+sm_cvar z_hunter_limit &quot;5&quot;
+
+// Charge同时出现数量(默认1)
+sm_cvar z_charger_limit &quot;4&quot;
+
+//最大同时出现数量
+z_jockey_limit &quot;3&quot;
+
+//口水婆最高刷新数量(已测试能用,嘿..注意不是同时在一个地点刷这么多)
+z_spitter_limit &quot;3&quot;
+
+//----------------------------------------
+
+//Boomer 胖子的生命值
+z_exploding_health &quot;2000&quot;
+
+// Charge生命(默认600)
+sm_cvar z_charger_health &quot;1200&quot;
+
+// Hunter生命(默认250)
+sm_cvar z_hunter_health &quot;600&quot;
+
+//烟鬼生命值 默认250(默认250)
+sm_cvar z_gas_health &quot;800&quot;
+
+// Jockey生命(默认325)
+sm_cvar z_jockey_health &quot;800&quot;
+
+// 大吐婆的生命值
+z_spitter_health &quot;800&quot;
+//-----------------------------------------
+
+// 设置为1，使用有效出现雾气
+sm_cvar z_fog_spawn 1
+//----------------------------------------
+
+
+//-----------------------------------------
+
+//女巫生命值，默认1000
+z_witch_health &quot;1000&quot;
+
+//女巫的发飙范围，默认200
+sm_cvar z_witch_berserk_range &quot;100&quot;
+
+//女巫的燃烧时间，烧完就死了
+sm_cvar z_witch_burn_time &quot;5&quot;
+
+//女巫的伤害，默认100
+sm_cvar z_witch_damage &quot;150&quot;
+
+//女巫对手电筒照射的反应范围，默认400
+sm_cvar z_witch_flashlight_range &quot;50&quot;
+
+//Witch 女巫的移动速度
+z_witch_speed 1000
+
+//-----------------------------------------
+
+//猎人跳跃角度
+sm_cvar hunter_pounce_max_loft_angle &quot;150&quot;
+
+//猎人爪子伤害值，默认6
+sm_cvar hunter_pz_claw_dmg &quot;50&quot;
+
+//猎人行走速度，默认300
+sm_cvar z_hunter_speed &quot;1000&quot;
+
+//猎人飞扑的速度，默认700
+sm_cvar hunter_pounce_air_speed &quot;1500&quot;
+
+//猎人飞跃距离，默认1000
+sm_cvar hunter_leap_away_give_up_range &quot;2000&quot;
+
+//猎人最长距离的飞扑仰角，默认45
+sm_cvar hunter_pounce_max_loft_angle &quot;45&quot;
+
+//猎人的扑倒范围，默认240
+sm_cvar z_hunter_claw_force &quot;800&quot;
+
+//猎人扑倒后的攻击力，默认5
+sm_cvar z_pounce_damage &quot;20&quot;
+
+//猎人扑倒持续伤害间隔，默认1
+sm_cvar z_pounce_damage_delay &quot;0.5&quot;
+
+//-----------------------------------------
+</code></pre><h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><pre><code>cd ~/Steam/steamapps/common/&quot;Left 4 Dead 2 Dedicated Server&quot;/
+screen -S coop
+./srcds_run -game left4dead2 -condebug -insecure +port 23333 +map c2m1_highway +exec server.cfg
+</code></pre><p>别忘记开防火墙里端口UDP协议</p>
+<h2 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h2><h3 id="sourcemod"><a href="#sourcemod" class="headerlink" title="sourcemod"></a>sourcemod</h3><pre><code>https://www.sourcemod.net/downloads.php?branch=stable
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327679.png" alt=""></p>
+<h3 id="metamod"><a href="#metamod" class="headerlink" title="metamod"></a><strong>metamod</strong></h3><pre><code>https://www.sourcemm.net/downloads.php?branch=stable
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327160.png" alt=""></p>
+<h3 id="L4DtoolZ"><a href="#L4DtoolZ" class="headerlink" title="L4DtoolZ"></a>L4DtoolZ</h3><pre><code>https://github.com/Accelerator74/l4dtoolz/releases
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328765.png" alt=""></p>
+<h3 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h3><p>将下载来的三个压缩包解压到一起，得到addons和cfg两个文件夹。如果得到多个文件夹，就把多余文件夹移入addons文件夹，只剩下addons和cfg两个文件夹。</p>
+<p>控制台输入<code>meta list</code>，即可查看安装是否成功</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328944.png" alt=""></p>
+<p>控制台输入<code>sm plugins list</code>，即可查看安装的插件</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328083.png" alt=""></p>
+<h2 id="安装插件（以MultiSlots多人插件为例）"><a href="#安装插件（以MultiSlots多人插件为例）" class="headerlink" title="安装插件（以MultiSlots多人插件为例）"></a>安装插件（以MultiSlots多人插件为例）</h2><p>啊，这个插件<strong><a href="https://forums.alliedmods.net/showthread.php?t=132408">MultiSlots</a></strong>搞了我半天==</p>
+<p>因为网上流传的许多是win版本的整合包，我在里面寻找，拿过去用之后发现总是给我报错，说缺失dhooks.ext.so这个运行库</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328268.png" alt=""></p>
+<p>但是整合包里全是dll，找半天才搜到</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329548.png" alt=""></p>
+<p>emmm，之后找到了放到extension里面也没用，还是同样的报错</p>
+<p>看似穷途末路了，但是还是让我找到了这个插件的最初版本</p>
+<p><a href="https://forums.alliedmods.net/showthread.php?t=132408">https://forums.alliedmods.net/showthread.php?t=132408</a></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329006.png" alt=""></p>
+<p>好耶！（所以说应该能用了）</p>
+<h2 id="添加管理员"><a href="#添加管理员" class="headerlink" title="添加管理员"></a>添加管理员</h2><p>/addons/sourcemod/configs里找admins_simple.ini</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329116.png" alt=""></p>
+<h2 id="插件推荐"><a href="#插件推荐" class="headerlink" title="插件推荐"></a>插件推荐</h2><h3 id="sourcemod的官方论坛"><a href="#sourcemod的官方论坛" class="headerlink" title="sourcemod的官方论坛"></a>sourcemod的官方论坛</h3><p><a href="http://alliedmods.net">alliedmods.net</a></p>
+<h3 id="电击器修复"><a href="#电击器修复" class="headerlink" title="电击器修复"></a>电击器修复</h3><p>这个是电击器修复，5人及以上的时候不会电起来错误的人</p>
+<p><a href="https://forums.alliedmods.net/showthread.php?p=2647018">https://forums.alliedmods.net/showthread.php?p=2647018</a></p>
+<h3 id="witch惊扰修复"><a href="#witch惊扰修复" class="headerlink" title="witch惊扰修复"></a>witch惊扰修复</h3><p>防止惊扰的witch只会找tab列表里能看到的人等等</p>
+<p><a href="https://forums.alliedmods.net/showthread.php?p=2647014">https://forums.alliedmods.net/showthread.php?p=2647014</a></p>
+<h3 id="榴弹M60正常化"><a href="#榴弹M60正常化" class="headerlink" title="榴弹M60正常化"></a>榴弹M60正常化</h3><p><a href="https://forums.alliedmods.net/showthread.php?p=2694504">https://forums.alliedmods.net/showthread.php?p=2694504</a></p>
+<h3 id="特感血量显示"><a href="#特感血量显示" class="headerlink" title="特感血量显示"></a>特感血量显示</h3><p><a href="https://forums.alliedmods.net/showthread.php?p=2694504">https://forums.alliedmods.net/showthread.php?p=2694504</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>ubuntu</tag>
+        <tag>求生之路</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>树莓派搭建Mirai QQ机器人</title>
+    <url>/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直以来，我都有一个搭建qq机器人的想法。可惜酷Q早已被腾讯橄榄，但好在还有Mirai这个框架。在翻出我用了五年的树莓派后，我打算在上面自己搭建一个qq机器人，以后或许还会写一写插件啥的（</p>
+<p>本文可能会时不时偶尔更新一下，做到哪步是哪步（咕咕咕预订</p>
+<p>项目地址：<a href="https://github.com/mamoe/mirai">https://github.com/mamoe/mirai</a></p>
+<h2 id="0x01下载Mirai控制台"><a href="#0x01下载Mirai控制台" class="headerlink" title="0x01下载Mirai控制台"></a>0x01下载Mirai控制台</h2><p><a href="https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md">https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md</a></p>
+<p>因为树莓派是arm架构的，所以我选择了arm的版本</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200411.png" alt=""></p>
+<p>建立文件夹，进入，并chmod一下</p>
+<pre><code>pi@raspberrypi:~/mirai $ ls
+mcl-installer-72b890d-linux-arm
+pi@raspberrypi:~/mirai $ sudo chmod +x ./mcl-installer-72b890d-linux-arm
+pi@raspberrypi:~/mirai $ ls
+mcl-installer-72b890d-linux-arm
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200451.png" alt=""></p>
+<p>然后无脑回车就是了</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200333.png" alt=""></p>
+<p>可以看到，目录下多了不少东西，先chmod运行mcl再说</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201423.png" alt=""></p>
+<p>第一次运行会初始化</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201727.png" alt=""></p>
+<h2 id="0x02下载和安装插件"><a href="#0x02下载和安装插件" class="headerlink" title="0x02下载和安装插件"></a>0x02下载和安装插件</h2><p>刚刚装好的 Mirai Console 是没有任何功能的。功能将由插件提供。</p>
+<p>Mirai 官方提供两个插件：</p>
+<ul>
+<li><a href="https://github.com/project-mirai/chat-command">chat-command</a>: 允许在聊天环境通过以 “/“ 起始的消息执行指令</li>
+<li><a href="https://github.com/project-mirai/mirai-api-http">mirai-api-http</a>：提供 HTTP 支持，允许使用其他编程语言的插件</li>
+</ul>
+<p>打开命令行 (Windows 系统按住Shift+鼠标右键，点击”在此处打开 PowerShell”),<br>可以使用 MCL 自动安装这些插件如：</p>
+<pre><code>./mcl --update-package net.mamoe:mirai-api-http --type plugin --channel stable
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201808.png" alt=""></p>
+<p>如果是 JAR 文件的插件，放入 <code>plugins</code> 即可。其他插件一般都有特殊说明如何使用，请参考它们的说明。</p>
+<h2 id="0x03使用控制台指令"><a href="#0x03使用控制台指令" class="headerlink" title="0x03使用控制台指令"></a>0x03使用控制台指令</h2><p>启动 <code>mcl.cmd</code> 就会看到控制台。在控制台可以输入指令，按回车执行这条指令。</p>
+<p>Mirai Console 内置一些指令，输入 <code>?</code> 并回车可以查看指令列表。</p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>Mirai</tag>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决Gravatar头像被墙的问题</title>
+    <url>/2021/03/09/%E8%A7%A3%E5%86%B3gravatar%E5%A4%B4%E5%83%8F%E8%A2%AB%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242337275.png" alt=""></p>
+<p>2月27日凌晨，我像往常一样打开了自己的博客，来到了留言板，却发现头像无法加载出来。</p>
+<p>原先我以为只是我的网络问题，可没想到gravatar官网都打不开了，这时我意识到不太对劲了，于是打开测速网：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242338698.png" alt=""></p>
+<p>我能说什么呢？反正当时我人麻了😅</p>
+<p>当时也是事发突然，本来也没几个玩wp的朋友，所以当时没有解决的方法。今天尝试百度了一下gravatar，时间限定这一个月，查到了这篇博客，<a href="https://kzyblog.com/5247.html/comment-page-1#comment-3542">完美解决Gravatar头像被墙</a></p>
+<p>抱着尝试的心态试了一下最后一个方法，下载了个WP-China-Yes插件，安装。</p>
+<p>我○，头像又出现了！！！！！！！！！！</p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>wordpress</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
+    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg" alt=""></p>
+<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
+<pre><code class="lang-shell">apt install open-vm-tools
+apt install open-vm-tools-desktop
+</code></pre>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>Vmware</tag>
       </tags>
   </entry>
   <entry>
