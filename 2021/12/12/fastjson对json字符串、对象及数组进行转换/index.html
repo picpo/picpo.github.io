@@ -1,26 +1,14 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+
+<html class="article-header-style-default">
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.3.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
-  <link rel="mask-icon" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg" color="#222">
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"picpo.top","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
-  </script>
-
-  <meta name="description" content="fastjson依赖包添加 网上找到了个不错的api，格式是json，我只会js语言的json处理，赶紧学了一下fastjson  到https:&#x2F;&#x2F;mvnrepository.com&#x2F;里，搜索Fastjson    选择版本，我用的是1.2.78的kotlin Gradle    FastJson主要类 fastjson对于json格式字符串的解析主要用到了一下三个类   * （1）JSON：f">
+	
+	<title>Fastjson对JSON字符串、对象及数组进行转换 - PiCpo的阁楼</title>
+	<meta charset="utf-8">
+	
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	
+	<meta name="description" content="fastjson依赖包添加 网上找到了个不错的api，格式是json，我只会js语言的json处理，赶紧学了一下fastjson  到https:&#x2F;&#x2F;mvnrepository.com&#x2F;里，搜索Fastjson    选择版本，我用的是1.2.78的kotlin Gradle    FastJson主要类 fastjson对于json格式字符串的解析主要用到了一下三个类   * （1）JSON：f">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Fastjson对JSON字符串、对象及数组进行转换">
 <meta property="og:url" content="https://picpo.top/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/index.html">
@@ -31,495 +19,979 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252130395.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252130885.png">
 <meta property="article:published_time" content="2021-12-12T13:45:32.000Z">
-<meta property="article:modified_time" content="2022-12-25T14:12:29.680Z">
+<meta property="article:modified_time" content="2022-12-28T12:05:40.100Z">
 <meta property="article:author" content="PiCpo">
-<meta property="article:tag" content="后端">
 <meta property="article:tag" content="Fastjson">
 <meta property="article:tag" content="Kotlin">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252126633.png">
 
-<link rel="canonical" href="https://picpo.top/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/">
+	<meta name="theme-color" content="#5e72e4">
+	<meta name="theme-color-rgb" content="94,114,228">
+	<meta name="theme-color-origin" content="#5e72e4">
+	<meta name="argon-enable-custom-theme-color" content="true">
+	<meta name="theme-card-radius" content="4">
+	<meta name="theme-version" content="1.0.2">
+	<link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+
+	
+<link rel="stylesheet" href="/assets/argon_css_merged.css">
+
+	
+<link rel="stylesheet" href="/style.css">
+
+	
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Open+Sans:300,400,600,700|Noto+Serif+SC:300,600&display=swap.css">
+
+	
+<script src="/assets/argon_js_merged.js"></script>
+
+	
+<script src="/assets/js/argon.min.js"></script>
+
+	
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
+	
 
-  <title>Fastjson对JSON字符串、对象及数组进行转换 | PiCpo的阁楼</title>
-  
+	<script>
+		var argonConfig = {
+			language: "zh_CN",
+			
+				zoomify: {
+					duration: 200,
+					easing: "cubic-bezier(0.4,0,0,1)",
+					scale: 0.9
+				},
+			
+			pangu: "false",
+			
+				lazyload: {
+					threshold: 800,
+					effect: "fadeIn"
+				},
+			
+			disable_pjax: false,
+			headroom: false
+		}
+	</script>
+	<script>
+		var darkmodeAutoSwitch = "time";
+		function setDarkmode(enable){
+			if (enable == true){
+				$("html").addClass("darkmode");
+			}else{
+				$("html").removeClass("darkmode");
+			}
+			$(window).trigger("scroll");
+		}
+		function toggleDarkmode(){
+			if ($("html").hasClass("darkmode")){
+				setDarkmode(false);
+				sessionStorage.setItem("Argon_Enable_Dark_Mode", "false");
+			}else{
+				setDarkmode(true);
+				sessionStorage.setItem("Argon_Enable_Dark_Mode", "true");
+			}
+		}
+		if (sessionStorage.getItem("Argon_Enable_Dark_Mode") == "true"){
+			setDarkmode(true);
+		}
+		function toggleDarkmodeByPrefersColorScheme(media){
+			if (sessionStorage.getItem('Argon_Enable_Dark_Mode') == "false" || sessionStorage.getItem('Argon_Enable_Dark_Mode') == "true"){
+				return;
+			}
+			if (media.matches){
+				setDarkmode(true);
+			}else{
+				setDarkmode(false);
+			}
+		}
+		function toggleDarkmodeByTime(){
+			if (sessionStorage.getItem('Argon_Enable_Dark_Mode') == "false" || sessionStorage.getItem('Argon_Enable_Dark_Mode') == "true"){
+				return;
+			}
+			let hour = new Date().getHours();
+			if (hour < 7 || hour >= 22){
+				setDarkmode(true);
+			}else{
+				setDarkmode(false);
+			}
+		}
+		if (darkmodeAutoSwitch == 'system'){
+			var darkmodeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+			darkmodeMediaQuery.addListener(toggleDarkmodeByPrefersColorScheme);
+			toggleDarkmodeByPrefersColorScheme(darkmodeMediaQuery);
+		}
+		if (darkmodeAutoSwitch == 'time'){
+			toggleDarkmodeByTime();
+		}
+		if (darkmodeAutoSwitch == 'alwayson'){
+			setDarkmode(true);
+		}
 
+		function toggleAmoledDarkMode(){
+			$("html").toggleClass("amoled-dark");
+			if ($("html").hasClass("amoled-dark")){
+				localStorage.setItem("Argon_Enable_Amoled_Dark_Mode", "true");
+			}else{
+				localStorage.setItem("Argon_Enable_Amoled_Dark_Mode", "false");
+			}
+		}
+		if (localStorage.getItem("Argon_Enable_Amoled_Dark_Mode") == "true"){
+			$("html").addClass("amoled-dark");
+		}else if (localStorage.getItem("Argon_Enable_Amoled_Dark_Mode") == "false"){
+			$("html").removeClass("amoled-dark");
+		}
+	</script>
+	<script>
+		if (navigator.userAgent.indexOf("Safari") !== -1 && navigator.userAgent.indexOf("Chrome") === -1){
+			$("html").addClass("using-safari");
+		}
+	</script>
 
+	
+		
+<script src="/assets/vendor/smoothscroll/smoothscroll1.js"></script>
 
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+	
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --></head>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
 
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
 
-  <div class="site-meta">
+<style id="themecolor_css">
+	
+	:root{
+		--themecolor: #5e72e4;
+		--themecolor-dark0: #5368E2;
+		--themecolor-dark: #485FE0;
+		--themecolor-dark2: #324CDD;
+		--themecolor-dark3: #233DD2;
+		--themecolor-light: #8A98EB;
+		--themecolor-rgbstr: 94,114,228;
+		--themecolor-gradient: linear-gradient(150deg,var(--themecolor-light) 15%, var(--themecolor) 70%, var(--themecolor-dark0) 94%);
 
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">PiCpo的阁楼</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
+	}
+</style>
+<style id="theme_cardradius_css">
+	:root{
+		--card-radius: 4px;
+	}
+</style>
 
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
+<body>
+<div id="toolbar">
+	<header class="header-global">
+		<nav id="navbar-main" class="navbar navbar-main navbar-expand-lg navbar-transparent navbar-light bg-primary headroom--not-bottom headroom--not-top headroom--pinned">
+			<div class="container">
+				
+					<a class="navbar-brand navbar-icon mr-lg-5" href="">
+						<img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+					</a>
+				
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<a class="navbar-brand" href="/">PiCpo的阁楼</a>
+				<div class="navbar-collapse collapse" id="navbar_global">
+					<div class="navbar-collapse-header">
+						<div class="row">
+							<div class="col-6 collapse-brand"></div>
+							<div class="col-6 collapse-close">
+								<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
+									<span></span>
+									<span></span>
+								</button>
+							</div>
+						</div>
+					</div>
+					<ul id="navbar_search_btn_mobile" class="navbar-nav align-items-lg-center ml-lg-auto">
+						<li class="nav-item" data-toggle="modal" data-target="#argon_search_modal" style="padding-left: 5px;">
+							<a class="nav-link nav-link-icon">
+								<i class="fa fa-search"></i>
+								<span class="nav-link-inner--text d-lg-none">搜索</span>
+							</a>
+						</li>
+					</ul>
+					
+							<ul class='navbar-nav navbar-nav-hover align-items-lg-center'>
+								
+										<li class='nav-item'>
+											<a href='/home' class='nav-link' >
+												<i class='ni ni-book-bookmark d-lg-none'></i>
+												<span class='nav-link-inner--text'>首页</span>
+											</a>
+											
+										</li>
+									
+										<li class='nav-item'>
+											<a href='/archives' class='nav-link' >
+												<i class='ni ni-book-bookmark d-lg-none'></i>
+												<span class='nav-link-inner--text'>归档</span>
+											</a>
+											
+										</li>
+									
+										<li class='nav-item'>
+											<a href='/links' class='nav-link' >
+												<i class='ni ni-book-bookmark d-lg-none'></i>
+												<span class='nav-link-inner--text'>友链</span>
+											</a>
+											
+										</li>
+									
+										<li class='nav-item'>
+											<a href='/about' class='nav-link' >
+												<i class='ni ni-book-bookmark d-lg-none'></i>
+												<span class='nav-link-inner--text'>关于我</span>
+											</a>
+											
+										</li>
+									
+							</ul>
+						
+					<ul class="navbar-nav align-items-lg-center ml-lg-auto">
+						<li class="nav-item" data-toggle="modal" data-target="#argon_search_modal" id="navbar_search_btn_pc">
+							<a class="nav-link nav-link-icon">
+								<i class="fa fa-search"></i>
+								<span class="nav-link-inner--text d-lg-none">搜索</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				
+					<a class="navbar-brand navbar-icon-mobile" href="">
+						<img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/linux.jpg">
+					</a>
+				
+				<div id="navbar_menu_mask" data-toggle="collapse" data-target="#navbar_global"></div>
+			</div>
+		</nav>
+	</header>
+</div>
+<div class="modal fade" id="argon_search_modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">搜索</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<!-- TODO -->
+<div class="form-group mb-3">
+	<div class="input-group input-group-alternative">
+		<div class="input-group-prepend">
+			<span class="input-group-text"><i class="fa fa-search"></i></span>
+		</div>
+		<input id="local-search-input" class="form-control" placeholder="搜索什么..." type="text"  autocomplete="off" data-search.path="search.xml" data-config.root="/">
+	</div>
+	<div id="local-search-result"></div>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<!--Banner-->
+<section id="banner" class="banner section section-lg section-shaped">
+	<div class="shape shape-style-1 shape-primary">
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+	</div>
+
+	
+	<div id="banner_container" class="banner-container container text-center">
+		
+			<div class="banner-title text-white" data-text="PiCpo的阁楼" data-interval=""><span class="banner-title-inner">&nbsp;</span>
+		
+		<span class="banner-subtitle d-block">猜猜里面有什么(=・ω・=)</span></div>
+	</div>
+	
+		<style>
+			section.banner{
+				background-image: url(/assets/img/banner.jpg) !important;
+			}
+		</style>
+	
+</section>
+
+
+	<style>
+		#content:before {
+			content: '';
+			display: block;
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			z-index: -2;
+			background: url(https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212281947959.jpg);
+			background-position: center;
+			background-size: cover;
+			background-repeat: no-repeat;
+			opacity: 1;
+			transition: opacity .5s ease;
+		}
+		html.darkmode #content:before{
+			filter: brightness(0.65);
+		}
+		
+		
+			#banner, #banner .shape {
+				background: transparent !important;
+			}
+		
+	</style>
+
+
+
+
+<div id="float_action_buttons" class="float-action-buttons fabtns-unloaded">
+	<button id="fabtn_toggle_sides" class="btn btn-icon btn-neutral fabtn shadow-sm" type="button" aria-hidden="true" tooltip-move-to-left="移至左侧" tooltip-move-to-right="移至右侧">
+		<span class="btn-inner--icon fabtn-show-on-right"><i class="fa fa-caret-left"></i></span>
+		<span class="btn-inner--icon fabtn-show-on-left"><i class="fa fa-caret-right"></i></span>
+	</button>
+	<button id="fabtn_back_to_top" class="btn btn-icon btn-neutral fabtn shadow-sm" type="button" aria-label="Back To Top" tooltip="回到顶部">
+		<span class="btn-inner--icon"><i class="fa fa-angle-up"></i></span>
+	</button>
+	<button id="fabtn_go_to_comment" class="btn btn-icon btn-neutral fabtn shadow-sm d-none" type="button" <-% theme.fab_show_gotocomment_button ? "" : "style='display: none;'"  aria-label="Comment" tooltip="评论">
+		<span class="btn-inner--icon"><i class="fa fa-comment-o"></i></span>
+	</button>
+	<button id="fabtn_toggle_darkmode" class="btn btn-icon btn-neutral fabtn shadow-sm" type="button" <-% theme.fab_show_darkmode_button ? "" : "style='display: none;'"  aria-label="Toggle Darkmode" tooltip-darkmode="夜间模式" tooltip-blackmode="暗黑模式" tooltip-lightmode="日间模式">
+		<span class="btn-inner--icon"><i class="fa fa-moon-o"></i><i class='fa fa-lightbulb-o'></i></span>
+	</button>
+	<button id="fabtn_toggle_blog_settings_popup" class="btn btn-icon btn-neutral fabtn shadow-sm" type="button" <-% theme.fab_show_settings_button ? "" : "style='display: none;'"  aria-label="Open Blog Settings Menu" tooltip="设置">
+		<span class="btn-inner--icon"><i class="fa fa-cog"></i></span>
+	</button>
+	<div id="fabtn_blog_settings_popup" class="card shadow-sm" style="opacity: 0;" aria-hidden="true">
+		<div id="close_blog_settings"><i class="fa fa-close"></i></div>
+		<div class="blog-setting-item mt-3">
+			<div style="transform: translateY(-4px);"><div id="blog_setting_toggle_darkmode_and_amoledarkmode" tooltip-switch-to-darkmode="切换到夜间模式" tooltip-switch-to-blackmode="切换到暗黑模式"><span>夜间模式</span><span>暗黑模式</span></div></div>
+			<div style="flex: 1;"></div>
+			<label id="blog_setting_darkmode_switch" class="custom-toggle">
+				<span class="custom-toggle-slider rounded-circle"></span>
+			</label>
+		</div>
+		<div class="blog-setting-item mt-3">
+			<div style="flex: 1;">字体</div>
+			<div>
+				<button id="blog_setting_font_sans_serif" type="button" class="blog-setting-font btn btn-outline-primary blog-setting-selector-left">Sans Serif</button><button id="blog_setting_font_serif" type="button" class="blog-setting-font btn btn-outline-primary blog-setting-selector-right">Serif</button>
+			</div>
+		</div>
+		<div class="blog-setting-item mt-3">
+			<div style="flex: 1;">阴影</div>
+			<div>
+				<button id="blog_setting_shadow_small" type="button" class="blog-setting-shadow btn btn-outline-primary blog-setting-selector-left">浅阴影</button><button id="blog_setting_shadow_big" type="button" class="blog-setting-shadow btn btn-outline-primary blog-setting-selector-right">深阴影</button>
+			</div>
+		</div>
+		<div class="blog-setting-item mt-3 mb-3">
+			<div style="flex: 1;">滤镜</div>
+			<div id="blog_setting_filters" class="ml-3">
+				<button id="blog_setting_filter_off" type="button" class="blog-setting-filter-btn ml-0" filter-name="off">关闭</button>
+				<button id="blog_setting_filter_sunset" type="button" class="blog-setting-filter-btn" filter-name="sunset">日落</button>
+				<button id="blog_setting_filter_darkness" type="button" class="blog-setting-filter-btn" filter-name="darkness">暗化</button>
+				<button id="blog_setting_filter_grayscale" type="button" class="blog-setting-filter-btn" filter-name="grayscale">灰度</button>
+			</div>
+		</div>
+		<div class="blog-setting-item mb-3">
+			<div id="blog_setting_card_radius_to_default" style="cursor: pointer;" tooltip="恢复默认">圆角</div>
+			<div style="flex: 1;margin-left: 20px;margin-right: 8px;transform: translateY(2px);">
+				<div id="blog_setting_card_radius"></div>
+			</div>
+		</div>
+		
+			<div class="blog-setting-item mt-1 mb-3">
+				<div style="flex: 1;">主题色</div>
+				<div id="theme-color-picker" class="ml-3"></div>
+			</div>
+		
+	</div>
+	<button id="fabtn_open_sidebar" class="btn btn-icon btn-neutral fabtn shadow-sm" type="button" aria-label="Open Sidebar Menu" tooltip="菜单">
+		<span class="btn-inner--icon"><i class="fa fa-bars"></i></span>
+	</button>
+	<button id="fabtn_reading_progress" class="btn btn-icon btn-neutral fabtn shadow-sm" type="button" aria-hidden="true" tooltip="阅读进度">
+		<div id="fabtn_reading_progress_bar" style="width: 0%;"></div>
+		<span id="fabtn_reading_progress_details">0%</span>
+	</button>
+</div>
+
+<div id="content" class="site-content">
+
+
+
+
+
+
+
+
+
+<div class="page-information-card-container">
+	
+</div>
+
+<div id="sidebar_mask"></div>
+<aside id="leftbar" class="leftbar widget-area" role="complementary">
+		
+		<div id="leftbar_part1" class="widget widget_search card bg-white shadow-sm border-0">
+			<div class="leftbar-banner card-body">
+				<span class="leftbar-banner-title text-white">PiCpo的阁楼</span>
+				
+				
+					<span class="leftbar-banner-subtitle text-white"><span class='hitokoto'></span></span>
+				
+			</div>
+			
+			
+				<ul id='leftbar_part1_menu' class='leftbar-menu'>
+					<li class='leftbar-menu-item'><a href='/'>首页</a></li><li class='leftbar-menu-item'><a href='/archives'>归档</a></li><li class='leftbar-menu-item'><a href='/links'>友链</a></li><li class='leftbar-menu-item'><a href='/about'>关于我</a></li>
+				</ul>
+			
+			<div class="card-body text-center leftbar-search-button">
+				<button id="leftbar_search" class="btn btn-secondary btn-lg active btn-sm btn-block border-0" role="button" data-toggle="modal" data-target="#argon_search_modal" >
+					<i class="menu-item-icon fa fa-search mr-0"></i> 搜索
+				</button>
+			</div>
+		</div>
+		<div id="leftbar_part2" class="widget widget_search card bg-white shadow-sm border-0">
+			<div id="leftbar_part2_inner" class="card-body">
+				
+				<div class="nav-wrapper" style="padding-top: 5px;">
+	                <ul class="nav nav-pills nav-fill" role="tablist">
+						
+							<li class="nav-item sidebar-tab-switcher">
+								<a class="active show" id="leftbar_tab_catalog_btn" data-toggle="tab" href="#leftbar_tab_catalog" role="tab" aria-controls="leftbar_tab_catalog" no-pjax>文章目录</a>
+							</li>
+						
+						<li class="nav-item sidebar-tab-switcher">
+							<a class="" id="leftbar_tab_overview_btn" data-toggle="tab" href="#leftbar_tab_overview" role="tab" aria-controls="leftbar_tab_overview" no-pjax>站点概览</a>
+						</li>
+	                </ul>
+				</div>
+				<div>
+					<div class="tab-content" style="padding: 10px 10px 0 10px;">
+						
+							<div class="tab-pane fade active show" id="leftbar_tab_catalog" role="tabpanel" aria-labelledby="leftbar_tab_catalog_btn">
+								<div id="leftbar_catalog"></div>
+								<script type="text/javascript">
+									$(function () {
+										$(document).headIndex({
+											articleWrapSelector: '#post_content',
+											indexBoxSelector: '#leftbar_catalog',
+											subItemBoxClass: "index-subItem-box",
+											itemClass: "index-item",
+											linkClass: "index-link",
+											offset: 80,
+										});
+									})
+								</script>
+								
+							</div>
+						
+						<div class="tab-pane fade text-center" id="leftbar_tab_overview" role="tabpanel" aria-labelledby="leftbar_tab_overview_btn">
+							<img id="leftbar_overview_author_image" src="https://avatars.githubusercontent.com/u/33993624?s=400&amp;u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&amp;v=4" class="img-fluid rounded-circle shadow-sm" style="width: 100px;" alt="avatar">
+							<h6 id="leftbar_overview_author_name">PiCpo</h6>
+							<nav class="site-state">
+								<div class="site-state-item site-state-posts">
+									<a href="/archives">
+										<span class="site-state-item-count">26</span>
+										<span class="site-state-item-name">文章</span>
+									</a>
+								</div>
+								<div class="site-state-item site-state-categories">
+									<a data-toggle="modal" data-target="#blog_categories">
+										<span class="site-state-item-count">6</span>
+										<span class="site-state-item-name">分类</span>
+									</a>
+								</div>      
+								<div class="site-state-item site-state-tags">
+									<a data-toggle="modal" data-target="#blog_tags">
+										<span class="site-state-item-count">33</span>
+										<span class="site-state-item-name">标签</span>
+									</a>
+								</div>
+							</nav>
+							
+									<div class="site-author-links">
+										
+									</div>
+								
+							
+									<div class='site-friend-links'>
+										<div class='site-friend-links-title'><i class='fa fa-fw fa-link'></i> Links</div>
+										<ul class='site-friend-links-ul'>
+											
+										</ul>
+									</div>
+								
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</aside>
+<div class="modal fade" id="blog_categories" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">分类</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<a class="badge badge-secondary tag" href="/categories/CTF/" rel="tag">CTF <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/categories/%E5%89%8D%E7%AB%AF/" rel="tag">前端 <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/categories/%E5%90%8E%E7%AB%AF/" rel="tag">后端 <span class="tag-num">3</span></a><a class="badge badge-secondary tag" href="/categories/%E5%AE%89%E5%85%A8/" rel="tag">安全 <span class="tag-num">2</span></a><a class="badge badge-secondary tag" href="/categories/%E6%88%91%E7%88%B1%E5%AD%A6%E4%B9%A0/" rel="tag">我爱学习 <span class="tag-num">5</span></a><a class="badge badge-secondary tag" href="/categories/%E9%87%8E%E7%94%9F%E6%8A%80%E6%9C%AF%E5%8D%8F%E4%BC%9A/" rel="tag">野生技术协会 <span class="tag-num">14</span></a>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="blog_tags" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">标签</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<a class="badge badge-secondary tag" href="/tags/AI/" rel="tag">AI <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/Angular/" rel="tag">Angular <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/Docker/" rel="tag">Docker <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/Fastjson/" rel="tag">Fastjson <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/Flask/" rel="tag">Flask <span class="tag-num">3</span></a><a class="badge badge-secondary tag" href="/tags/HTTP/" rel="tag">HTTP <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/Java/" rel="tag">Java <span class="tag-num">2</span></a><a class="badge badge-secondary tag" href="/tags/Kotlin/" rel="tag">Kotlin <span class="tag-num">3</span></a><a class="badge badge-secondary tag" href="/tags/Mirai/" rel="tag">Mirai <span class="tag-num">3</span></a><a class="badge badge-secondary tag" href="/tags/PHP/" rel="tag">PHP <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/PWN/" rel="tag">PWN <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/PyCharm/" rel="tag">PyCharm <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/Python/" rel="tag">Python <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/RDP/" rel="tag">RDP <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/Selenium/" rel="tag">Selenium <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/VSCode/" rel="tag">VSCode <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/Vmware/" rel="tag">Vmware <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/ajax/" rel="tag">ajax <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/bootstrap/" rel="tag">bootstrap <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/git/" rel="tag">git <span class="tag-num">2</span></a><a class="badge badge-secondary tag" href="/tags/github/" rel="tag">github <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/jQuery/" rel="tag">jQuery <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/linux/" rel="tag">linux <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/ubuntu/" rel="tag">ubuntu <span class="tag-num">2</span></a><a class="badge badge-secondary tag" href="/tags/wordpress/" rel="tag">wordpress <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" rel="tag">文件上传 <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派 <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/%E6%B1%82%E7%94%9F%E4%B9%8B%E8%B7%AF/" rel="tag">求生之路 <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/" rel="tag">求生指南 <span class="tag-num">4</span></a><a class="badge badge-secondary tag" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫 <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8/" rel="tag">资源管理器 <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/%E9%80%9F%E9%80%9A%E6%8C%87%E5%8D%97/" rel="tag">速通指南 <span class="tag-num">1</span></a><a class="badge badge-secondary tag" href="/tags/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0/" rel="tag">青年大学习 <span class="tag-num">1</span></a>
+			</div>
+		</div>
+	</div>
 </div>
 
 
+<div id="primary" class="content-area">
+	<main id="main" class="site-main" role="main">
+		
+		
+			
+	<article class="post post-full card bg-white shadow-sm border-0 ">
+	<header class="post-header text-center post-header-with-thumbnail">
+		
+				<img class='post-thumbnail lazyload' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABBJREFUeNpi+P//PwNAgAEACPwC/tuiTRYAAAAASUVORK5CYII=' data-original='https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252126633.png' alt='thumbnail'></img>
+				<div class='post-header-text-container'>
+			
+		<a class="post-title" href="/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/">Fastjson对JSON字符串、对象及数组进行转换</a>
+		<div class="post-meta">
+			
+						
+						<div class="post-meta-detail post-meta-detail-time">
+							<i class="fa fa-clock-o" aria-hidden="true"></i>
+							<time title="发布于 2021-12-12 21:45:32 | 编辑于 2022-12-28 20:05:40">2021-12-12 21:45
+							</time>
+						</div>
+					
+						
+							<div class="post-meta-devide">|</div>
+						
+						<div class="post-meta-detail post-meta-detail-categories">
+							<i class="fa fa-bookmark-o" aria-hidden="true"></i>
+							<a class="post-meta-detail-catagory-link" href="/categories/%E5%90%8E%E7%AB%AF/">后端</a>
+						</div>
+					
+						
+							<div class="post-meta-devide">|</div>
+						
+						<div class="post-meta-detail post-meta-detail-words">
+							<i class="fa fa fa-book" aria-hidden="true"></i>
+							<span id="busuanzi_container_page_pv">
+								阅读<span id="busuanzi_value_page_pv"></span>次
+							</span>
+						</div>
+					
+						
+							<div class="post-meta-devide">|</div>
+						
+						<div class="post-meta-detail post-meta-detail-words">
+							<i class="fa fa-file-word-o" aria-hidden="true"></i>
+							2.4k 字
+						</div>
+					
+						
+							<div class="post-meta-devide">|</div>
+						
+						<div class="post-meta-detail post-meta-detail-readingtime">
+							<i class="fa fa-hourglass-end" aria-hidden="true"></i>
+							12 分钟
+						</div>
+					
+		</div>
+		
+				</div>
+			
+	</header>
 
+	<div class="post-content" id="post_content">
+		<p><img class="lazyload lazyload-style-1" src="data:image/svg+xml;base64,PCEtLUFyZ29uTG9hZGluZy0tPgo8c3ZnIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3Ryb2tlPSIjZmZmZmZmMDAiPjxnPjwvZz4KPC9zdmc+"  data-original="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252126633.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" alt=""></p>
 
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
-  </ul>
-</nav>
-
-
-
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
-           placeholder="搜索..." spellcheck="false"
-           type="search" class="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
-  </div>
-</div>
-
-    </div>
-  </div>
-
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
-
-    
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://picpo.top/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/33993624?s=400&u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&v=4">
-      <meta itemprop="name" content="PiCpo">
-      <meta itemprop="description" content="猜猜里面有什么(=・ω・=)">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PiCpo的阁楼">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          Fastjson对JSON字符串、对象及数组进行转换
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-12 21:45:32" itemprop="dateCreated datePublished" datetime="2021-12-12T21:45:32+08:00">2021-12-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-12-25 22:12:29" itemprop="dateModified" datetime="2022-12-25T22:12:29+08:00">2022-12-25</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-        <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252126633.png" alt=""></p>
 <h2 id="fastjson依赖包添加"><a href="#fastjson依赖包添加" class="headerlink" title="fastjson依赖包添加"></a><strong>fastjson依赖</strong>包添加</h2><p>网上找到了个不错的api，格式是json，我只会js语言的json处理，赶紧学了一下fastjson</p>
 <p>到<a target="_blank" rel="noopener" href="https://mvnrepository.com/">https://mvnrepository.com/</a>里，搜索Fastjson</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252130395.png" alt=""></p>
+<p><img class="lazyload lazyload-style-1" src="data:image/svg+xml;base64,PCEtLUFyZ29uTG9hZGluZy0tPgo8c3ZnIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3Ryb2tlPSIjZmZmZmZmMDAiPjxnPjwvZz4KPC9zdmc+"  data-original="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252130395.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" alt=""></p>
+
 <p>选择版本，我用的是1.2.78的kotlin Gradle</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252130885.png" alt=""></p>
+<p><img class="lazyload lazyload-style-1" src="data:image/svg+xml;base64,PCEtLUFyZ29uTG9hZGluZy0tPgo8c3ZnIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3Ryb2tlPSIjZmZmZmZmMDAiPjxnPjwvZz4KPC9zdmc+"  data-original="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252130885.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" alt=""></p>
+
 <h2 id="FastJson主要类"><a href="#FastJson主要类" class="headerlink" title="FastJson主要类"></a>FastJson主要类</h2><p>fastjson对于json格式字符串的解析主要用到了一下三个类</p>
 <ul>
 <li>（1）JSON：fastJson的解析器，用于JSON格式字符串与JSON对象及javaBean之间的转换。</li>
 <li>（2）jsonobject：fastJson提供的json对象。</li>
 <li>（3）jsonarray：fastJson提供json数组对象。</li>
 </ul>
-<h2 id="JSON转换"><a href="#JSON转换" class="headerlink" title="JSON转换"></a>JSON转换</h2><h3 id="JAVA对象转JSON字符串"><a href="#JAVA对象转JSON字符串" class="headerlink" title="JAVA对象转JSON字符串"></a>JAVA对象转JSON字符串</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//java对象转json字符串</span><br><span class="line">    public static void beanTojson() &#123;</span><br><span class="line">        Data data = new Data();</span><br><span class="line">        data.setAction(&quot;add&quot;);</span><br><span class="line">        data.setId(&quot;1&quot;);</span><br><span class="line">        data.setOrdinal(8L);</span><br><span class="line">        data.setOrganUnitFullName(&quot;testJSON&quot;);</span><br><span class="line">        data.setParent(&quot;0&quot;);</span><br><span class="line">        data.setSuborderNo(&quot;58961&quot;);</span><br><span class="line"></span><br><span class="line">        String s = JSON.toJSONString(data);</span><br><span class="line">        System.out.println(&quot;toJsonString()方法：s=&quot; + s);</span><br><span class="line">        //输出结果&#123;&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;ordinal&quot;:8,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;parent&quot;:&quot;0&quot;,&quot;suborderNo&quot;:&quot;58961&quot;&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="JSON字符串转JSON对象"><a href="#JSON字符串转JSON对象" class="headerlink" title="JSON字符串转JSON对象"></a>JSON字符串转JSON对象</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//json字符串转json对象</span><br><span class="line">    public static void jsonToJsonBean() &#123;</span><br><span class="line">        String s =&quot;&#123;\&quot;action\&quot;:\&quot;add\&quot;,\&quot;id\&quot;:\&quot;1\&quot;,\&quot;ordinal\&quot;:8,\&quot;organUnitFullName\&quot;:\&quot;testJSON\&quot;,\&quot;parent\&quot;:\&quot;0\&quot;,\&quot;suborderNo\&quot;:\&quot;58961\&quot;&#125;&quot;;</span><br><span class="line"></span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(s);</span><br><span class="line">        String action = jsonObject.getString(&quot;action&quot;);</span><br><span class="line">        String id = jsonObject.getString(&quot;id&quot;);</span><br><span class="line">        System.out.println(&quot;action =&quot;+action);//add</span><br><span class="line">        System.out.println(&quot;id =&quot;+id);//1</span><br><span class="line">        System.out.println(&quot;jsonObject =&quot;+jsonObject);</span><br><span class="line">        //action =add</span><br><span class="line">        //id =1</span><br><span class="line">        //jsonObject =&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="复杂JSON格式字符串与JSONObject之间的转换"><a href="#复杂JSON格式字符串与JSONObject之间的转换" class="headerlink" title="复杂JSON格式字符串与JSONObject之间的转换"></a>复杂JSON格式字符串与JSONObject之间的转换</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public static void jsonToBean() &#123;</span><br><span class="line">        String str =&quot;&#123;\&quot;meta\&quot;:&#123;\&quot;code\&quot;:\&quot;0\&quot;,\&quot;message\&quot;:\&quot;同步成功!\&quot;&#125;,\&quot;data\&quot;:&#123;\&quot;orderno\&quot;:\&quot;U_2018062790915774\&quot;,\&quot;suborderno\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;type\&quot;:\&quot;organunit\&quot;,\&quot;result\&quot;:&#123;\&quot;organunit\&quot;:&#123;\&quot;totalCount\&quot;:2,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:2,\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;,\&quot;role\&quot;:&#123;\&quot;totalCount\&quot;:0,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:0,\&quot;errors\&quot;:[]&#125;,\&quot;user\&quot;:&#123;\&quot;totalCount\&quot;:0,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:0,\&quot;errors\&quot;:[]&#125;&#125;&#125;&#125;&quot;;</span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(str);</span><br><span class="line">        JSONObject data = jsonObject.getJSONObject(&quot;data&quot;);</span><br><span class="line">        JSONObject result = data.getJSONObject(&quot;result&quot;);</span><br><span class="line"></span><br><span class="line">        String organunit1 = result.getString(&quot;organunit&quot;);</span><br><span class="line">        System.out.println(organunit1);</span><br><span class="line">        JSONObject organunit = result.getJSONObject(&quot;organunit&quot;);</span><br><span class="line"></span><br><span class="line">        JSONArray errors2 = organunit.getJSONArray(&quot;errors&quot;);</span><br><span class="line"></span><br><span class="line">        List&lt;Error&gt; error = JSON.parseObject(errors2.toJSONString(), new TypeReference&lt;List&lt;Error&gt;&gt;() &#123;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="JSON字符串转JAVA简单对象"><a href="#JSON字符串转JAVA简单对象" class="headerlink" title="JSON字符串转JAVA简单对象"></a>JSON字符串转JAVA简单对象</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//json字符串转java简单对象</span><br><span class="line">   public static void jsonStrToJavaBean() &#123;</span><br><span class="line">       String s =&quot;&#123;\&quot;action\&quot;:\&quot;add\&quot;,\&quot;id\&quot;:\&quot;1\&quot;,\&quot;ordinal\&quot;:8,\&quot;organUnitFullName\&quot;:\&quot;testJSON\&quot;,\&quot;parent\&quot;:\&quot;0\&quot;,\&quot;suborderNo\&quot;:\&quot;58961\&quot;&#125;&quot;;</span><br><span class="line">       Data data = JSON.parseObject(s, Data.class);</span><br><span class="line">       System.out.println(&quot;data对象&quot;+data.toString());</span><br><span class="line">       System.out.println(&quot;action=&quot;+data.getAction()+&quot;---id=&quot;+data.getId());</span><br><span class="line">       //data对象Data&#123;id=&#x27;1&#x27;, suborderNo=&#x27;58961&#x27;, organUnitType=&#x27;null&#x27;, action=&#x27;add&#x27;, parent=&#x27;0&#x27;, organUnitFullName=&#x27;testJSON&#x27;, ordinal=8&#125;</span><br><span class="line">       //action=add---id=1</span><br><span class="line"></span><br><span class="line">       /**</span><br><span class="line">        * 另一种方式转对象</span><br><span class="line">        */</span><br><span class="line">       Data dd = JSON.parseObject(s, new TypeReference&lt;Data&gt;() &#123;&#125;);</span><br><span class="line">       System.out.println(&quot;另一种方式获取data对象&quot;+dd.toString());</span><br><span class="line">       System.out.println(&quot;另一种方式获取=&quot;+dd.getAction()+&quot;---id=&quot;+dd.getId());</span><br><span class="line">       //另一种方式获取data对象Data&#123;id=&#x27;1&#x27;, suborderNo=&#x27;58961&#x27;, organUnitType=&#x27;null&#x27;, action=&#x27;add&#x27;, parent=&#x27;0&#x27;, organUnitFullName=&#x27;testJSON&#x27;, ordinal=8&#125;</span><br><span class="line">       //另一种方式获取=add---id=1</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="JSON字符串-数组类型与JAVA对象的转换"><a href="#JSON字符串-数组类型与JAVA对象的转换" class="headerlink" title="JSON字符串 数组类型与JAVA对象的转换"></a>JSON字符串 数组类型与JAVA对象的转换</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;errors&quot;:[&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;254&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;,&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;255&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;]&#125;</span><br><span class="line"></span><br><span class="line">//json字符串--数组型与JSONArray对象之间的转换</span><br><span class="line">    public static void jsonStrToJSONArray() &#123;</span><br><span class="line">        String str = &quot;&#123;\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;&quot;;</span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(str);</span><br><span class="line">        JSONArray error = jsonObject.getJSONArray(&quot;errors&quot;);</span><br><span class="line">        List&lt;Error&gt; errors = JSON.parseObject(error.toJSONString(), new TypeReference&lt;List&lt;Error&gt;&gt;() &#123;</span><br><span class="line">        &#125;);</span><br><span class="line">        for (Error e: errors) &#123;</span><br><span class="line">            //Error的属性</span><br><span class="line">            System.out.println(&quot;Error属性=&quot;+e.getSuccess());</span><br><span class="line">            System.out.println(&quot;Error属性=&quot;+e.getCode());</span><br><span class="line">            System.out.println(&quot;Error属性=&quot;+e.getMessage());</span><br><span class="line">            //Error集合属性</span><br><span class="line">            List&lt;Data&gt; datas = e.getData();</span><br><span class="line">            for (Data d: datas) &#123;</span><br><span class="line">                System.out.println(&quot;data对象属性=&quot;+d.getId());</span><br><span class="line">                System.out.println(&quot;data对象属性=&quot;+d.getAction());</span><br><span class="line">                System.out.println(&quot;data对象属性=&quot;+d.getSuborderNo());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //Error属性=false</span><br><span class="line">        //Error属性=UUM70004</span><br><span class="line">        //Error属性=组织单元名称不能为空</span><br><span class="line">        //data对象属性=254</span><br><span class="line">        //data对象属性=add</span><br><span class="line">        //data对象属性=SUB_2018062797348039</span><br><span class="line"></span><br><span class="line">        //Error属性=false</span><br><span class="line">        //Error属性=UUM70004</span><br><span class="line">        //Error属性=组织单元名称不能为空</span><br><span class="line">        //data对象属性=255</span><br><span class="line">        //data对象属性=add</span><br><span class="line">        //data对象属性=SUB_2018062797348039</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="JSON字符串-第二种方法–-gt-数组类型与JAVA对象的转换"><a href="#JSON字符串-第二种方法–-gt-数组类型与JAVA对象的转换" class="headerlink" title="JSON字符串 第二种方法–&gt;数组类型与JAVA对象的转换"></a>JSON字符串 第二种方法–&gt;数组类型与JAVA对象的转换</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">//第二种方法：json字符串--数组型与JSONArray对象之间的转换</span><br><span class="line">    @Test</span><br><span class="line">    public void jsonStrToJSONArray2() &#123;</span><br><span class="line">        String str = &quot;&#123;\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;&quot;;</span><br><span class="line">        //获取jsonobject对象</span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(str);</span><br><span class="line">        //把对象转换成jsonArray数组</span><br><span class="line">        JSONArray error = jsonObject.getJSONArray(&quot;errors&quot;);</span><br><span class="line">        //error==&gt;[&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;254&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;,&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;255&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;]</span><br><span class="line">        //将数组转换成字符串</span><br><span class="line">        String jsonString = JSONObject.toJSONString(error);//将array数组转换成字符串</span><br><span class="line">        //将字符串转成list集合</span><br><span class="line">        List&lt;Error&gt;  errors = JSONObject.parseArray(jsonString, Error.class);//把字符串转换成集合</span><br><span class="line">        for (Error e: errors) &#123;</span><br><span class="line">            //Error的属性</span><br><span class="line">            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getSuccess());</span><br><span class="line">            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getCode());</span><br><span class="line">            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getMessage());</span><br><span class="line">            //Error集合属性</span><br><span class="line">            List&lt;Data&gt; datas = e.getData();</span><br><span class="line">            for (Data d: datas) &#123;</span><br><span class="line">                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getId());</span><br><span class="line">                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getAction());</span><br><span class="line">                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getSuborderNo());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //另一种数组转换Error属性=false</span><br><span class="line">        //另一种数组转换Error属性=UUM70004</span><br><span class="line">        //另一种数组转换Error属性=组织单元名称不能为空</span><br><span class="line">        //另一种数组转换data对象属性=254</span><br><span class="line">        //另一种数组转换data对象属性=add</span><br><span class="line">        //另一种数组转换data对象属性=SUB_2018062797348039</span><br><span class="line"></span><br><span class="line">        //另一种数组转换Error属性=false</span><br><span class="line">        //另一种数组转换Error属性=UUM70004</span><br><span class="line">        //另一种数组转换Error属性=组织单元名称不能为空</span><br><span class="line">        //另一种数组转换data对象属性=255</span><br><span class="line">        //另一种数组转换data对象属性=add</span><br><span class="line">        //另一种数组转换data对象属性=SUB_2018062797348039</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="JAVA对象转JSON对象"><a href="#JAVA对象转JSON对象" class="headerlink" title="JAVA对象转JSON对象"></a>JAVA对象转JSON对象</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//javabean转json对象</span><br><span class="line">    public static void jsonBenToJsonObject() &#123;</span><br><span class="line">        Data data = new Data();</span><br><span class="line">        data.setAction(&quot;add&quot;);</span><br><span class="line">        data.setId(&quot;1&quot;);</span><br><span class="line">        data.setOrdinal(8L);</span><br><span class="line">        data.setOrganUnitFullName(&quot;testJSON&quot;);</span><br><span class="line">        data.setParent(&quot;0&quot;);</span><br><span class="line">        data.setSuborderNo(&quot;58961&quot;);</span><br><span class="line">        JSONObject jsonObj = (JSONObject) JSON.toJSON(data);</span><br><span class="line">        JSON json = (JSON) JSON.toJSON(data);</span><br><span class="line">        System.out.println(&quot;jsonObj&quot;+jsonObj);</span><br><span class="line">        System.out.println(&quot;json对象&quot;+json);</span><br><span class="line">        //jsonObj&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;</span><br><span class="line">        //json对象&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-    </div>
+<h2 id="JSON转换"><a href="#JSON转换" class="headerlink" title="JSON转换"></a>JSON转换</h2><h3 id="JAVA对象转JSON字符串"><a href="#JAVA对象转JSON字符串" class="headerlink" title="JAVA对象转JSON字符串"></a>JAVA对象转JSON字符串</h3><pre><code>//java对象转json字符串
+    public static void beanTojson() &#123;
+        Data data = new Data();
+        data.setAction(&quot;add&quot;);
+        data.setId(&quot;1&quot;);
+        data.setOrdinal(8L);
+        data.setOrganUnitFullName(&quot;testJSON&quot;);
+        data.setParent(&quot;0&quot;);
+        data.setSuborderNo(&quot;58961&quot;);
 
-    
-    
-    
-        
+        String s = JSON.toJSONString(data);
+        System.out.println(&quot;toJsonString()方法：s=&quot; + s);
+        //输出结果&#123;&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;ordinal&quot;:8,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;parent&quot;:&quot;0&quot;,&quot;suborderNo&quot;:&quot;58961&quot;&#125;
+    &#125;
+</code></pre><h3 id="JSON字符串转JSON对象"><a href="#JSON字符串转JSON对象" class="headerlink" title="JSON字符串转JSON对象"></a>JSON字符串转JSON对象</h3><pre><code>//json字符串转json对象
+    public static void jsonToJsonBean() &#123;
+        String s =&quot;&#123;\&quot;action\&quot;:\&quot;add\&quot;,\&quot;id\&quot;:\&quot;1\&quot;,\&quot;ordinal\&quot;:8,\&quot;organUnitFullName\&quot;:\&quot;testJSON\&quot;,\&quot;parent\&quot;:\&quot;0\&quot;,\&quot;suborderNo\&quot;:\&quot;58961\&quot;&#125;&quot;;
 
-<div>
-<ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者： </strong>PiCpo
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="https://picpo.top/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/" title="Fastjson对JSON字符串、对象及数组进行转换">https://picpo.top/2021/12/12/fastjson对json字符串、对象及数组进行转换/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
+        JSONObject jsonObject = JSON.parseObject(s);
+        String action = jsonObject.getString(&quot;action&quot;);
+        String id = jsonObject.getString(&quot;id&quot;);
+        System.out.println(&quot;action =&quot;+action);//add
+        System.out.println(&quot;id =&quot;+id);//1
+        System.out.println(&quot;jsonObject =&quot;+jsonObject);
+        //action =add
+        //id =1
+        //jsonObject =&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;
+    &#125;
+</code></pre><h3 id="复杂JSON格式字符串与JSONObject之间的转换"><a href="#复杂JSON格式字符串与JSONObject之间的转换" class="headerlink" title="复杂JSON格式字符串与JSONObject之间的转换"></a>复杂JSON格式字符串与JSONObject之间的转换</h3><pre><code>public static void jsonToBean() &#123;
+        String str =&quot;&#123;\&quot;meta\&quot;:&#123;\&quot;code\&quot;:\&quot;0\&quot;,\&quot;message\&quot;:\&quot;同步成功!\&quot;&#125;,\&quot;data\&quot;:&#123;\&quot;orderno\&quot;:\&quot;U_2018062790915774\&quot;,\&quot;suborderno\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;type\&quot;:\&quot;organunit\&quot;,\&quot;result\&quot;:&#123;\&quot;organunit\&quot;:&#123;\&quot;totalCount\&quot;:2,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:2,\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;,\&quot;role\&quot;:&#123;\&quot;totalCount\&quot;:0,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:0,\&quot;errors\&quot;:[]&#125;,\&quot;user\&quot;:&#123;\&quot;totalCount\&quot;:0,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:0,\&quot;errors\&quot;:[]&#125;&#125;&#125;&#125;&quot;;
+        JSONObject jsonObject = JSON.parseObject(str);
+        JSONObject data = jsonObject.getJSONObject(&quot;data&quot;);
+        JSONObject result = data.getJSONObject(&quot;result&quot;);
+
+        String organunit1 = result.getString(&quot;organunit&quot;);
+        System.out.println(organunit1);
+        JSONObject organunit = result.getJSONObject(&quot;organunit&quot;);
+
+        JSONArray errors2 = organunit.getJSONArray(&quot;errors&quot;);
+
+        List&lt;Error&gt; error = JSON.parseObject(errors2.toJSONString(), new TypeReference&lt;List&lt;Error&gt;&gt;() &#123;
+        &#125;);
+    &#125;
+</code></pre><h3 id="JSON字符串转JAVA简单对象"><a href="#JSON字符串转JAVA简单对象" class="headerlink" title="JSON字符串转JAVA简单对象"></a>JSON字符串转JAVA简单对象</h3><pre><code> //json字符串转java简单对象
+    public static void jsonStrToJavaBean() &#123;
+        String s =&quot;&#123;\&quot;action\&quot;:\&quot;add\&quot;,\&quot;id\&quot;:\&quot;1\&quot;,\&quot;ordinal\&quot;:8,\&quot;organUnitFullName\&quot;:\&quot;testJSON\&quot;,\&quot;parent\&quot;:\&quot;0\&quot;,\&quot;suborderNo\&quot;:\&quot;58961\&quot;&#125;&quot;;
+        Data data = JSON.parseObject(s, Data.class);
+        System.out.println(&quot;data对象&quot;+data.toString());
+        System.out.println(&quot;action=&quot;+data.getAction()+&quot;---id=&quot;+data.getId());
+        //data对象Data&#123;id=&#39;1&#39;, suborderNo=&#39;58961&#39;, organUnitType=&#39;null&#39;, action=&#39;add&#39;, parent=&#39;0&#39;, organUnitFullName=&#39;testJSON&#39;, ordinal=8&#125;
+        //action=add---id=1
+
+        /**
+         * 另一种方式转对象
+         */
+        Data dd = JSON.parseObject(s, new TypeReference&lt;Data&gt;() &#123;&#125;);
+        System.out.println(&quot;另一种方式获取data对象&quot;+dd.toString());
+        System.out.println(&quot;另一种方式获取=&quot;+dd.getAction()+&quot;---id=&quot;+dd.getId());
+        //另一种方式获取data对象Data&#123;id=&#39;1&#39;, suborderNo=&#39;58961&#39;, organUnitType=&#39;null&#39;, action=&#39;add&#39;, parent=&#39;0&#39;, organUnitFullName=&#39;testJSON&#39;, ordinal=8&#125;
+        //另一种方式获取=add---id=1
+    &#125;
+</code></pre><h3 id="JSON字符串-数组类型与JAVA对象的转换"><a href="#JSON字符串-数组类型与JAVA对象的转换" class="headerlink" title="JSON字符串 数组类型与JAVA对象的转换"></a>JSON字符串 数组类型与JAVA对象的转换</h3><pre><code>&#123;&quot;errors&quot;:[&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;254&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;,&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;255&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;]&#125;
+
+//json字符串--数组型与JSONArray对象之间的转换
+    public static void jsonStrToJSONArray() &#123;
+        String str = &quot;&#123;\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;&quot;;
+        JSONObject jsonObject = JSON.parseObject(str);
+        JSONArray error = jsonObject.getJSONArray(&quot;errors&quot;);
+        List&lt;Error&gt; errors = JSON.parseObject(error.toJSONString(), new TypeReference&lt;List&lt;Error&gt;&gt;() &#123;
+        &#125;);
+        for (Error e: errors) &#123;
+            //Error的属性
+            System.out.println(&quot;Error属性=&quot;+e.getSuccess());
+            System.out.println(&quot;Error属性=&quot;+e.getCode());
+            System.out.println(&quot;Error属性=&quot;+e.getMessage());
+            //Error集合属性
+            List&lt;Data&gt; datas = e.getData();
+            for (Data d: datas) &#123;
+                System.out.println(&quot;data对象属性=&quot;+d.getId());
+                System.out.println(&quot;data对象属性=&quot;+d.getAction());
+                System.out.println(&quot;data对象属性=&quot;+d.getSuborderNo());
+            &#125;
+        &#125;
+        //Error属性=false
+        //Error属性=UUM70004
+        //Error属性=组织单元名称不能为空
+        //data对象属性=254
+        //data对象属性=add
+        //data对象属性=SUB_2018062797348039
+
+        //Error属性=false
+        //Error属性=UUM70004
+        //Error属性=组织单元名称不能为空
+        //data对象属性=255
+        //data对象属性=add
+        //data对象属性=SUB_2018062797348039
+    &#125;
+</code></pre><h3 id="JSON字符串-第二种方法–-gt-数组类型与JAVA对象的转换"><a href="#JSON字符串-第二种方法–-gt-数组类型与JAVA对象的转换" class="headerlink" title="JSON字符串 第二种方法–&gt;数组类型与JAVA对象的转换"></a>JSON字符串 第二种方法–&gt;数组类型与JAVA对象的转换</h3><pre><code>//第二种方法：json字符串--数组型与JSONArray对象之间的转换
+    @Test
+    public void jsonStrToJSONArray2() &#123;
+        String str = &quot;&#123;\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;&quot;;
+        //获取jsonobject对象
+        JSONObject jsonObject = JSON.parseObject(str);
+        //把对象转换成jsonArray数组
+        JSONArray error = jsonObject.getJSONArray(&quot;errors&quot;);
+        //error==&gt;[&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;254&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;,&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;255&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;]
+        //将数组转换成字符串
+        String jsonString = JSONObject.toJSONString(error);//将array数组转换成字符串
+        //将字符串转成list集合
+        List&lt;Error&gt;  errors = JSONObject.parseArray(jsonString, Error.class);//把字符串转换成集合
+        for (Error e: errors) &#123;
+            //Error的属性
+            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getSuccess());
+            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getCode());
+            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getMessage());
+            //Error集合属性
+            List&lt;Data&gt; datas = e.getData();
+            for (Data d: datas) &#123;
+                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getId());
+                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getAction());
+                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getSuborderNo());
+            &#125;
+        &#125;
+        //另一种数组转换Error属性=false
+        //另一种数组转换Error属性=UUM70004
+        //另一种数组转换Error属性=组织单元名称不能为空
+        //另一种数组转换data对象属性=254
+        //另一种数组转换data对象属性=add
+        //另一种数组转换data对象属性=SUB_2018062797348039
+
+        //另一种数组转换Error属性=false
+        //另一种数组转换Error属性=UUM70004
+        //另一种数组转换Error属性=组织单元名称不能为空
+        //另一种数组转换data对象属性=255
+        //另一种数组转换data对象属性=add
+        //另一种数组转换data对象属性=SUB_2018062797348039
+    &#125;
+</code></pre><h3 id="JAVA对象转JSON对象"><a href="#JAVA对象转JSON对象" class="headerlink" title="JAVA对象转JSON对象"></a>JAVA对象转JSON对象</h3><pre><code>//javabean转json对象
+    public static void jsonBenToJsonObject() &#123;
+        Data data = new Data();
+        data.setAction(&quot;add&quot;);
+        data.setId(&quot;1&quot;);
+        data.setOrdinal(8L);
+        data.setOrganUnitFullName(&quot;testJSON&quot;);
+        data.setParent(&quot;0&quot;);
+        data.setSuborderNo(&quot;58961&quot;);
+        JSONObject jsonObj = (JSONObject) JSON.toJSON(data);
+        JSON json = (JSON) JSON.toJSON(data);
+        System.out.println(&quot;jsonObj&quot;+jsonObj);
+        System.out.println(&quot;json对象&quot;+json);
+        //jsonObj&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;
+        //json对象&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;
+    &#125;
+</code></pre>
+	</div>
+
+	
+
+	
+
+	
+		<div class="post-tags">
+			<i class="fa fa-tags" aria-hidden="true"></i>
+			<a class="tag badge badge-secondary post-meta-detail-tag -none-link" href="/tags/Fastjson/" rel="tag">Fastjson</a><a class="tag badge badge-secondary post-meta-detail-tag -none-link" href="/tags/Kotlin/" rel="tag">Kotlin</a>
+		</div>
+	
+</article>
+
+	<div id="share_container">
+	<div id="share" data-initialized="true">
+		<a class="no-pjax icon-wechat" tooltip="分享到微信">
+			<button class="btn btn-icon btn-success">
+				<span class="btn-inner--icon"><i class="fa fa-weixin"></i></span>
+			</button>
+		</a>
+		<a target="_blank" class="no-pjax icon-douban" tooltip="分享到豆瓣">
+			<button class="btn btn-icon btn-primary" style="background: #209261;border: none;">
+				豆
+			</button>
+		</a>
+		<a target="_blank" class="no-pjax icon-qq" tooltip="分享到 QQ">
+			<button class="btn btn-icon btn-primary" style="background: #2196f3;border: none;">
+				<span class="btn-inner--icon"><i class="fa fa-qq"></i></span>
+			</button>
+		</a>
+		<a target="_blank" class="no-pjax icon-qzone" tooltip="分享到 QQ 空间">
+			<button class="btn btn-icon btn-primary" style="background: #ffc107;border: none;">
+				<span class="btn-inner--icon"><i class="fa fa-star"></i></span>
+			</button>
+		</a>
+		<a target="_blank" class="no-pjax icon-weibo" tooltip="分享到微博">
+			<button class="btn btn-icon btn-warning">
+				<span class="btn-inner--icon"><i class="fa fa-weibo"></i></span>
+			</button>
+		</a>
+		<a target="_blank" class="no-pjax icon-facebook" tooltip="分享到 Facebook">
+			<button class="btn btn-icon btn-primary" style="background: #283593;border: none;">
+				<span class="btn-inner--icon"><i class="fa fa-facebook"></i></span>
+			</button>
+		</a>
+		<a target="_blank" class="no-pjax icon-twitter" tooltip="分享到 Twitter">
+			<button class="btn btn-icon btn-primary" style="background: #03a9f4;border: none;">
+				<span class="btn-inner--icon"><i class="fa fa-twitter"></i></span>
+			</button>
+		</a>
+		<a target="_blank" class="no-pjax icon-telegram" href="https://telegram.me/share/url?url=https://picpo.top/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/&text=Fastjson对JSON字符串、对象及数组进行转换" tooltip="分享到 Telegram">
+			<button class="btn btn-icon btn-primary" style="background: #42a5f5;border: none;">
+				<span class="btn-inner--icon"><i class="fa fa-telegram"></i></span>
+			</button>
+		</a>
+		<a target="_blank" class="no-pjax icon-copy-link" id="share_copy_link" tooltip="复制链接">
+			<button class="btn btn-icon btn-default">
+				<span class="btn-inner--icon"><i class="fa fa-link"></i></span>
+			</button>
+		</a>
+	</div>
+	<button id="share_show" class="btn btn-icon btn-primary" tooltip="分享">
+		<span class="btn-inner--icon"><i class="fa fa-share"></i></span>
+	</button>
 </div>
-
-
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/%E5%90%8E%E7%AB%AF/" rel="tag"># 后端</a>
-              <a href="/tags/Fastjson/" rel="tag"># Fastjson</a>
-              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
-          </div>
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2021/11/27/%E8%AE%B0%E4%B8%80%E6%AC%A1flask%E5%90%8E%E7%AB%AF%E8%A2%AB%E6%B8%97%E9%80%8F%E7%9A%84%E7%BB%8F%E5%8E%86/" rel="prev" title="记一次Flask后端被渗透的经历">
-      <i class="fa fa-chevron-left"></i> 记一次Flask后端被渗透的经历
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/" rel="next" title="《信息安全数学基础》求生指南">
-      《信息安全数学基础》求生指南 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
+<script type="text/javascript">
+	socialShare("#share", {
+	    title : 'Fastjson对JSON字符串、对象及数组进行转换',
+	    description : '
+fastjson依赖包添加网上找到了个不错的api，格式是json，我只会js语言的json处理，...',
+	    wechatQrcodeTitle : "分享到微信",
+	    wechatQrcodeHelper : '微信扫描二维码',
+	    source : 'https://picpo.top/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/'
+	});
+	$("#share_show")[0].onclick = function(){
+		$("#share_container").addClass("opened");
+	};
+	$("#share_copy_link")[0].onclick = function(){
+		let input = document.createElement('input');
+		document.body.appendChild(input);
+		input.setAttribute("value", window.location.href);
+		input.setAttribute("readonly", "readonly");
+		input.setAttribute("style", "opacity: 0;mouse-events:none;");
+		input.select();
+		if (document.execCommand('copy')){
+			iziToast.show({
+				title: '链接已复制',
+				message: "链接已复制到剪贴板",
+				class: 'shadow',
+				position: 'topRight',
+				backgroundColor: '#2dce89',
+				titleColor: '#ffffff',
+				messageColor: '#ffffff',
+				iconColor: '#ffffff',
+				progressBarColor: '#ffffff',
+				icon: 'fa fa-check',
+				timeout: 5000
+			});
+		}else{
+			iziToast.show({
+				title: '复制失败',
+				message: "请手动复制链接",
+				class: 'shadow',
+				position: 'topRight',
+				backgroundColor: '#f5365c',
+				titleColor: '#ffffff',
+				messageColor: '#ffffff',
+				iconColor: '#ffffff',
+				progressBarColor: '#ffffff',
+				icon: 'fa fa-close',
+				timeout: 5000
+			});
+		}
+		document.body.removeChild(input);
+	};
 </script>
 
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
 
-  <aside class="sidebar">
-    <div class="sidebar-inner">
 
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
 
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#fastjson%E4%BE%9D%E8%B5%96%E5%8C%85%E6%B7%BB%E5%8A%A0"><span class="nav-number">1.</span> <span class="nav-text">fastjson依赖包添加</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FastJson%E4%B8%BB%E8%A6%81%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">FastJson主要类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.</span> <span class="nav-text">JSON转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JAVA%E5%AF%B9%E8%B1%A1%E8%BD%ACJSON%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">3.1.</span> <span class="nav-text">JAVA对象转JSON字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%ACJSON%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.2.</span> <span class="nav-text">JSON字符串转JSON对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82JSON%E6%A0%BC%E5%BC%8F%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%8EJSONObject%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.3.</span> <span class="nav-text">复杂JSON格式字符串与JSONObject之间的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%ACJAVA%E7%AE%80%E5%8D%95%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.4.</span> <span class="nav-text">JSON字符串转JAVA简单对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON%E5%AD%97%E7%AC%A6%E4%B8%B2-%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8B%E4%B8%8EJAVA%E5%AF%B9%E8%B1%A1%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.5.</span> <span class="nav-text">JSON字符串 数组类型与JAVA对象的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON%E5%AD%97%E7%AC%A6%E4%B8%B2-%E7%AC%AC%E4%BA%8C%E7%A7%8D%E6%96%B9%E6%B3%95%E2%80%93-gt-%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8B%E4%B8%8EJAVA%E5%AF%B9%E8%B1%A1%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.6.</span> <span class="nav-text">JSON字符串 第二种方法–&gt;数组类型与JAVA对象的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JAVA%E5%AF%B9%E8%B1%A1%E8%BD%ACJSON%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.7.</span> <span class="nav-text">JAVA对象转JSON对象</span></a></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
 
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="PiCpo"
-      src="https://avatars.githubusercontent.com/u/33993624?s=400&u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&v=4">
-  <p class="site-author-name" itemprop="name">PiCpo</p>
-  <div class="site-description" itemprop="description">猜猜里面有什么(=・ω・=)</div>
+<div class="post-navigation card shadow-sm"><div class="post-navigation-item post-navigation-pre"><span class="page-navigation-extra-text"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>上一篇</span><a href="/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/" rel="prev"> 《信息安全数学基础》求生指南</a></div><div class="post-navigation-item post-navigation-next"><span class="page-navigation-extra-text">下一篇 <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></span><a href="/2021/11/27/%E8%AE%B0%E4%B8%80%E6%AC%A1flask%E5%90%8E%E7%AB%AF%E8%A2%AB%E6%B8%97%E9%80%8F%E7%9A%84%E7%BB%8F%E5%8E%86/" rel="next"> 记一次Flask后端被渗透的经历</a></div></div>
+
+
+
+
+		
+		
+		
+		
+
+					<footer id="footer" class="site-footer card shadow-sm border-0">
+						<a href="https://icp.gov.moe/?keyword=20220176" target="_blank">萌ICP备20220176号</a>
+						<div>Theme <a target="_blank" rel="noopener" href="https://github.com/solstice23/hexo-theme-argon"><strong>Argon</strong></a> | Powered by Hexo</div>
+						<span id="busuanzi_container_site_uv">
+							本站访客数 <span id="busuanzi_value_site_uv"></span> 人次
+						</span>
+					</footer>
+				</main>
+			</div>
+		</div>
+		
+<script src="/argontheme.js"></script>
+
+		
+		
+		
+			<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
+			<script src="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+			<script src="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+			<script>
+				document.addEventListener("DOMContentLoaded", function() {
+					renderMathInElement(document.body,{
+						delimiters: [
+							{left: "$$", right: "$$", display: true},
+							{left: "$", right: "$", display: false},
+							{left: "\\(", right: "\\)", display: false}
+						]
+					});
+				});
+			</script>
+		
+
+		
+			<script>
+				var argonEnableCodeHighlight = true;
+			</script>
+			
+<link rel="stylesheet" href="/assets/vendor/highlight/styles/vs2015.css">
+
+		
+
+	</div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">26</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">39</span>
-        <span class="site-state-item-name">标签</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/picpo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;picpo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:picpo@proton.me" title="E-Mail → mailto:picpo@proton.me" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://twitter.com/picpo_dot" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;picpo_dot" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
-      </span>
-  </div>
-
-
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-
-<a href="https://icp.gov.moe/?keyword=20220176" target="_blank">萌ICP备20220176号</a>
-<div class="copyright">
-  
-  &copy; 2018 – 
-  <span itemprop="copyrightYear">2022</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">PiCpo</span>
-</div>
-<div>
-<span id="timeDate">载入天数...</span>
-<span id="times">载入时分秒...</span> 
-<script> 
-    var now = new Date(); 
-    function createtime() {
-    var grt= new Date("7/15/2018 12:00:00");
-    //此处修改你的建站时间或者网站上线时间 
-    now.setTime(now.getTime()+250); 
-    days = (now - grt ) / 1000 / 60 / 60 / 24; 
-    dnum = Math.floor(days); hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); 
-    hnum = Math.floor(hours); 
-    if(String(hnum).length ==1 ){
-        hnum = "0" + hnum;
-    } 
-    minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
-    mnum = Math.floor(minutes); if(String(mnum).length ==1 )
-    {
-       mnum = "0" + mnum;
-    } 
-    seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
-    snum = Math.round(seconds);
-    if(String(snum).length ==1 ){snum = "0" + snum;} 
-    document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
-    document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
-} 
-    setInterval("createtime()",250); 
-</script>
-</div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
-  </div>
-
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
-
-  
-<script src="/js/local-search.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-  
-
+<noscript>
+	<style>
+		article img.lazyload[src^="data:image/svg+xml;base64,PCEtLUFyZ29uTG9hZGluZy0tPg"]{display: none;}
+		.comment-item-text .comment-sticker.lazyload{display: none;}
+	</style>
+</noscript>
 </body>
+
+
+
 </html>
+
