@@ -1,92 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Docker+Flask构建后端的踩坑记录</title>
-    <url>/2021/11/04/dockerflask%E6%9E%84%E5%BB%BA%E5%90%8E%E7%AB%AF%E7%9A%84%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252206491.png" alt=""></p>
-<p>今天第一次尝试用flask构建自己的后端项目，其实一切都挺顺利的。直到部署这个环节，因为我对于Flask和Docker不了解，踩了不少坑。</p>
-<p>docker这个东西，对于我这个初学者来说，dockerfile是好文明，但是docker本身不是。</p>
-<p>在一开始，我总是尝试pull ubuntu镜像，然后再dockerfile里面写上apt-get install和pip，其实何必呢，完全就有官方的python环境镜像。而且，手动更改系统镜像，不一定能达到效果，就好比今天Python环境搞了半天，发现跑不起来，因为期间的软链接创建不成功，无法执行<code>python app.py</code>这个命令（但是它自带的python3没有问题，但是我要的是python2）</p>
-<p>写了个自动搭建dockerfile，仅供参考</p>
-<pre><code>//FlaskApp  
-//    ├── requirements.txt
-//    ├── Dockerfile
-//    └── app
-//        └── app.py
-//        └── &lt;other .py files&gt;
-//这是我的目录结构
-
-
-FROM python:3.7
-//直接pull python3.7
-
-MAINTAINER picpo &quot;picpo@foxmail.com&quot;
-
-COPY ./requirements.txt /requirements.txt
-
-WORKDIR /
-
-RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple some-package
-
-COPY . /
-
-ENTRYPOINT [ &quot;python&quot; ,&quot;app/app.py&quot; ]
-</code></pre><p>Dockerfile的基本指令有十三个,上面用到了部分；</p>
-<ul>
-<li><p><strong>FROM</strong> - 所有Dockerfile的第一个指令都必须是 <code>FROM</code> ，用于指定一个构建镜像的基础源镜像，如果本地没有就会从公共库中拉取，没有指定镜像的标签会使用默认的latest标签，如果需要在一个Dockerfile中构建多个镜像，可以使用多次。  </p>
-</li>
-<li><p><strong>MAINTAINER</strong> - 描述镜像的创建者，名称和邮箱。  </p>
-</li>
-<li><p><strong>RUN</strong> - RUN命令是一个常用的命令，执行完成之后会成为一个新的镜像，通常用于运行安装任务从而向映像中添加额外的内容。在这里，我们需更新包，安装 <code>python3</code> 和 <code>pip</code> 。在第二个 <code>RUN</code> 命令中使用 <code>pip</code> 来安装 <code>requirements.txt</code> 文件中的所有包。  </p>
-</li>
-<li><p><strong>COPY</strong> - 复制本机文件或目录，添加到指定的容器目录, 本例中将 <code>requirements.txt</code> 复制到镜像中。  </p>
-</li>
-<li><p><strong>WORKDIR</strong> - 为RUN、CMD、ENTRYPOINT指令配置工作目录。可以使用多个WORKDIR指令，后续参数如果是相对路径，则会基于之前命令指定的路径。  </p>
-</li>
-<li><p><strong>ENTRYPOINT</strong> - 在启动容器的时候提供一个默认的命令项。</p>
-</li>
-</ul>
-<p>现在 <code>Dockerfile</code> 已经准备好了，而且也了解了Docker的构建过程，接下来为我们的应用程序创建Docker映像:</p>
-<pre><code>docker build -t docker-flask:0.1 .
-</code></pre><p>容器化的优点，就是开发的应用程序通过容器部署，从一开始就确保了应用程序构建的环境是干净的，从而消除了交付过程中的意外情况。</p>
-<p>但是呢，在开发应用程序的过程中，更重要的是要快速重新构建和测试，以检查验证过程中的每个中间步骤。为此，web应用程序的开发人员需要依赖于Flask等框架提供的自动重启功能（Debug模式下，修改代码自动重启）。而这一功能也可以在容器中使用。</p>
-<p>为了启用自动重启，在启动Docker容器时将主机中的开发目录映射到容器中的app目录。这样Flask就可以监听主机中的文件变化(通过映射)来发现代码更改，并在检测到更改时自动重启应用程序。</p>
-<p>此外，还需要将应用程序的端口从容器转发到主机。这是为了能够让主机上的浏览器访问应用程序。</p>
-<p>因此，启动Dokcer容器时需要使用 <em>volume-mapping</em> 和 <em>port-forwarding</em> 选项：</p>
-<pre><code>docker run --name flask_app -v $PWD/app:/app -p 1000:5000 docker-flask:0.1
-</code></pre><p>该命令将会执行以下操作:</p>
-<ul>
-<li><p>基于之前构建的 <code>docker-flask</code> 镜像启动一个容器；  </p>
-</li>
-<li><p>这个容器的名称被设置为 <code>flask_app</code> 。如果没有 <code>——name</code> 选项，Docker将为容器生成一个名称。显式指定名称可以帮助我们定位容器(用来停止等操作)；  </p>
-</li>
-<li><p><code>-v</code> 选项将主机的app目录挂载到容器；  </p>
-</li>
-<li><p><code>-p</code> 选项将容器的端口映射到主机。  </p>
-</li>
-</ul>
-<p>现在可以通过<code>http://localhost:5000</code> 或者 <code>http://0.0.0.0:5000/</code> 访问到应用</p>
-<p>然而，然而，第二个坑就是我今天对Flask掌握不足的问题了（，在成功做好端口映射后，我在宿主机环境一直一直<code>curl localhost:10000</code>失败，返回的字符是<code>curl: (52) Empty reply from server</code>。很难绷得住，因为这端口好像转发成功了，但是啥也没有，其他的没有服务的端口都是refuse，压根没开，所以这是咋回事呢？我百思不得其解。</p>
-<p>终于找到了一篇讲Flask的博客（<a href="https://blog.csdn.net/qq_26591517/article/details/86423838">https://blog.csdn.net/qq_26591517/article/details/86423838</a>），里面有这么提到：</p>
-<p>“用python开启flask web服务时：（1）你只需要本机访问，那ip只要不设置为0.0.0.0就可以，正常访问就好。（2）如果你需要外网访问，ip需要设置为0.0.0.0，此时，在本机上访问需要使用默认的127.0.0.1（也就是你不设置ip时默认的ip）,在外网上访问则需要使用你本机的ip，不要使用0.0.0.0”</p>
-<p>原来如此，我立马把</p>
-<pre><code>if __name__ == &quot;__main__&quot;:
-    app.run()
-</code></pre><p>改为：</p>
-<pre><code>if __name__ == &quot;__main__&quot;:
-    app.run(host=&quot;0.0.0.0&quot;)
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252207219.png" alt=""></p>
-<p>成功了！</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>Docker</tag>
-        <tag>Flask</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Fastjson对JSON字符串、对象及数组进行转换</title>
     <url>/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252126633.png" alt=""></p>
@@ -264,35 +178,89 @@ ENTRYPOINT [ &quot;python&quot; ,&quot;app/app.py&quot; ]
       </tags>
   </entry>
   <entry>
-    <title>Flask的食用方法</title>
-    <url>/2021/11/04/flask%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252214256.png" alt=""></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直觉得python写后端是件很方便的事，所以我打算整一个Flask的学习</p>
-<h2 id="0x01PyCharm导入环境"><a href="#0x01PyCharm导入环境" class="headerlink" title="0x01PyCharm导入环境"></a>0x01PyCharm导入环境</h2><p>File-Settings-Project Interpreter，如下图所示：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215727.png" alt=""></p>
-<p>添加Flask server：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215040.png" alt=""></p>
-<h2 id="0x02Hello-Flask"><a href="#0x02Hello-Flask" class="headerlink" title="0x02Hello,Flask!"></a>0x02Hello,Flask!</h2><p>新建一个app.py，什么名字都行，记住不要Flask，会冲突</p>
-<pre><code>from flask import Flask
-app = Flask(__name__)
+    <title>Docker+Flask构建后端的踩坑记录</title>
+    <url>/2021/11/04/dockerflask%E6%9E%84%E5%BB%BA%E5%90%8E%E7%AB%AF%E7%9A%84%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252206491.png" alt=""></p>
+<p>今天第一次尝试用flask构建自己的后端项目，其实一切都挺顺利的。直到部署这个环节，因为我对于Flask和Docker不了解，踩了不少坑。</p>
+<p>docker这个东西，对于我这个初学者来说，dockerfile是好文明，但是docker本身不是。</p>
+<p>在一开始，我总是尝试pull ubuntu镜像，然后再dockerfile里面写上apt-get install和pip，其实何必呢，完全就有官方的python环境镜像。而且，手动更改系统镜像，不一定能达到效果，就好比今天Python环境搞了半天，发现跑不起来，因为期间的软链接创建不成功，无法执行<code>python app.py</code>这个命令（但是它自带的python3没有问题，但是我要的是python2）</p>
+<p>写了个自动搭建dockerfile，仅供参考</p>
+<pre><code>//FlaskApp  
+//    ├── requirements.txt
+//    ├── Dockerfile
+//    └── app
+//        └── app.py
+//        └── &lt;other .py files&gt;
+//这是我的目录结构
 
-@app.route(&#39;/&#39;)
-def hello_world():
-    return &#39;Hello,Flask!&#39;
 
-if __name__ == &#39;__main__&#39;:
+FROM python:3.7
+//直接pull python3.7
+
+MAINTAINER picpo &quot;picpo@foxmail.com&quot;
+
+COPY ./requirements.txt /requirements.txt
+
+WORKDIR /
+
+RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple some-package
+
+COPY . /
+
+ENTRYPOINT [ &quot;python&quot; ,&quot;app/app.py&quot; ]
+</code></pre><p>Dockerfile的基本指令有十三个,上面用到了部分；</p>
+<ul>
+<li><p><strong>FROM</strong> - 所有Dockerfile的第一个指令都必须是 <code>FROM</code> ，用于指定一个构建镜像的基础源镜像，如果本地没有就会从公共库中拉取，没有指定镜像的标签会使用默认的latest标签，如果需要在一个Dockerfile中构建多个镜像，可以使用多次。  </p>
+</li>
+<li><p><strong>MAINTAINER</strong> - 描述镜像的创建者，名称和邮箱。  </p>
+</li>
+<li><p><strong>RUN</strong> - RUN命令是一个常用的命令，执行完成之后会成为一个新的镜像，通常用于运行安装任务从而向映像中添加额外的内容。在这里，我们需更新包，安装 <code>python3</code> 和 <code>pip</code> 。在第二个 <code>RUN</code> 命令中使用 <code>pip</code> 来安装 <code>requirements.txt</code> 文件中的所有包。  </p>
+</li>
+<li><p><strong>COPY</strong> - 复制本机文件或目录，添加到指定的容器目录, 本例中将 <code>requirements.txt</code> 复制到镜像中。  </p>
+</li>
+<li><p><strong>WORKDIR</strong> - 为RUN、CMD、ENTRYPOINT指令配置工作目录。可以使用多个WORKDIR指令，后续参数如果是相对路径，则会基于之前命令指定的路径。  </p>
+</li>
+<li><p><strong>ENTRYPOINT</strong> - 在启动容器的时候提供一个默认的命令项。</p>
+</li>
+</ul>
+<p>现在 <code>Dockerfile</code> 已经准备好了，而且也了解了Docker的构建过程，接下来为我们的应用程序创建Docker映像:</p>
+<pre><code>docker build -t docker-flask:0.1 .
+</code></pre><p>容器化的优点，就是开发的应用程序通过容器部署，从一开始就确保了应用程序构建的环境是干净的，从而消除了交付过程中的意外情况。</p>
+<p>但是呢，在开发应用程序的过程中，更重要的是要快速重新构建和测试，以检查验证过程中的每个中间步骤。为此，web应用程序的开发人员需要依赖于Flask等框架提供的自动重启功能（Debug模式下，修改代码自动重启）。而这一功能也可以在容器中使用。</p>
+<p>为了启用自动重启，在启动Docker容器时将主机中的开发目录映射到容器中的app目录。这样Flask就可以监听主机中的文件变化(通过映射)来发现代码更改，并在检测到更改时自动重启应用程序。</p>
+<p>此外，还需要将应用程序的端口从容器转发到主机。这是为了能够让主机上的浏览器访问应用程序。</p>
+<p>因此，启动Dokcer容器时需要使用 <em>volume-mapping</em> 和 <em>port-forwarding</em> 选项：</p>
+<pre><code>docker run --name flask_app -v $PWD/app:/app -p 1000:5000 docker-flask:0.1
+</code></pre><p>该命令将会执行以下操作:</p>
+<ul>
+<li><p>基于之前构建的 <code>docker-flask</code> 镜像启动一个容器；  </p>
+</li>
+<li><p>这个容器的名称被设置为 <code>flask_app</code> 。如果没有 <code>——name</code> 选项，Docker将为容器生成一个名称。显式指定名称可以帮助我们定位容器(用来停止等操作)；  </p>
+</li>
+<li><p><code>-v</code> 选项将主机的app目录挂载到容器；  </p>
+</li>
+<li><p><code>-p</code> 选项将容器的端口映射到主机。  </p>
+</li>
+</ul>
+<p>现在可以通过<code>http://localhost:5000</code> 或者 <code>http://0.0.0.0:5000/</code> 访问到应用</p>
+<p>然而，然而，第二个坑就是我今天对Flask掌握不足的问题了（，在成功做好端口映射后，我在宿主机环境一直一直<code>curl localhost:10000</code>失败，返回的字符是<code>curl: (52) Empty reply from server</code>。很难绷得住，因为这端口好像转发成功了，但是啥也没有，其他的没有服务的端口都是refuse，压根没开，所以这是咋回事呢？我百思不得其解。</p>
+<p>终于找到了一篇讲Flask的博客（<a href="https://blog.csdn.net/qq_26591517/article/details/86423838">https://blog.csdn.net/qq_26591517/article/details/86423838</a>），里面有这么提到：</p>
+<p>“用python开启flask web服务时：（1）你只需要本机访问，那ip只要不设置为0.0.0.0就可以，正常访问就好。（2）如果你需要外网访问，ip需要设置为0.0.0.0，此时，在本机上访问需要使用默认的127.0.0.1（也就是你不设置ip时默认的ip）,在外网上访问则需要使用你本机的ip，不要使用0.0.0.0”</p>
+<p>原来如此，我立马把</p>
+<pre><code>if __name__ == &quot;__main__&quot;:
     app.run()
-</code></pre><p>我们点击运行，即终端输出：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215056.png" alt=""></p>
-<p>打开网址：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215977.png" alt=""></p>
+</code></pre><p>改为：</p>
+<pre><code>if __name__ == &quot;__main__&quot;:
+    app.run(host=&quot;0.0.0.0&quot;)
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252207219.png" alt=""></p>
+<p>成功了！</p>
 ]]></content>
       <categories>
         <category>后端</category>
       </categories>
       <tags>
+        <tag>Docker</tag>
         <tag>Flask</tag>
-        <tag>PyCharm</tag>
       </tags>
   </entry>
   <entry>
@@ -381,6 +349,111 @@ This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
       </tags>
   </entry>
   <entry>
+    <title>Nekobot开发心得</title>
+    <url>/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>开一个帖，记录一下Nekobot的开发心得吧（主要是自己认为比较重要的某些功能的代码实现方法，写给自己，以免忘记）</p>
+<p>不过，如果笔记里的这些内容对你有所帮助，那就更好了2333.</p>
+<h2 id="0x01通过Get方式请求来获取网页源码"><a href="#0x01通过Get方式请求来获取网页源码" class="headerlink" title="0x01通过Get方式请求来获取网页源码"></a>0x01通过Get方式请求来获取网页源码</h2><pre><code>fun httpget(url: String): String? &#123;
+        val client = OkHttpClient()
+        val request = Request.Builder().get()
+            .url(url)
+            .build()
+        val call = client.newCall(request)
+        val response = call.execute()
+        val HTML = response.body?.string()
+        return HTML
+    &#125;
+</code></pre><p>肯定要有的，不然网页api以及爬虫都做不了了</p>
+<h2 id="0x02读取本地文件夹的文件名"><a href="#0x02读取本地文件夹的文件名" class="headerlink" title="0x02读取本地文件夹的文件名"></a>0x02读取本地文件夹的文件名</h2><pre><code>fun getImgList(path: String): MutableList&lt;String&gt; &#123;
+            val files: MutableList&lt;String&gt; = mutableListOf()
+            val fileTree: FileTreeWalk = File(path).walk()
+            fileTree.maxDepth(1)
+                .filter &#123; it.isFile &#125;
+                .forEach &#123; files.add(it.name) &#125;
+            return files
+        &#125;
+</code></pre><p>示例是读取本地文件夹的图片，通过类似的思路做了个黑名单读取</p>
+<pre><code>fun getList(path: String): MutableList&lt;Long&gt; &#123;
+            val files: MutableList&lt;Long&gt; = mutableListOf()
+            val fileTree: FileTreeWalk = File(path).walk()
+            fileTree.maxDepth(1)
+                .filter &#123; it.isFile &#125;
+                .forEach &#123; files.add(it.name.toLong()) &#125;
+            return files
+        &#125;
+</code></pre><p>读取时转换为id（类型为Long），一般来说这个添加方式比修改服务器上的黑名单列表文件内容方便多了，我只要新建个文件，文件名为屏蔽的id就是了；想要移除，删掉就是了。</p>
+<p>为什么不在QQ上直接指示机器人屏蔽某个QQid？对不起，我对本人的编程水平极不自信，虽然源文件泄露导致发现漏洞然后攻击的可能性极微。但是给mirai以root权限对服务器的文件进行创建删除写入，我不太敢这样做。</p>
+<p>顺便一提.filter是选择器而.forEach是循环，类似与if和for，不过咱只有在这块使用了这个kotlin推荐（？）使用的选择语句和循环语句，其他地方一般就是if和for，有的时候还是when（选择语句），语法相当混乱（捂脸）</p>
+<h2 id="0x03获取网络资源并转换为流"><a href="#0x03获取网络资源并转换为流" class="headerlink" title="0x03获取网络资源并转换为流"></a>0x03获取网络资源并转换为流</h2><pre><code>//获取网络图片
+fun getNetImg(urlstr: String): InputStream? &#123;
+        val url = URL(urlstr)
+//        return try &#123;  实有异常了再说
+        return url.openConnection().getInputStream()
+//        &#125;catch(err:java.io.IOException)&#123;
+//            null
+//        &#125;
+    &#125;
+</code></pre><p>学会这个的契机是想发送网络上的图片来着的</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203015.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203912.png" alt=""></p>
+<p><a href="https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97">https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97</a></p>
+<p>就是这个思路，另外提一下mirai的具体食用方法吧</p>
+<pre><code>getNetImg(imgurl).use &#123;
+                        if (it != null) &#123;
+//方法一，最原始的发送图片的方法，就是先uploadImage 然后sendMessage
+                            val img = it.toExternalResource()
+                            group.sendMessage(group.uploadImage(img))
+//方法二，sendImage相当于先进行uploadImage然后再sendMessage
+                            group.sendImage(img)
+                        &#125; else &#123;
+                        &#125;
+                    &#125;
+</code></pre><h2 id="0x05发送语音"><a href="#0x05发送语音" class="headerlink" title="0x05发送语音"></a>0x05发送语音</h2><p>其实也没啥，不过注意，<strong>只支持 <code>amr</code> 和 <code>silk</code> 格式</strong></p>
+<pre><code>group.sendMessage(File(&quot;$&#123;voiceDir&#125;Av845256252.silk&quot;).toExternalResource().uploadAsVoice(group))
+</code></pre>]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>Kotlin</tag>
+        <tag>Java</tag>
+        <tag>Mirai</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Flask的食用方法</title>
+    <url>/2021/11/04/flask%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252214256.png" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直觉得python写后端是件很方便的事，所以我打算整一个Flask的学习</p>
+<h2 id="0x01PyCharm导入环境"><a href="#0x01PyCharm导入环境" class="headerlink" title="0x01PyCharm导入环境"></a>0x01PyCharm导入环境</h2><p>File-Settings-Project Interpreter，如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215727.png" alt=""></p>
+<p>添加Flask server：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215040.png" alt=""></p>
+<h2 id="0x02Hello-Flask"><a href="#0x02Hello-Flask" class="headerlink" title="0x02Hello,Flask!"></a>0x02Hello,Flask!</h2><p>新建一个app.py，什么名字都行，记住不要Flask，会冲突</p>
+<pre><code>from flask import Flask
+app = Flask(__name__)
+
+@app.route(&#39;/&#39;)
+def hello_world():
+    return &#39;Hello,Flask!&#39;
+
+if __name__ == &#39;__main__&#39;:
+    app.run()
+</code></pre><p>我们点击运行，即终端输出：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215056.png" alt=""></p>
+<p>打开网址：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215977.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Flask</tag>
+        <tag>PyCharm</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Nekobot开发心得：Silk4j食用笔记</title>
     <url>/2021/10/11/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97%EF%BC%9Asilk4j%E9%A3%9F%E7%94%A8%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252204000.png" alt=""></p>
@@ -454,79 +527,6 @@ getNetImg(mp3str).use &#123;
                             group.sendMessage(silk.toExternalResource().uploadAsVoice(group))
                         &#125;
                     &#125;
-</code></pre>]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>Kotlin</tag>
-        <tag>Java</tag>
-        <tag>Mirai</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Nekobot开发心得</title>
-    <url>/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png" alt=""></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>开一个帖，记录一下Nekobot的开发心得吧（主要是自己认为比较重要的某些功能的代码实现方法，写给自己，以免忘记）</p>
-<p>不过，如果笔记里的这些内容对你有所帮助，那就更好了2333.</p>
-<h2 id="0x01通过Get方式请求来获取网页源码"><a href="#0x01通过Get方式请求来获取网页源码" class="headerlink" title="0x01通过Get方式请求来获取网页源码"></a>0x01通过Get方式请求来获取网页源码</h2><pre><code>fun httpget(url: String): String? &#123;
-        val client = OkHttpClient()
-        val request = Request.Builder().get()
-            .url(url)
-            .build()
-        val call = client.newCall(request)
-        val response = call.execute()
-        val HTML = response.body?.string()
-        return HTML
-    &#125;
-</code></pre><p>肯定要有的，不然网页api以及爬虫都做不了了</p>
-<h2 id="0x02读取本地文件夹的文件名"><a href="#0x02读取本地文件夹的文件名" class="headerlink" title="0x02读取本地文件夹的文件名"></a>0x02读取本地文件夹的文件名</h2><pre><code>fun getImgList(path: String): MutableList&lt;String&gt; &#123;
-            val files: MutableList&lt;String&gt; = mutableListOf()
-            val fileTree: FileTreeWalk = File(path).walk()
-            fileTree.maxDepth(1)
-                .filter &#123; it.isFile &#125;
-                .forEach &#123; files.add(it.name) &#125;
-            return files
-        &#125;
-</code></pre><p>示例是读取本地文件夹的图片，通过类似的思路做了个黑名单读取</p>
-<pre><code>fun getList(path: String): MutableList&lt;Long&gt; &#123;
-            val files: MutableList&lt;Long&gt; = mutableListOf()
-            val fileTree: FileTreeWalk = File(path).walk()
-            fileTree.maxDepth(1)
-                .filter &#123; it.isFile &#125;
-                .forEach &#123; files.add(it.name.toLong()) &#125;
-            return files
-        &#125;
-</code></pre><p>读取时转换为id（类型为Long），一般来说这个添加方式比修改服务器上的黑名单列表文件内容方便多了，我只要新建个文件，文件名为屏蔽的id就是了；想要移除，删掉就是了。</p>
-<p>为什么不在QQ上直接指示机器人屏蔽某个QQid？对不起，我对本人的编程水平极不自信，虽然源文件泄露导致发现漏洞然后攻击的可能性极微。但是给mirai以root权限对服务器的文件进行创建删除写入，我不太敢这样做。</p>
-<p>顺便一提.filter是选择器而.forEach是循环，类似与if和for，不过咱只有在这块使用了这个kotlin推荐（？）使用的选择语句和循环语句，其他地方一般就是if和for，有的时候还是when（选择语句），语法相当混乱（捂脸）</p>
-<h2 id="0x03获取网络资源并转换为流"><a href="#0x03获取网络资源并转换为流" class="headerlink" title="0x03获取网络资源并转换为流"></a>0x03获取网络资源并转换为流</h2><pre><code>//获取网络图片
-fun getNetImg(urlstr: String): InputStream? &#123;
-        val url = URL(urlstr)
-//        return try &#123;  实有异常了再说
-        return url.openConnection().getInputStream()
-//        &#125;catch(err:java.io.IOException)&#123;
-//            null
-//        &#125;
-    &#125;
-</code></pre><p>学会这个的契机是想发送网络上的图片来着的</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203015.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203912.png" alt=""></p>
-<p><a href="https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97">https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97</a></p>
-<p>就是这个思路，另外提一下mirai的具体食用方法吧</p>
-<pre><code>getNetImg(imgurl).use &#123;
-                        if (it != null) &#123;
-//方法一，最原始的发送图片的方法，就是先uploadImage 然后sendMessage
-                            val img = it.toExternalResource()
-                            group.sendMessage(group.uploadImage(img))
-//方法二，sendImage相当于先进行uploadImage然后再sendMessage
-                            group.sendImage(img)
-                        &#125; else &#123;
-                        &#125;
-                    &#125;
-</code></pre><h2 id="0x05发送语音"><a href="#0x05发送语音" class="headerlink" title="0x05发送语音"></a>0x05发送语音</h2><p>其实也没啥，不过注意，<strong>只支持 <code>amr</code> 和 <code>silk</code> 格式</strong></p>
-<pre><code>group.sendMessage(File(&quot;$&#123;voiceDir&#125;Av845256252.silk&quot;).toExternalResource().uploadAsVoice(group))
 </code></pre>]]></content>
       <categories>
         <category>野生技术协会</category>
@@ -644,6 +644,27 @@ if __name__ == &#39;__main__&#39;:
       </tags>
   </entry>
   <entry>
+    <title>shell备份脚本</title>
+    <url>/2023/01/13/shell%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301132338163.png" alt=""></p>
+<p>写了个shell的备份脚本，自带删除过早存档的功能。</p>
+<p>本意是为饥荒服务器写的，虽然饥荒自带回档，但是人物数据、token以及mod配置没被备份。</p>
+<pre><code class="lang-shell">#! /bin/bash
+today=`date +%Y%m%d%H%M`
+tar -czvf /mnt/WDC/dst_backup/$today.tar.gz /home/picpo/.klei/DoNotStarveTogether/Cluster_1
+find /mnt/WDC/dst_backup/ -type f -mtime +1 -exec rm -f &#123;&#125; \; #自动删除+1是两天之前的存档
+echo &quot;backup!$today&quot;
+</code></pre>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>shell</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>stable-diffusion-webui的食用方法</title>
     <url>/2022/10/08/stable-diffusion-webui%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252157828.png" alt=""></p>
@@ -677,27 +698,6 @@ if __name__ == &#39;__main__&#39;:
       </categories>
       <tags>
         <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>shell备份脚本</title>
-    <url>/2023/01/13/shell%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301132338163.png" alt=""></p>
-<p>写了个shell的备份脚本，自带删除过早存档的功能。</p>
-<p>本意是为饥荒服务器写的，虽然饥荒自带回档，但是人物数据、token以及mod配置没被备份。</p>
-<pre><code class="lang-shell">#! /bin/bash
-today=`date +%Y%m%d%H%M`
-tar -czvf /mnt/WDC/dst_backup/$today.tar.gz /home/picpo/.klei/DoNotStarveTogether/Cluster_1
-find /mnt/WDC/dst_backup/ -type f -mtime +1 -exec rm -f &#123;&#125; \; #自动删除+1是两天之前的存档
-echo &quot;backup!$today&quot;
-</code></pre>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>shell</tag>
       </tags>
   </entry>
   <entry>
@@ -943,137 +943,6 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </tags>
   </entry>
   <entry>
-    <title>《信息安全数学基础》求生指南</title>
-    <url>/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png" alt=""></p>
-<h2 id="感受"><a href="#感受" class="headerlink" title="感受"></a>感受</h2><p>先说感受，还就是那个崭新出厂，所以考试前三天才开始学非常痛苦，因为这书真的看不下去</p>
-<p>数论部分概念比较简单，但是涉及的计算很多，学到原根解方程那块才知道很多难的点考试是不会考的</p>
-<p>抽代部分看书已经看不懂了，建议配合哈工大的网课食用基础概念，考试会考多项式环那块的简单证明和简单计算，其他就是证明了</p>
-<p>那那么多证明我哪知道考哪些？会有透题的，或许是自己老师，或许是别的老师，总之保持消息畅通</p>
-<p>最后综测80，3.0，算是很满意的成绩了，虽然考试期间有两道计算题我铸币了，算错了好几次最后还是放弃了。</p>
-<h2 id="第一章-整数的可除性"><a href="#第一章-整数的可除性" class="headerlink" title="第一章 整数的可除性"></a>第一章 整数的可除性</h2><p>欧几里得除法</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-1c5b8f5bc3f4f9b7.png" alt=""></p>
-<h3 id="最大公因数"><a href="#最大公因数" class="headerlink" title="最大公因数"></a>最大公因数</h3><p>所有公因数中最大的那个整数，记作 ( a1，…，an )</p>
-<h3 id="最小公倍数"><a href="#最小公倍数" class="headerlink" title="最小公倍数"></a>最小公倍数</h3><p>所有公倍数中最小的那个正整数，记作 [ a1，…，an ]</p>
-<h3 id="整除的进一步性质"><a href="#整除的进一步性质" class="headerlink" title="整除的进一步性质"></a>整除的进一步性质</h3><p>① 若 c ab、(a，c) = 1，则 c b<br>② 若 p 是素数，p ab，则 p a 或 p b<br>③ 若 a₁，a₂，…，an 是 D 的公倍数，则 D [ a1，…，an ]</p>
-<h3 id="真因数"><a href="#真因数" class="headerlink" title="真因数"></a>真因数</h3><p>不包括这个数本身的所有因数，例如 6 的真因数是 1、2、3</p>
-<h3 id="整数分解定理"><a href="#整数分解定理" class="headerlink" title="整数分解定理"></a>整数分解定理</h3><p>若 n a² - b²，n 不整除 a+b、a-b</p>
-<p>则 (n，a+b)、(n，a-b) 是 n 的真因数</p>
-<h3 id="π-x"><a href="#π-x" class="headerlink" title="π (x)"></a>π (x)</h3><p>表示不超过 x 的素数个数，例如 π (2) = 1，π (10) = 4</p>
-<p>素数定理</p>
-<p>lim(x-&gt;∞) π(x) / x / lnx = 1</p>
-<h2 id="第二章-同余"><a href="#第二章-同余" class="headerlink" title="第二章 同余"></a>第二章 同余</h2><h3 id="同余"><a href="#同余" class="headerlink" title="同余"></a>同余</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-4b4af8c1d3aec647.png" alt=""></p>
-<h3 id="剩余类"><a href="#剩余类" class="headerlink" title="剩余类"></a>剩余类</h3><p>Ca = { c c∈Z，c ≡ a (mod m) }</p>
-<p>Ca 叫做模 m 的剩余类，c 叫做该类的剩余</p>
-<h3 id="完全剩余系"><a href="#完全剩余系" class="headerlink" title="完全剩余系"></a>完全剩余系</h3><p>r0，r1，… ，rm-1 是模 m 的完全剩余系充要条件：r 的模 m 两两不同余</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-1.png" alt=""></p>
-<h3 id="两个模的完全剩余系"><a href="#两个模的完全剩余系" class="headerlink" title="两个模的完全剩余系"></a>两个模的完全剩余系</h3><p>(m1, m2) = 1，若 k1、k2 遍历模 m1、m2 的完全剩余系</p>
-<p>则 k1·m2 + k2·m1 也遍历模 m1、m2 的完全剩余系</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-1.png" alt=""></p>
-<h3 id="多个模的完全剩余系"><a href="#多个模的完全剩余系" class="headerlink" title="多个模的完全剩余系"></a>多个模的完全剩余系</h3><p>(m1, … , mx) = 1，若 ki 遍历模 mi 的完全剩余系</p>
-<p>则 k1(m2m3…mx) + k2(m1m3…mx) + … + kx(m1m2…mx-1) 也遍历模 mi 的完全剩余系</p>
-<h3 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h3><p>整数 1, 2, … , m-1 中与 m 互素的个数叫做欧拉函数，记作：φ(m)</p>
-<p>例如：m = 10，则 1, 3, 7, 9 与 10 互素，φ(m) = 4</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-3.png" alt=""></p>
-<h3 id="欧拉函数性质"><a href="#欧拉函数性质" class="headerlink" title="欧拉函数性质"></a>欧拉函数性质</h3><p>φ(mn) = φ(m) φ(n)</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-4.png" alt=""></p>
-<p>若 p、q 是素数，则 φ(pq) = pq - p - q + 1</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-5.png" alt=""></p>
-<p>若 m = p1^α1 … pk^αk</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-6.png" alt=""></p>
-<p>也就是</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-7.png" alt=""></p>
-<h3 id="简化剩余系"><a href="#简化剩余系" class="headerlink" title="简化剩余系"></a>简化剩余系</h3><p>和剩余系概念差不多，但是得<strong>和m互素</strong>，也就是 φ (x)的具体值</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-8.png" alt=""></p>
-<h3 id="两个模的简化剩余系"><a href="#两个模的简化剩余系" class="headerlink" title="两个模的简化剩余系"></a>两个模的简化剩余系</h3><p>(m1, m2) = 1，若 k1、k2 遍历模 m1、m2 的简化剩余系</p>
-<p>则 k1·m2 + k2·m1 也遍历模 m1、m2 的简化剩余系</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-9.png" alt=""></p>
-<h3 id="欧拉定理，费马小定理，Wilson-定理"><a href="#欧拉定理，费马小定理，Wilson-定理" class="headerlink" title="欧拉定理，费马小定理，Wilson 定理"></a>欧拉定理，费马小定理，Wilson 定理</h3><p>欧拉定理</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-10.png" alt=""></p>
-<p>费马小定理</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-11.png" alt=""></p>
-<p>也就是说 a^(p-1)≡1(mod p)</p>
-<p>Wilson 定理</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-12.png" alt=""></p>
-<h3 id="模模重复平方计算法"><a href="#模模重复平方计算法" class="headerlink" title="模模重复平方计算法"></a>模模重复平方计算法</h3><p>先拆解指数，a=1</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-13.png" alt=""></p>
-<p>b不停的平方运算，a根据01进行相乘</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-14.png" alt=""></p>
-<h2 id="第三章-同余式"><a href="#第三章-同余式" class="headerlink" title="第三章 同余式"></a>第三章 同余式</h2><h3 id="一次同余式求解"><a href="#一次同余式求解" class="headerlink" title="一次同余式求解"></a>一次同余式求解</h3><p>例题</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-16.png" alt=""></p>
-<p>解的个数k</p>
-<h3 id="中国剩余定理"><a href="#中国剩余定理" class="headerlink" title="中国剩余定理"></a>中国剩余定理</h3><p>通式</p>
-<p>对方程组</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-17.png" alt=""></p>
-<p>求M</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-18.png" alt=""></p>
-<p>根据MM‘ ≡1(mod m) 求M’</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-19.png" alt=""></p>
-<p>例题</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-42dcdb0faf2b942e.png" alt=""></p>
-<h3 id="中国剩余定理的应用"><a href="#中国剩余定理的应用" class="headerlink" title="中国剩余定理的应用"></a>中国剩余定理的应用</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-fd544bdbcc16e431.png" alt=""></p>
-<h3 id="高次同余式的解数和解法"><a href="#高次同余式的解数和解法" class="headerlink" title="高次同余式的解数和解法"></a>高次同余式的解数和解法</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-20.png" alt=""></p>
-<p>至于解法，特几把烦人，我也没上过课所以不知道课上有没有讲，但好像考纲不考</p>
-<p>高次同余式的提升属于是学了就会会了又忘，逆天😭😭😭</p>
-<h3 id="素数模的同余式"><a href="#素数模的同余式" class="headerlink" title="素数模的同余式"></a>素数模的同余式</h3><p>素数模同余式的简化</p>
-<p>先化简</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-21.png" alt=""></p>
-<p>然后直接验算就行</p>
-<p>例题</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-22.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-23.png" alt=""></p>
-<p>同余式的解数不超过他的次数</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-24.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-25.png" alt=""></p>
-<p>需要将多项式变成首1</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-26.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-27.png" alt=""></p>
-<h2 id="第四章-二次同余式，平方剩余"><a href="#第四章-二次同余式，平方剩余" class="headerlink" title="第四章 二次同余式，平方剩余"></a>第四章 二次同余式，平方剩余</h2><h3 id="一般二次同余式"><a href="#一般二次同余式" class="headerlink" title="一般二次同余式"></a>一般二次同余式</h3><p>x ² ≡ a (mod m) ，(a , m) = 1</p>
-<p>若同余式有解，则 a 叫做模 m 的平方剩余，否则 a 叫做模 m 的平方非剩余</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-28.png" alt=""></p>
-<h3 id="模为奇素数"><a href="#模为奇素数" class="headerlink" title="模为奇素数"></a>模为奇素数</h3><p>x ² ≡ a (mod p) ，(a , p) = 1 ，p 是奇素数</p>
-<p>判别条件</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-29.png" alt=""></p>
-<p>并且</p>
-<p>(a1 , p) = 1 ，(a2 , p) = 1 ，p 是奇素数<br>① 若 a1 是模 p 的平方剩余、a2 是模 p 的平方剩余，则 a1 · a2 是模 p 的平方剩余<br>② 若 a1 是模 p 的平方剩余、a2 是模 p 的平方非剩余，则 a1 · a2 是模 p 的平方非剩余<br>③ 若 a1 是模 p 的平方非剩余、a2 是模 p 的平方非剩余，则 a1 · a2 是模 p 的平方剩余</p>
-<h3 id="勒让德符号"><a href="#勒让德符号" class="headerlink" title="勒让德符号"></a>勒让德符号</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-31.png" alt=""></p>
-<p>p为奇素数时</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-32.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-33.png" alt=""></p>
-<p>对于a==2</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-34.png" alt=""></p>
-<p>对于a!=2，可以用二次互反律和周期性</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-35.png" alt=""></p>
-<p>例题</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-36.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-37.png" alt=""></p>
-<h3 id="雅可比符号"><a href="#雅可比符号" class="headerlink" title="雅可比符号"></a>雅可比符号</h3><p>当m为合数时</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-38.png" alt=""></p>
-<p>引理</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-39.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-40.png" alt=""></p>
-<h3 id="模平方根"><a href="#模平方根" class="headerlink" title="模平方根"></a>模平方根</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-41.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-42.png" alt=""></p>
-<p>剩下的白兰咯~</p>
-<h2 id="第五章-原根，指标"><a href="#第五章-原根，指标" class="headerlink" title="第五章 原根，指标"></a>第五章 原根，指标</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-43.png" alt=""></p>
-<p>若 (a,m) = 1，e 是满足 a^e ≡ 1 (mod m) 的最小正整数<br>则 e 叫 a 对模 m 的指数，记作 ordm (a)<br>若 ordm (a) = φ(m)，则 a 叫模 m 的原根</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-44.png" alt=""></p>
-<h3 id="指数性质"><a href="#指数性质" class="headerlink" title="指数性质"></a>指数性质</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-44.png" alt=""></p>
-<h3 id="指数构造"><a href="#指数构造" class="headerlink" title="指数构造"></a>指数构造</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-a533c22c7fe0b427.png" alt=""></p>
-<h3 id="原根"><a href="#原根" class="headerlink" title="原根"></a>原根</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-de5a4e15e741a962.png" alt=""></p>
-<h3 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-29e78ea361a2f365.png" alt=""></p>
-<p>例题</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-45.png" alt=""></p>
-<h2 id="第八章-群"><a href="#第八章-群" class="headerlink" title="第八章 群"></a>第八章 群</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-35ca3a779c250841.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>我爱学习</category>
-      </categories>
-      <tags>
-        <tag>求生指南</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>《汇编语言程序设计》求生指南</title>
     <url>/2022/11/14/%E3%80%8A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png" alt=""></p>
@@ -1110,72 +979,6 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </categories>
       <tags>
         <tag>求生指南</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>右键程序文件夹卡死问题的解决</title>
-    <url>/2022/01/16/%E5%8F%B3%E9%94%AE%E7%A8%8B%E5%BA%8F%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252137988.jpg" alt=""></p>
-<p>困扰我半年多的老毛病了</p>
-<p>右键管理中删掉百度网盘就行了，出生啊百度网盘</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252138140.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>资源管理器</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>右键菜单，用VSCode打开文件和文件夹</title>
-    <url>/2021/06/18/%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%EF%BC%8C%E7%94%A8vscode%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252139401.jpg" alt=""></p>
-<p>由于之前在安装VSCODE的时候，没注意详细阅读提示，而且第一次安装比较随意，只是带着想试一下VSCODE才安装的，所以安装的时候漏了勾选open with code这个非常好用的功能！</p>
-<p>那么我们应该怎么解决这个问题呢？？？<br>看了看网上的方法，分为两种：</p>
-<ul>
-<li>重装VSCODE，重装大法好啊有没有？(不，重装了好多插件要重新装很麻烦的)</li>
-<li>修改注册表(一点都不难，但是要仔细一点)</li>
-</ul>
-<p>重装我就不讲了，谁都会的了吧?</p>
-<p>那么我来讲一下修改注册表</p>
-<p>首先新建一个文本文件。在文本文件中输入以下代码修改注册表，这里要注意一下，<strong>里面的路径要修改为自己电脑里VSCODE的绝对路径，而且注意路径的书写，因为在字符串中，所以注意 \ 的转义</strong></p>
-<pre><code>Windows Registry Editor Version 5.00
-
-[HKEY_CLASSES_ROOT\*\shell\VSCode]
-@=&quot;Open with Code&quot;
-&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
-
-[HKEY_CLASSES_ROOT\*\shell\VSCode\command]
-@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%1\&quot;&quot;
-
-Windows Registry Editor Version 5.00
-
-[HKEY_CLASSES_ROOT\Directory\shell\VSCode]
-@=&quot;Open with Code&quot;
-&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
-
-[HKEY_CLASSES_ROOT\Directory\shell\VSCode\command]
-@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
-
-Windows Registry Editor Version 5.00
-
-[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode]
-@=&quot;Open with Code&quot;
-&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
-
-[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode\command]
-@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
-</code></pre><p>保存文件，随便放在哪里都可以，然后命名为： vsCodeOpenFolder.reg，这里你命名为什么都没关系，但是后缀必须要为 <strong>.reg</strong>最后，双击点开该文件，注册完成！</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252140939.png" alt=""></p>
-<hr>
-<p>参考文章：VSCODE添加open with code功能，实现右键打开文件夹 <a href="https://blog.csdn.net/qq_37810453/article/details/88101745">https://blog.csdn.net/qq_37810453/article/details/88101745</a></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>VSCode</tag>
       </tags>
   </entry>
   <entry>
@@ -1477,6 +1280,203 @@ Windows Registry Editor Version 5.00
       </categories>
       <tags>
         <tag>求生指南</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>右键程序文件夹卡死问题的解决</title>
+    <url>/2022/01/16/%E5%8F%B3%E9%94%AE%E7%A8%8B%E5%BA%8F%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252137988.jpg" alt=""></p>
+<p>困扰我半年多的老毛病了</p>
+<p>右键管理中删掉百度网盘就行了，出生啊百度网盘</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252138140.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>资源管理器</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>《信息安全数学基础》求生指南</title>
+    <url>/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png" alt=""></p>
+<h2 id="感受"><a href="#感受" class="headerlink" title="感受"></a>感受</h2><p>先说感受，还就是那个崭新出厂，所以考试前三天才开始学非常痛苦，因为这书真的看不下去</p>
+<p>数论部分概念比较简单，但是涉及的计算很多，学到原根解方程那块才知道很多难的点考试是不会考的</p>
+<p>抽代部分看书已经看不懂了，建议配合哈工大的网课食用基础概念，考试会考多项式环那块的简单证明和简单计算，其他就是证明了</p>
+<p>那那么多证明我哪知道考哪些？会有透题的，或许是自己老师，或许是别的老师，总之保持消息畅通</p>
+<p>最后综测80，3.0，算是很满意的成绩了，虽然考试期间有两道计算题我铸币了，算错了好几次最后还是放弃了。</p>
+<h2 id="第一章-整数的可除性"><a href="#第一章-整数的可除性" class="headerlink" title="第一章 整数的可除性"></a>第一章 整数的可除性</h2><p>欧几里得除法</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-1c5b8f5bc3f4f9b7.png" alt=""></p>
+<h3 id="最大公因数"><a href="#最大公因数" class="headerlink" title="最大公因数"></a>最大公因数</h3><p>所有公因数中最大的那个整数，记作 ( a1，…，an )</p>
+<h3 id="最小公倍数"><a href="#最小公倍数" class="headerlink" title="最小公倍数"></a>最小公倍数</h3><p>所有公倍数中最小的那个正整数，记作 [ a1，…，an ]</p>
+<h3 id="整除的进一步性质"><a href="#整除的进一步性质" class="headerlink" title="整除的进一步性质"></a>整除的进一步性质</h3><p>① 若 c ab、(a，c) = 1，则 c b<br>② 若 p 是素数，p ab，则 p a 或 p b<br>③ 若 a₁，a₂，…，an 是 D 的公倍数，则 D [ a1，…，an ]</p>
+<h3 id="真因数"><a href="#真因数" class="headerlink" title="真因数"></a>真因数</h3><p>不包括这个数本身的所有因数，例如 6 的真因数是 1、2、3</p>
+<h3 id="整数分解定理"><a href="#整数分解定理" class="headerlink" title="整数分解定理"></a>整数分解定理</h3><p>若 n a² - b²，n 不整除 a+b、a-b</p>
+<p>则 (n，a+b)、(n，a-b) 是 n 的真因数</p>
+<h3 id="π-x"><a href="#π-x" class="headerlink" title="π (x)"></a>π (x)</h3><p>表示不超过 x 的素数个数，例如 π (2) = 1，π (10) = 4</p>
+<p>素数定理</p>
+<p>lim(x-&gt;∞) π(x) / x / lnx = 1</p>
+<h2 id="第二章-同余"><a href="#第二章-同余" class="headerlink" title="第二章 同余"></a>第二章 同余</h2><h3 id="同余"><a href="#同余" class="headerlink" title="同余"></a>同余</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-4b4af8c1d3aec647.png" alt=""></p>
+<h3 id="剩余类"><a href="#剩余类" class="headerlink" title="剩余类"></a>剩余类</h3><p>Ca = { c c∈Z，c ≡ a (mod m) }</p>
+<p>Ca 叫做模 m 的剩余类，c 叫做该类的剩余</p>
+<h3 id="完全剩余系"><a href="#完全剩余系" class="headerlink" title="完全剩余系"></a>完全剩余系</h3><p>r0，r1，… ，rm-1 是模 m 的完全剩余系充要条件：r 的模 m 两两不同余</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-1.png" alt=""></p>
+<h3 id="两个模的完全剩余系"><a href="#两个模的完全剩余系" class="headerlink" title="两个模的完全剩余系"></a>两个模的完全剩余系</h3><p>(m1, m2) = 1，若 k1、k2 遍历模 m1、m2 的完全剩余系</p>
+<p>则 k1·m2 + k2·m1 也遍历模 m1、m2 的完全剩余系</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-1.png" alt=""></p>
+<h3 id="多个模的完全剩余系"><a href="#多个模的完全剩余系" class="headerlink" title="多个模的完全剩余系"></a>多个模的完全剩余系</h3><p>(m1, … , mx) = 1，若 ki 遍历模 mi 的完全剩余系</p>
+<p>则 k1(m2m3…mx) + k2(m1m3…mx) + … + kx(m1m2…mx-1) 也遍历模 mi 的完全剩余系</p>
+<h3 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h3><p>整数 1, 2, … , m-1 中与 m 互素的个数叫做欧拉函数，记作：φ(m)</p>
+<p>例如：m = 10，则 1, 3, 7, 9 与 10 互素，φ(m) = 4</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-3.png" alt=""></p>
+<h3 id="欧拉函数性质"><a href="#欧拉函数性质" class="headerlink" title="欧拉函数性质"></a>欧拉函数性质</h3><p>φ(mn) = φ(m) φ(n)</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-4.png" alt=""></p>
+<p>若 p、q 是素数，则 φ(pq) = pq - p - q + 1</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-5.png" alt=""></p>
+<p>若 m = p1^α1 … pk^αk</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-6.png" alt=""></p>
+<p>也就是</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-7.png" alt=""></p>
+<h3 id="简化剩余系"><a href="#简化剩余系" class="headerlink" title="简化剩余系"></a>简化剩余系</h3><p>和剩余系概念差不多，但是得<strong>和m互素</strong>，也就是 φ (x)的具体值</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-8.png" alt=""></p>
+<h3 id="两个模的简化剩余系"><a href="#两个模的简化剩余系" class="headerlink" title="两个模的简化剩余系"></a>两个模的简化剩余系</h3><p>(m1, m2) = 1，若 k1、k2 遍历模 m1、m2 的简化剩余系</p>
+<p>则 k1·m2 + k2·m1 也遍历模 m1、m2 的简化剩余系</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-9.png" alt=""></p>
+<h3 id="欧拉定理，费马小定理，Wilson-定理"><a href="#欧拉定理，费马小定理，Wilson-定理" class="headerlink" title="欧拉定理，费马小定理，Wilson 定理"></a>欧拉定理，费马小定理，Wilson 定理</h3><p>欧拉定理</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-10.png" alt=""></p>
+<p>费马小定理</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-11.png" alt=""></p>
+<p>也就是说 a^(p-1)≡1(mod p)</p>
+<p>Wilson 定理</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-12.png" alt=""></p>
+<h3 id="模模重复平方计算法"><a href="#模模重复平方计算法" class="headerlink" title="模模重复平方计算法"></a>模模重复平方计算法</h3><p>先拆解指数，a=1</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-13.png" alt=""></p>
+<p>b不停的平方运算，a根据01进行相乘</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-14.png" alt=""></p>
+<h2 id="第三章-同余式"><a href="#第三章-同余式" class="headerlink" title="第三章 同余式"></a>第三章 同余式</h2><h3 id="一次同余式求解"><a href="#一次同余式求解" class="headerlink" title="一次同余式求解"></a>一次同余式求解</h3><p>例题</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-16.png" alt=""></p>
+<p>解的个数k</p>
+<h3 id="中国剩余定理"><a href="#中国剩余定理" class="headerlink" title="中国剩余定理"></a>中国剩余定理</h3><p>通式</p>
+<p>对方程组</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-17.png" alt=""></p>
+<p>求M</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-18.png" alt=""></p>
+<p>根据MM‘ ≡1(mod m) 求M’</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-19.png" alt=""></p>
+<p>例题</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-42dcdb0faf2b942e.png" alt=""></p>
+<h3 id="中国剩余定理的应用"><a href="#中国剩余定理的应用" class="headerlink" title="中国剩余定理的应用"></a>中国剩余定理的应用</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-fd544bdbcc16e431.png" alt=""></p>
+<h3 id="高次同余式的解数和解法"><a href="#高次同余式的解数和解法" class="headerlink" title="高次同余式的解数和解法"></a>高次同余式的解数和解法</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-20.png" alt=""></p>
+<p>至于解法，特几把烦人，我也没上过课所以不知道课上有没有讲，但好像考纲不考</p>
+<p>高次同余式的提升属于是学了就会会了又忘，逆天😭😭😭</p>
+<h3 id="素数模的同余式"><a href="#素数模的同余式" class="headerlink" title="素数模的同余式"></a>素数模的同余式</h3><p>素数模同余式的简化</p>
+<p>先化简</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-21.png" alt=""></p>
+<p>然后直接验算就行</p>
+<p>例题</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-22.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-23.png" alt=""></p>
+<p>同余式的解数不超过他的次数</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-24.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-25.png" alt=""></p>
+<p>需要将多项式变成首1</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-26.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-27.png" alt=""></p>
+<h2 id="第四章-二次同余式，平方剩余"><a href="#第四章-二次同余式，平方剩余" class="headerlink" title="第四章 二次同余式，平方剩余"></a>第四章 二次同余式，平方剩余</h2><h3 id="一般二次同余式"><a href="#一般二次同余式" class="headerlink" title="一般二次同余式"></a>一般二次同余式</h3><p>x ² ≡ a (mod m) ，(a , m) = 1</p>
+<p>若同余式有解，则 a 叫做模 m 的平方剩余，否则 a 叫做模 m 的平方非剩余</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-28.png" alt=""></p>
+<h3 id="模为奇素数"><a href="#模为奇素数" class="headerlink" title="模为奇素数"></a>模为奇素数</h3><p>x ² ≡ a (mod p) ，(a , p) = 1 ，p 是奇素数</p>
+<p>判别条件</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-29.png" alt=""></p>
+<p>并且</p>
+<p>(a1 , p) = 1 ，(a2 , p) = 1 ，p 是奇素数<br>① 若 a1 是模 p 的平方剩余、a2 是模 p 的平方剩余，则 a1 · a2 是模 p 的平方剩余<br>② 若 a1 是模 p 的平方剩余、a2 是模 p 的平方非剩余，则 a1 · a2 是模 p 的平方非剩余<br>③ 若 a1 是模 p 的平方非剩余、a2 是模 p 的平方非剩余，则 a1 · a2 是模 p 的平方剩余</p>
+<h3 id="勒让德符号"><a href="#勒让德符号" class="headerlink" title="勒让德符号"></a>勒让德符号</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-31.png" alt=""></p>
+<p>p为奇素数时</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-32.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-33.png" alt=""></p>
+<p>对于a==2</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-34.png" alt=""></p>
+<p>对于a!=2，可以用二次互反律和周期性</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-35.png" alt=""></p>
+<p>例题</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-36.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-37.png" alt=""></p>
+<h3 id="雅可比符号"><a href="#雅可比符号" class="headerlink" title="雅可比符号"></a>雅可比符号</h3><p>当m为合数时</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-38.png" alt=""></p>
+<p>引理</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-39.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-40.png" alt=""></p>
+<h3 id="模平方根"><a href="#模平方根" class="headerlink" title="模平方根"></a>模平方根</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-41.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-42.png" alt=""></p>
+<p>剩下的白兰咯~</p>
+<h2 id="第五章-原根，指标"><a href="#第五章-原根，指标" class="headerlink" title="第五章 原根，指标"></a>第五章 原根，指标</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-43.png" alt=""></p>
+<p>若 (a,m) = 1，e 是满足 a^e ≡ 1 (mod m) 的最小正整数<br>则 e 叫 a 对模 m 的指数，记作 ordm (a)<br>若 ordm (a) = φ(m)，则 a 叫模 m 的原根</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-44.png" alt=""></p>
+<h3 id="指数性质"><a href="#指数性质" class="headerlink" title="指数性质"></a>指数性质</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-44.png" alt=""></p>
+<h3 id="指数构造"><a href="#指数构造" class="headerlink" title="指数构造"></a>指数构造</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-a533c22c7fe0b427.png" alt=""></p>
+<h3 id="原根"><a href="#原根" class="headerlink" title="原根"></a>原根</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-de5a4e15e741a962.png" alt=""></p>
+<h3 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-29e78ea361a2f365.png" alt=""></p>
+<p>例题</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-45.png" alt=""></p>
+<h2 id="第八章-群"><a href="#第八章-群" class="headerlink" title="第八章 群"></a>第八章 群</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-35ca3a779c250841.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>我爱学习</category>
+      </categories>
+      <tags>
+        <tag>求生指南</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>右键菜单，用VSCode打开文件和文件夹</title>
+    <url>/2021/06/18/%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%EF%BC%8C%E7%94%A8vscode%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252139401.jpg" alt=""></p>
+<p>由于之前在安装VSCODE的时候，没注意详细阅读提示，而且第一次安装比较随意，只是带着想试一下VSCODE才安装的，所以安装的时候漏了勾选open with code这个非常好用的功能！</p>
+<p>那么我们应该怎么解决这个问题呢？？？<br>看了看网上的方法，分为两种：</p>
+<ul>
+<li>重装VSCODE，重装大法好啊有没有？(不，重装了好多插件要重新装很麻烦的)</li>
+<li>修改注册表(一点都不难，但是要仔细一点)</li>
+</ul>
+<p>重装我就不讲了，谁都会的了吧?</p>
+<p>那么我来讲一下修改注册表</p>
+<p>首先新建一个文本文件。在文本文件中输入以下代码修改注册表，这里要注意一下，<strong>里面的路径要修改为自己电脑里VSCODE的绝对路径，而且注意路径的书写，因为在字符串中，所以注意 \ 的转义</strong></p>
+<pre><code>Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\*\shell\VSCode]
+@=&quot;Open with Code&quot;
+&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
+
+[HKEY_CLASSES_ROOT\*\shell\VSCode\command]
+@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%1\&quot;&quot;
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\shell\VSCode]
+@=&quot;Open with Code&quot;
+&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
+
+[HKEY_CLASSES_ROOT\Directory\shell\VSCode\command]
+@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode]
+@=&quot;Open with Code&quot;
+&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode\command]
+@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
+</code></pre><p>保存文件，随便放在哪里都可以，然后命名为： vsCodeOpenFolder.reg，这里你命名为什么都没关系，但是后缀必须要为 <strong>.reg</strong>最后，双击点开该文件，注册完成！</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252140939.png" alt=""></p>
+<hr>
+<p>参考文章：VSCODE添加open with code功能，实现右键打开文件夹 <a href="https://blog.csdn.net/qq_37810453/article/details/88101745">https://blog.csdn.net/qq_37810453/article/details/88101745</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>VSCode</tag>
       </tags>
   </entry>
   <entry>
@@ -1982,6 +1982,332 @@ screen -S coop
         <tag>linux</tag>
         <tag>ubuntu</tag>
         <tag>求生之路</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>家用服务器折腾指南</title>
+    <url>/2023/01/15/%E5%AE%B6%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8A%98%E8%85%BE%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151847944.jpg" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>去年暑假组了一台新电脑，老电脑逐渐用不上用场了。恰好我有刷pt的需求，还想运行MC等游戏的服务器，于是我就动手改造这台老电脑了。</p>
+<h2 id="0x01硬件配置"><a href="#0x01硬件配置" class="headerlink" title="0x01硬件配置"></a>0x01硬件配置</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151851767.png" alt=""></p>
+<p>这台老电脑是15年配的：CPU是i3-4160，两个核心四个线程；主板是技嘉的丐版H81M-D2，有两个内存插槽，最大只支持8G的DDR3内存；主板有三个PCIE接口，一个PCIEx16够宽，两个PCIEx1比较短；还有四个SATA接口；另外主板太老没有HDMI只有VGA接口，除此之外的千兆以太网口没啥好说的</p>
+<p>PCIEx16上的亮机卡是GT640 2G，其实就是装系统时候用的；PCIEx1装了个物联网开机模块，因为我要将其放到家中，而我常年在外面上学，所以这个必不可少；还有个PCIEx1是英特尔Intel Corporation Wireless 7260网卡，这个是当时在学校里倒腾这玩意时应急选项，因为当初交换机太远，显示器太近。</p>
+<p>内存的话，只插了一根8G的DDR3内存，没想插更多是因为没有那么多服务要跑。当然了，高版本的MC多少内存都不够，不够我的U似乎也有些捉襟见肘了。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151912133.png" alt=""></p>
+<p>SATA四个接口全被占用啦。一个是系统盘，威刚的远古120G固态盘；一个两百块淘来的4THGST企业盘，是真的吵，也是真的烫，为此我加了个风扇改变风道，用来刷刷PT还是比较够的；之前云盘服务是在日立盘上的，但这小文件读写实在是太吵了，也不安全，于是26块包邮搞了块500G西数蓝盘，配上闲置的500G西数绿盘，组了个RAID1阵列，图个心安吧，这个阵列就是专门做云盘备份了。</p>
+<h2 id="0x02系统与网络配置"><a href="#0x02系统与网络配置" class="headerlink" title="0x02系统与网络配置"></a>0x02系统与网络配置</h2><p>系统没啥好说的，本人不喜欢折腾，也就没有搞ESXi，我系统盘实在是太小了，我为了配置方便就直接装Ubuntu 22.04.1 LTS了。</p>
+<p>网络的话，我家里是楼上楼下；光猫先是进入一楼的房间，通过院子里的飞线飞到二楼客厅弱电箱的交换机里。一路上的路由器我全改为了mesh组网，这是为了保证每个设备都能拿到ipv6。另外，据修网的师傅所言，上海电信的SDN只有在有公网的情况下才能正常使用ipv6（我不理解），于是我也拿到了我的一个公网v4地址，管他静态还是动态（半个多月都没改变地址），能有就是赢麻了！v4的话不支持NAT回流，就是我内网的主机没法用公网IP访问我的设备；但是v6没有公网内网之分，没有问题；还有就是v4v6都被封了80，443，8080端口。</p>
+<h2 id="0x03游戏服务器"><a href="#0x03游戏服务器" class="headerlink" title="0x03游戏服务器"></a>0x03游戏服务器</h2><p>这个配置拿来刷pt和做NAS（不考虑转码）其实是有些暴殄天物了，刚好我的云服务器也到期了，于是就把我的游戏服务器全都迁移到家里。</p>
+<h3 id="1-MC运维面板MCSManager"><a href="#1-MC运维面板MCSManager" class="headerlink" title="1.MC运维面板MCSManager"></a>1.MC运维面板MCSManager</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151920251.png" alt=""></p>
+<p>Aimed to provide a healthy software support for server administrators of Minecraft, Terraria and other game servers.</p>
+<p>官网地址：<a href="https://mcsmanager.com/">https://mcsmanager.com/</a></p>
+<p>这个东西简直不要太好用！我之前在云服务器上搭建的我的世界服务器，经常要不停地按UP键找历史命令，有一次还输入错误导致存档没了，非常可惜；如果想做备份和其他计划任务，说不难也不难，shell和crontab看着文档就能写出想要的东西了。但这些繁琐危险的操作本可以避免，在MCSManager里，你可以很方便地在网页端执行命令、修改配置文件、上传整合包、设定计划任务，甚至可以说，他就是一个网页Linux周期命令执行器。另外本身自带一些api，在我的NekobotQQ机器人还活着时，无需打开游戏戳一戳她就显示服务器情况和人数。</p>
+<p>安装很简单，官网提供了wget下载的安装脚本和docker安装方式，我是推荐用wget：</p>
+<pre><code>wget -qO- https://raw.githubusercontent.com/mcsmanager/Script/master/setup_en.sh | bash
+</code></pre><h3 id="2-SteamCMD"><a href="#2-SteamCMD" class="headerlink" title="2.SteamCMD"></a>2.SteamCMD</h3><p>SteamCMD is the command line version of the Steam client. The tool is used <strong>to download dedicated server applications of popular Steam games quickly  and easily for running your own Valheim server or Rust server</strong>, for example.</p>
+<p>官方网址：<a href="https://developer.valvesoftware.com/wiki/SteamCMD">https://developer.valvesoftware.com/wiki/SteamCMD</a></p>
+<p>也挺好安装的，具体方法包括在我之前写的<a href="https://picpo.top/2022/01/18/在linux平台上搭建求生之路服务器/">在linux平台上搭建求生之路服务器</a>里。要注意的是，SteamCMD似乎是能被MCSManager原生识别的，但是其权限问题错综复杂无法访问到一些文件，本人水平不够没有细究（懒），所以就ssh后screen运维拉到。</p>
+<p>服务器上跑了求生之路和饥荒的服务器，很可惜这两个游戏都原生不支持ipv6，但还好我本身就有公网v4😋。</p>
+<h2 id="0x04运维组件"><a href="#0x04运维组件" class="headerlink" title="0x04运维组件"></a>0x04运维组件</h2><p>SSH和Linux谁都会，但这些繁琐的操作都是可以避免的。</p>
+<h3 id="1-DDNS-GO"><a href="#1-DDNS-GO" class="headerlink" title="1.DDNS-GO"></a>1.DDNS-GO</h3><p>官方网址：<a href="https://github.com/jeessy2/ddns-go">https://github.com/jeessy2/ddns-go</a></p>
+<p>这是一个用go写的ddns，且不说我的v4很有可能是动态的，ipv6可是每两天就变化一次的，所以有个ddns服务非常有必要。</p>
+<p>我的安装方式：</p>
+<pre><code>docker run -d --name ddns-go --restart=always --net=host -v /opt/ddns-go:/root jeessy/ddns-go
+</code></pre><h3 id="2-性能监控-amp-运维Cockpit"><a href="#2-性能监控-amp-运维Cockpit" class="headerlink" title="2.性能监控&amp;运维Cockpit"></a>2.性能监控&amp;运维Cockpit</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151939945.webp" alt=""></p>
+<p>这个是Fedora Server自带的面板，作为debian系的Ubuntu肯定也能装：</p>
+<pre><code class="lang-brainfuck">$ sudo apt install cockpit -y
+</code></pre>
+<p>多的不说，光Storage能帮你格式化、分区、组软RAID就已经很好了。界面很素，但是很好用。</p>
+<p>安全性有自签名证书，不放心可以搞个其他的。</p>
+<h3 id="3-Portainer"><a href="#3-Portainer" class="headerlink" title="3.Portainer"></a>3.Portainer</h3><p>Deploy, configure, troubleshoot and secure containers in minutes  on Kubernetes, Docker, Swarm and Nomad in any data center, cloud,  network edge or IIOT device. </p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151945605.webp" alt=""></p>
+<p>官方网址：<a href="https://www.portainer.io/">https://www.portainer.io/</a></p>
+<p>这个没啥好说，管理docker容器的。我有太多服务是依赖docker快速启动的了。</p>
+<p>我的安装方式：</p>
+<pre><code class="lang-shell">docker pull portainer/portainer:latest
+
+docker run -d --net=host --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /data/portainer_data:/data portainer/portainer:1.23.2
+</code></pre>
+<h2 id="0x05其他服务"><a href="#0x05其他服务" class="headerlink" title="0x05其他服务"></a>0x05其他服务</h2><h3 id="1-transmission-daemon"><a href="#1-transmission-daemon" class="headerlink" title="1.transmission-daemon"></a>1.transmission-daemon</h3><p>磁力下载工具，主要用来刷pt。</p>
+<p>我的安装方式：</p>
+<pre><code>sudo apt-get install transmission-daemon
+</code></pre><p>原版界面太素，信息不够详尽，推荐用这个改善：</p>
+<p><a href="https://github.com/ronggang/transmission-web-control">https://github.com/ronggang/transmission-web-control</a></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151954452.png" alt=""></p>
+<h3 id="2-LibreSpeed"><a href="#2-LibreSpeed" class="headerlink" title="2.LibreSpeed"></a>2.LibreSpeed</h3><p><img src="C:\Users\picpo\AppData\Roaming\Typora\typora-user-images\image-20230115195929602.png" alt="image-20230115195929602"></p>
+<p>测速服务器。官方网址：<a href="https://github.com/librespeed/speedtest-go">https://github.com/librespeed/speedtest-go</a></p>
+<p>我的安装方式：</p>
+<pre><code>docker pull badapple9/speedtest-x
+
+docker run -d --restart=always --name speedtest -p 9001:80 -it badapple9/speedtest-x
+</code></pre><h3 id="3-Samba服务"><a href="#3-Samba服务" class="headerlink" title="3.Samba服务"></a>3.Samba服务</h3><p>单纯当Nas用的服务</p>
+<p>我的安装方式：</p>
+<pre><code class="lang-bash">sudo apt-get install samba samba-common
+</code></pre>
+<p>配置文件：</p>
+<pre><code class="lang-bash">sudo nano /etc/samba/smb.conf
+
+//更多配置字段请查阅Google
+
+[share]
+comment = share folder
+browseable = yes
+path = /home/frank/share
+create mask = 0700
+directory mask = 0700=
+public = yes
+available = yes
+writable = yes
+</code></pre>
+<p>重启服务：</p>
+<pre><code class="lang-text">sudo service smbd restart
+</code></pre>
+<p>推荐给samba新创建一个用户，而不是root和本机用户。</p>
+<h3 id="4-Nextcloud网盘"><a href="#4-Nextcloud网盘" class="headerlink" title="4.Nextcloud网盘"></a>4.Nextcloud网盘</h3><p>The most popular self-hosted collaboration solution for tens of millions of users at thousands of organizations across the globe</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301152005332.webp" alt=""></p>
+<p>官方网址：<a href="https://nextcloud.com/">https://nextcloud.com/</a></p>
+<p>我的安装方式是docker而不是官网推荐的docker-compose，因为docker-compose出现了权限读取问题，没解决成功。推荐自己去官网看docker-compose.yml。</p>
+<p>挺好用的，每个平台都有客户端，主要用来同步手机照片和其他文件，当网盘用。</p>
+<h3 id="5-Navidrome私有音乐服务"><a href="#5-Navidrome私有音乐服务" class="headerlink" title="5.Navidrome私有音乐服务"></a>5.Navidrome私有音乐服务</h3><p><img src="C:\Users\picpo\AppData\Roaming\Typora\typora-user-images\image-20230115201040737.png" alt="image-20230115201040737"></p>
+<p>受不了各大音乐平台的版权壁垒了，官方网址：<a href="https://www.navidrome.org/">https://www.navidrome.org/</a></p>
+<ul>
+<li>几乎可以播放任何音频格式</li>
+<li>多用户，每个用户都有自己的播放次数、播放列表、收藏夹等。</li>
+<li>资源使用率非常低。例如：300GB的资料库（约29000首歌曲），使用不到50MB的内存。</li>
+<li>界面简洁，支持中文。</li>
+<li>支持Subsonic API，也就是说Subsonic能用的客户端，Navidrome都能用。</li>
+</ul>
+<p>唯一的问题就是歌词显示有问题，似乎放到目录里也显示无歌词。</p>
+<p>我的docker-compose.yml：</p>
+<pre><code class="lang-yaml">version: &quot;3&quot;
+services:
+  navidrome:
+    container_name: navidrome
+    image: deluan/navidrome:latest
+    user: 0:0 #0:0代表用root用户运行
+    ports:
+      - &quot;4533:4533&quot;
+    restart: unless-stopped
+    environment:
+      # Optional: put your config options customization here. Examples:
+      ND_SCANSCHEDULE: 1h
+      ND_LOGLEVEL: info  
+      ND_SESSIONTIMEOUT: 24h
+      ND_BASEURL: &quot;&quot;
+      ND_ENABLETRANSCODINGCONFIG: &quot;true&quot;
+      ND_TRANSCODINGCACHESIZE: &quot;4000M&quot;
+      ND_IMAGECACHESIZE: &quot;1000M&quot;
+    volumes:
+      - &quot;/mnt/WDC/navidrome/data:/data&quot; //数据文件
+      - &quot;/mnt/WDC/navidrome/media:/music:ro&quot; //媒体文件
+</code></pre>
+<p>以下是支持的客户端：</p>
+<pre><code>iOS: play:Sub, substreamer, Amperfy, iSub
+Android: DSub, Subtracks, subreamer, Ultrasonic, Audinaut
+网页端: Subplayer, Airsonic Refix, Aurial, Jamstash, Subfire
+桌面端: Sublime Music（Linux）和Sonixd（Windows/Linux/MacOS）
+命令行: Jellycli（Windows/Linux）和STMP（Linux/MacOS）
+</code></pre>]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+        <tag>linux</tag>
+        <tag>ubuntu</tag>
+        <tag>NAS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>树莓派搭建Mirai QQ机器人</title>
+    <url>/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直以来，我都有一个搭建qq机器人的想法。可惜酷Q早已被腾讯橄榄，但好在还有Mirai这个框架。在翻出我用了五年的树莓派后，我打算在上面自己搭建一个qq机器人，以后或许还会写一写插件啥的（</p>
+<p>本文可能会时不时偶尔更新一下，做到哪步是哪步（咕咕咕预订</p>
+<p>项目地址：<a href="https://github.com/mamoe/mirai">https://github.com/mamoe/mirai</a></p>
+<h2 id="0x01下载Mirai控制台"><a href="#0x01下载Mirai控制台" class="headerlink" title="0x01下载Mirai控制台"></a>0x01下载Mirai控制台</h2><p><a href="https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md">https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md</a></p>
+<p>因为树莓派是arm架构的，所以我选择了arm的版本</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200411.png" alt=""></p>
+<p>建立文件夹，进入，并chmod一下</p>
+<pre><code>pi@raspberrypi:~/mirai $ ls
+mcl-installer-72b890d-linux-arm
+pi@raspberrypi:~/mirai $ sudo chmod +x ./mcl-installer-72b890d-linux-arm
+pi@raspberrypi:~/mirai $ ls
+mcl-installer-72b890d-linux-arm
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200451.png" alt=""></p>
+<p>然后无脑回车就是了</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200333.png" alt=""></p>
+<p>可以看到，目录下多了不少东西，先chmod运行mcl再说</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201423.png" alt=""></p>
+<p>第一次运行会初始化</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201727.png" alt=""></p>
+<h2 id="0x02下载和安装插件"><a href="#0x02下载和安装插件" class="headerlink" title="0x02下载和安装插件"></a>0x02下载和安装插件</h2><p>刚刚装好的 Mirai Console 是没有任何功能的。功能将由插件提供。</p>
+<p>Mirai 官方提供两个插件：</p>
+<ul>
+<li><a href="https://github.com/project-mirai/chat-command">chat-command</a>: 允许在聊天环境通过以 “/“ 起始的消息执行指令</li>
+<li><a href="https://github.com/project-mirai/mirai-api-http">mirai-api-http</a>：提供 HTTP 支持，允许使用其他编程语言的插件</li>
+</ul>
+<p>打开命令行 (Windows 系统按住Shift+鼠标右键，点击”在此处打开 PowerShell”),<br>可以使用 MCL 自动安装这些插件如：</p>
+<pre><code>./mcl --update-package net.mamoe:mirai-api-http --type plugin --channel stable
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201808.png" alt=""></p>
+<p>如果是 JAR 文件的插件，放入 <code>plugins</code> 即可。其他插件一般都有特殊说明如何使用，请参考它们的说明。</p>
+<h2 id="0x03使用控制台指令"><a href="#0x03使用控制台指令" class="headerlink" title="0x03使用控制台指令"></a>0x03使用控制台指令</h2><p>启动 <code>mcl.cmd</code> 就会看到控制台。在控制台可以输入指令，按回车执行这条指令。</p>
+<p>Mirai Console 内置一些指令，输入 <code>?</code> 并回车可以查看指令列表。</p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>Mirai</tag>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
+    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg" alt=""></p>
+<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
+<pre><code class="lang-shell">apt install open-vm-tools
+apt install open-vm-tools-desktop
+</code></pre>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>Vmware</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决Gravatar头像被墙的问题</title>
+    <url>/2021/03/09/%E8%A7%A3%E5%86%B3gravatar%E5%A4%B4%E5%83%8F%E8%A2%AB%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242337275.png" alt=""></p>
+<p>2月27日凌晨，我像往常一样打开了自己的博客，来到了留言板，却发现头像无法加载出来。</p>
+<p>原先我以为只是我的网络问题，可没想到gravatar官网都打不开了，这时我意识到不太对劲了，于是打开测速网：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242338698.png" alt=""></p>
+<p>我能说什么呢？反正当时我人麻了😅</p>
+<p>当时也是事发突然，本来也没几个玩wp的朋友，所以当时没有解决的方法。今天尝试百度了一下gravatar，时间限定这一个月，查到了这篇博客，<a href="https://kzyblog.com/5247.html/comment-page-1#comment-3542">完美解决Gravatar头像被墙</a></p>
+<p>抱着尝试的心态试了一下最后一个方法，下载了个WP-China-Yes插件，安装。</p>
+<p>我○，头像又出现了！！！！！！！！！！</p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>wordpress</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记一次Flask后端被渗透的经历</title>
+    <url>/2021/11/27/%E8%AE%B0%E4%B8%80%E6%AC%A1flask%E5%90%8E%E7%AB%AF%E8%A2%AB%E6%B8%97%E9%80%8F%E7%9A%84%E7%BB%8F%E5%8E%86/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154649.png" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>2021-11-04中午，在flask文档的帮助下，我成功在一小时内搭建起一个带有沙盒的可以执行部分python语句的后端脚本，并第一次将项目部署在docker上。NekoBot新功能+1，在某十几个群开放了此功能，并特别标注为菜单的<strong>第-1项</strong>，开始期待几个群聊里做渗透的师傅们对其进行攻击。</p>
+<p>接下来的20多天里，如此明显的功能几乎没有人使用，这些人几乎全他妈的都在用Bot在看色图、犯病。不过好在有些人注意到了，其中有几位也是打CTF的师傅，可惜他们几乎都在瞎搞（）这期间有个南信大的朋友，对bot进行了一些列攻击，可惜这些方式都在我的预判之内，并没成功。但是单纯的部分绕过都做到了，因为真的很简单（）</p>
+<p>2021-11-27凌晨，在持续几个小时的尝试下，这个后端被巨佬<a href="https://blog.plusls.com/">plusls</a>（我也是从前小绿草的腿腿acdxvfsvd大仙贝那得知这位巨佬的）读取了源码，读取到了环境信息，最终利用flask的拒绝服务打了下来（我超我怎么不知道flask还有这个后门）。并在几个小时后发现了最后某几个关键字的绕过方法，基本就能get shell了。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154451.png" alt=""></p>
+<p>在写waf的时候我预先留了个open方法，这就能让所有人对任意文件进行读操作，还有dir()啥的也没过滤（要是过滤了很多东西也没法用了x）；当然还有一些然后以我浅薄的认知，封掉了几个可以利用os模块进行RCE的方法和关键词。我想看看，巨佬是怎么在这些阴间过滤的条件下成功get shell。很幸运，plusls的攻击过程十分精彩，让我学到许多，这波熬夜值了。记录一下记录一下.jpg</p>
+<p>（虽然说最后plusls师傅似乎发现了非常不错的绕过方式，但是我被他打掉的脚本不敢重启了，万一他手里有逃出docker的0day呢（害怕.jpg））</p>
+<h2 id="0x01文件源码"><a href="#0x01文件源码" class="headerlink" title="0x01文件源码"></a>0x01文件源码</h2><p>这么屑的源码有公开的必要吗（恼），直接<code>open(&#39;/proc/self/cwd/app/app.py&#39;, &#39;r&#39;).read()</code>，请。</p>
+<pre><code>#coding=utf-8
+from flask import Flask, request
+import random
+
+wrong_msg = [&quot;嘤嘤嘤，听不懂吖QAQ~&quot;, &quot;呜呜呜~咱好笨~&quot;, &quot;咱看不懂这些呀……&quot;, &quot;咿呀，好像出错了……&quot;, &quot;这超出窝的理解范围了QwQ&quot;, &quot;好难~咱听不懂~&quot;]
+
+
+def keyword_filter(keyword, msg):
+    for i in keyword:
+        if i not in msg:
+            return False
+    return True
+
+
+def py_filter(msg):
+    for keyword in [&quot;class&quot;, &quot;import&quot;, &quot;eval&quot;, &quot;exec&quot;, &quot;sys&quot;, &quot;globals&quot;, &quot;_&quot;, &quot;builtins&quot;, &quot;getattr&quot;, &quot;pow&quot;, &quot;&quot;,
+                    &quot;&amp;&quot;,]:
+        if keyword_filter(keyword, msg):
+            return False
+    if &quot;**&quot; in msg:
+        return False
+
+    return True
+
+
+def do_python(msg):
+    try:
+        if py_filter(msg):
+            temp = eval(msg)
+        else:
+            return &quot;Hacking for fun~&quot;
+
+        return str(temp)
+    except:
+        return random.choice(wrong_msg)
+
+
+app = Flask(__name__)
+
+
+@app.route(&quot;/submit&quot;, methods=[&quot;GET&quot;])
+def submit():
+    data = request.args.get(&quot;text&quot;)
+    print(data)
+    return do_python(data)
+
+
+if __name__ == &#39;__main__&#39;:
+    app.run(host=&quot;0.0.0.0&quot;)
+</code></pre><h2 id="0x02文件源码读取原理和-proc"><a href="#0x02文件源码读取原理和-proc" class="headerlink" title="0x02文件源码读取原理和/proc"></a>0x02文件源码读取原理和/proc</h2><p>我们都知道可以通过/proc/$pid/来获取指定进程的信息，例如内存映射、CPU绑定信息等等。如果某个进程想要获取本进程的系统信息，就可以通过进程的pid来访问/proc/$pid/目录。但是这个方法还需要获取进程pid，在fork、daemon等情况下pid还可能发生变化。为了更方便的获取本进程的信息，linux提供了/proc/self/目录，这个目录比较独特，不同的进程访问该目录时获得的信息是不同的，内容等价于/proc/本进程pid/。进程可以通过访问/proc/self/目录来获取自己的系统信息，而不用每次都获取pid。</p>
+<p>Linux 内核提供了一种通过 /proc 文件系统，在运行时访问内核内部数据结构、改变内核设置的机制。proc文件系统是一个伪文件系统，它只存在内存当中，而不占用外存空间。它以文件系统的方式为访问系统内核数据的操作提供接口。</p>
+<p>还有的是一些以数字命名的目录，他们是进程目录。系统中当前运行的每一个进程都有对应的一个目录在/proc下，以进程的PID号为目录名，他们是读取进程信息的接口。而self目录则是读取进程本身的信息接口，是一个link</p>
+<p>巨佬在做了一些常见的信息获取方式后，也试了一些关键字，然后就直接上手<code>/proc/self/</code>这个目录了（不愧是bin巨佬）</p>
+<p>读取/proc/self/maps可以得到当前进程的内存映射关系，通过读该文件的内容可以得到内存代码段基址。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154096.png" alt=""></p>
+<p>/proc/self/mem是进程的内存内容，通过修改该文件相当于直接修改当前进程的内存。</p>
+<p>（同样的，我们也可以通过写入mem文件来直接写入内存，例如直接修改代码段，放入我们的shellcode，从而在程序流程执行到这一步时执行shellcode来拿shell）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155528.png" alt=""></p>
+<p>覆写got表我只在一些pwn题见过，python的PWN相关我一无所知（甚至没有我对pyc文件的逆向了解的多，乐），感觉非常难非常硬核，感觉现在以我的智商可能难以掌握（）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155689.png" alt=""></p>
+<p>巨佬一直在尝试compile，并且试图向<code>/proc/self/mem</code>写入巨大多垃圾数据，应该是要搞堆栈溢出啥的，但好像没有什么太好的反馈（当然其他还有一些操作咱也看不懂QAQ）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155838.png" alt=""></p>
+<p>说回读取文件目录的方法，一开始我看巨佬的操作我以为是通过<code>/proc/self/exe</code>啥的（毕竟c的话，确实可以用readlink这个函数），但是佬用的方法事利用format函数和八进制绕过，最后采取了lambda表达式</p>
+<pre><code>&quot;&#123;0.__globals__&#125;&quot;.format(lambda x:x)
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155959.png" alt=""></p>
+<p>不仅地址泄露了，函数什么的都泄露了（地址泄露了open也能用这些不是迟早的事吗x）</p>
+<h2 id="0x03Flask框架问题"><a href="#0x03Flask框架问题" class="headerlink" title="0x03Flask框架问题"></a>0x03Flask框架问题</h2><h3 id="debug模式"><a href="#debug模式" class="headerlink" title="debug模式"></a>debug模式</h3><p>Flask在生产环境中开启debug模式是一件非常危险的事，主要有3点原因：</p>
+<p>1、会泄露当前报错页面的源码，可供审计挖掘其他漏洞</p>
+<p>2、会泄露Web应用的绝对路径，及Python解释器的路径（可以配合写文件漏洞向指定目录的文件内写入构造好的恶意代码，利用方式可以参考安全客的这篇文章：<a href="https://link.zhihu.com/?target=https%3A//www.anquanke.com/post/id/86961">文件解压之过 Python中的代码执行</a>）</p>
+<p>3、<strong>debug页面中包含Python的交互式shell，可以执行任意Python代码</strong></p>
+<p>但是，进入这个Python shell是需要输入一个PIN码的。PIN码的生成和几个与机器以及脚本的参数有关，比较难；当然，Debug模式要是没开启PIN码验证的话，是可以直接进入shell的</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155210.png" alt=""></p>
+<h3 id="request-environ"><a href="#request-environ" class="headerlink" title="request.environ"></a>request.environ</h3><p>在Flask的官方文档中是这样介绍request的：对于 Web 应用，与客户端发送给服务器的数据交互至关重要。在 Flask 中由全局的 request 对象来提供这些信息。</p>
+<p>从Flask模块导入request：from flask import request</p>
+<p>request的属性众多，其中的environ，官方文档给出的描述是：WSGI隐含的环境配置。</p>
+<p>好啊</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156624.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156130.png" alt=""></p>
+<h3 id="werkzeug-server-shutdown"><a href="#werkzeug-server-shutdown" class="headerlink" title="werkzeug.server.shutdown"></a>werkzeug.server.shutdown</h3><p>request.environ字典中一个名为 shutdown_server 的方法名分配的键为 werkzeug.server.shutdown</p>
+<p>注射request.environ[‘werkzeug.server.shutdown’]()会造成拒绝服务。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156023.png" alt=""></p>
+<p>捏麻麻滴，我是真的之前不知道flask的这些细节😅😅😅</p>
+<p>我真的操了，最无语的是，<code>request.environ[&#39;werkzeug.server.shutdown&#39;]()</code>这玩意在我的过滤规则下根本不用绕过😅。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156231.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156972.png" alt=""></p>
+<p>😅😅😅😅😅😅😅😅😅😅😅😅😅😅😅😅</p>
+<hr>
+<h2 id="0x04参考资料"><a href="#0x04参考资料" class="headerlink" title="0x04参考资料"></a>0x04参考资料</h2><ol>
+<li>Linux的/proc/self/学习: <a href="https://blog.csdn.net/cjdgg/article/details/119860355">https://blog.csdn.net/cjdgg/article/details/119860355</a></li>
+<li>-——已搬运———-Linux的/proc/self/学习 ++ CTF例题: <a href="https://blog.csdn.net/Zero_Adam/article/details/114853022">https://blog.csdn.net/Zero_Adam/article/details/114853022</a></li>
+<li>渗透系列之flask框架开启debug模式漏洞分析: <a href="https://cloud.tencent.com/developer/article/1726330">https://cloud.tencent.com/developer/article/1726330</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>安全</category>
+      </categories>
+      <tags>
+        <tag>Flask</tag>
+        <tag>Python</tag>
       </tags>
   </entry>
   <entry>
@@ -3657,312 +3983,46 @@ void MergeSort(List *list)
       </tags>
   </entry>
   <entry>
-    <title>家用服务器折腾指南</title>
-    <url>/2023/01/15/%E5%AE%B6%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8A%98%E8%85%BE%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151847944.jpg" alt=""></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>去年暑假组了一台新电脑，老电脑逐渐用不上用场了。恰好我有刷pt的需求，还想运行MC等游戏的服务器，于是我就动手改造这台老电脑了。</p>
-<h2 id="0x01硬件配置"><a href="#0x01硬件配置" class="headerlink" title="0x01硬件配置"></a>0x01硬件配置</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151851767.png" alt=""></p>
-<p>这台老电脑是15年配的：CPU是i3-4160，两个核心四个线程；主板是技嘉的丐版H81M-D2，有两个内存插槽，最大只支持8G的DDR3内存；主板有三个PCIE接口，一个PCIEx16够宽，两个PCIEx1比较短；还有四个SATA接口；另外主板太老没有HDMI只有VGA接口，除此之外的千兆以太网口没啥好说的</p>
-<p>PCIEx16上的亮机卡是GT640 2G，其实就是装系统时候用的；PCIEx1装了个物联网开机模块，因为我要将其放到家中，而我常年在外面上学，所以这个必不可少；还有个PCIEx1是英特尔Intel Corporation Wireless 7260网卡，这个是当时在学校里倒腾这玩意时应急选项，因为当初交换机太远，显示器太近。</p>
-<p>内存的话，只插了一根8G的DDR3内存，没想插更多是因为没有那么多服务要跑。当然了，高版本的MC多少内存都不够，不够我的U似乎也有些捉襟见肘了。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151912133.png" alt=""></p>
-<p>SATA四个接口全被占用啦。一个是系统盘，威刚的远古120G固态盘；一个两百块淘来的4THGST企业盘，是真的吵，也是真的烫，为此我加了个风扇改变风道，用来刷刷PT还是比较够的；之前云盘服务是在日立盘上的，但这小文件读写实在是太吵了，也不安全，于是26块包邮搞了块500G西数蓝盘，配上闲置的500G西数绿盘，组了个RAID1阵列，图个心安吧，这个阵列就是专门做云盘备份了。</p>
-<h2 id="0x02系统与网络配置"><a href="#0x02系统与网络配置" class="headerlink" title="0x02系统与网络配置"></a>0x02系统与网络配置</h2><p>系统没啥好说的，本人不喜欢折腾，也就没有搞ESXi，我系统盘实在是太小了，我为了配置方便就直接装Ubuntu 22.04.1 LTS了。</p>
-<p>网络的话，我家里是楼上楼下；光猫先是进入一楼的房间，通过院子里的飞线飞到二楼客厅弱电箱的交换机里。一路上的路由器我全改为了mesh组网，这是为了保证每个设备都能拿到ipv6。另外，据修网的师傅所言，上海电信的SDN只有在有公网的情况下才能正常使用ipv6（我不理解），于是我也拿到了我的一个公网v4地址，管他静态还是动态（半个多月都没改变地址），能有就是赢麻了！v4的话不支持NAT回流，就是我内网的主机没法用公网IP访问我的设备；但是v6没有公网内网之分，没有问题；还有就是v4v6都被封了80，443，8080端口。</p>
-<h2 id="0x03游戏服务器"><a href="#0x03游戏服务器" class="headerlink" title="0x03游戏服务器"></a>0x03游戏服务器</h2><p>这个配置拿来刷pt和做NAS（不考虑转码）其实是有些暴殄天物了，刚好我的云服务器也到期了，于是就把我的游戏服务器全都迁移到家里。</p>
-<h3 id="1-MC运维面板MCSManager"><a href="#1-MC运维面板MCSManager" class="headerlink" title="1.MC运维面板MCSManager"></a>1.MC运维面板MCSManager</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151920251.png" alt=""></p>
-<p>Aimed to provide a healthy software support for server administrators of Minecraft, Terraria and other game servers.</p>
-<p>官网地址：<a href="https://mcsmanager.com/">https://mcsmanager.com/</a></p>
-<p>这个东西简直不要太好用！我之前在云服务器上搭建的我的世界服务器，经常要不停地按UP键找历史命令，有一次还输入错误导致存档没了，非常可惜；如果想做备份和其他计划任务，说不难也不难，shell和crontab看着文档就能写出想要的东西了。但这些繁琐危险的操作本可以避免，在MCSManager里，你可以很方便地在网页端执行命令、修改配置文件、上传整合包、设定计划任务，甚至可以说，他就是一个网页Linux周期命令执行器。另外本身自带一些api，在我的NekobotQQ机器人还活着时，无需打开游戏戳一戳她就显示服务器情况和人数。</p>
-<p>安装很简单，官网提供了wget下载的安装脚本和docker安装方式，我是推荐用wget：</p>
-<pre><code>wget -qO- https://raw.githubusercontent.com/mcsmanager/Script/master/setup_en.sh | bash
-</code></pre><h3 id="2-SteamCMD"><a href="#2-SteamCMD" class="headerlink" title="2.SteamCMD"></a>2.SteamCMD</h3><p>SteamCMD is the command line version of the Steam client. The tool is used <strong>to download dedicated server applications of popular Steam games quickly  and easily for running your own Valheim server or Rust server</strong>, for example.</p>
-<p>官方网址：<a href="https://developer.valvesoftware.com/wiki/SteamCMD">https://developer.valvesoftware.com/wiki/SteamCMD</a></p>
-<p>也挺好安装的，具体方法包括在我之前写的<a href="https://picpo.top/2022/01/18/在linux平台上搭建求生之路服务器/">在linux平台上搭建求生之路服务器</a>里。要注意的是，SteamCMD似乎是能被MCSManager原生识别的，但是其权限问题错综复杂无法访问到一些文件，本人水平不够没有细究（懒），所以就ssh后screen运维拉到。</p>
-<p>服务器上跑了求生之路和饥荒的服务器，很可惜这两个游戏都原生不支持ipv6，但还好我本身就有公网v4😋。</p>
-<h2 id="0x04运维组件"><a href="#0x04运维组件" class="headerlink" title="0x04运维组件"></a>0x04运维组件</h2><p>SSH和Linux谁都会，但这些繁琐的操作都是可以避免的。</p>
-<h3 id="1-DDNS-GO"><a href="#1-DDNS-GO" class="headerlink" title="1.DDNS-GO"></a>1.DDNS-GO</h3><p>官方网址：<a href="https://github.com/jeessy2/ddns-go">https://github.com/jeessy2/ddns-go</a></p>
-<p>这是一个用go写的ddns，且不说我的v4很有可能是动态的，ipv6可是每两天就变化一次的，所以有个ddns服务非常有必要。</p>
-<p>我的安装方式：</p>
-<pre><code>docker run -d --name ddns-go --restart=always --net=host -v /opt/ddns-go:/root jeessy/ddns-go
-</code></pre><h3 id="2-性能监控-amp-运维Cockpit"><a href="#2-性能监控-amp-运维Cockpit" class="headerlink" title="2.性能监控&amp;运维Cockpit"></a>2.性能监控&amp;运维Cockpit</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151939945.webp" alt=""></p>
-<p>这个是Fedora Server自带的面板，作为debian系的Ubuntu肯定也能装：</p>
-<pre><code class="lang-brainfuck">$ sudo apt install cockpit -y
-</code></pre>
-<p>多的不说，光Storage能帮你格式化、分区、组软RAID就已经很好了。界面很素，但是很好用。</p>
-<p>安全性有自签名证书，不放心可以搞个其他的。</p>
-<h3 id="3-Portainer"><a href="#3-Portainer" class="headerlink" title="3.Portainer"></a>3.Portainer</h3><p>Deploy, configure, troubleshoot and secure containers in minutes  on Kubernetes, Docker, Swarm and Nomad in any data center, cloud,  network edge or IIOT device. </p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151945605.webp" alt=""></p>
-<p>官方网址：<a href="https://www.portainer.io/">https://www.portainer.io/</a></p>
-<p>这个没啥好说，管理docker容器的。我有太多服务是依赖docker快速启动的了。</p>
-<p>我的安装方式：</p>
-<pre><code class="lang-shell">docker pull portainer/portainer:latest
-
-docker run -d --net=host --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /data/portainer_data:/data portainer/portainer:1.23.2
-</code></pre>
-<h2 id="0x05其他服务"><a href="#0x05其他服务" class="headerlink" title="0x05其他服务"></a>0x05其他服务</h2><h3 id="1-transmission-daemon"><a href="#1-transmission-daemon" class="headerlink" title="1.transmission-daemon"></a>1.transmission-daemon</h3><p>磁力下载工具，主要用来刷pt。</p>
-<p>我的安装方式：</p>
-<pre><code>sudo apt-get install transmission-daemon
-</code></pre><p>原版界面太素，信息不够详尽，推荐用这个改善：</p>
-<p><a href="https://github.com/ronggang/transmission-web-control">https://github.com/ronggang/transmission-web-control</a></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151954452.png" alt=""></p>
-<h3 id="2-LibreSpeed"><a href="#2-LibreSpeed" class="headerlink" title="2.LibreSpeed"></a>2.LibreSpeed</h3><p><img src="C:\Users\picpo\AppData\Roaming\Typora\typora-user-images\image-20230115195929602.png" alt="image-20230115195929602"></p>
-<p>测速服务器。官方网址：<a href="https://github.com/librespeed/speedtest-go">https://github.com/librespeed/speedtest-go</a></p>
-<p>我的安装方式：</p>
-<pre><code>docker pull badapple9/speedtest-x
-
-docker run -d --restart=always --name speedtest -p 9001:80 -it badapple9/speedtest-x
-</code></pre><h3 id="3-Samba服务"><a href="#3-Samba服务" class="headerlink" title="3.Samba服务"></a>3.Samba服务</h3><p>单纯当Nas用的服务</p>
-<p>我的安装方式：</p>
-<pre><code class="lang-bash">sudo apt-get install samba samba-common
-</code></pre>
-<p>配置文件：</p>
-<pre><code class="lang-bash">sudo nano /etc/samba/smb.conf
-
-//更多配置字段请查阅Google
-
-[share]
-comment = share folder
-browseable = yes
-path = /home/frank/share
-create mask = 0700
-directory mask = 0700=
-public = yes
-available = yes
-writable = yes
-</code></pre>
-<p>重启服务：</p>
-<pre><code class="lang-text">sudo service smbd restart
-</code></pre>
-<p>推荐给samba新创建一个用户，而不是root和本机用户。</p>
-<h3 id="4-Nextcloud网盘"><a href="#4-Nextcloud网盘" class="headerlink" title="4.Nextcloud网盘"></a>4.Nextcloud网盘</h3><p>The most popular self-hosted collaboration solution for tens of millions of users at thousands of organizations across the globe</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301152005332.webp" alt=""></p>
-<p>官方网址：<a href="https://nextcloud.com/">https://nextcloud.com/</a></p>
-<p>我的安装方式是docker而不是官网推荐的docker-compose，因为docker-compose出现了权限读取问题，没解决成功。推荐自己去官网看docker-compose.yml。</p>
-<p>挺好用的，每个平台都有客户端，主要用来同步手机照片和其他文件，当网盘用。</p>
-<h3 id="5-Navidrome私有音乐服务"><a href="#5-Navidrome私有音乐服务" class="headerlink" title="5.Navidrome私有音乐服务"></a>5.Navidrome私有音乐服务</h3><p><img src="C:\Users\picpo\AppData\Roaming\Typora\typora-user-images\image-20230115201040737.png" alt="image-20230115201040737"></p>
-<p>受不了各大音乐平台的版权壁垒了，官方网址：<a href="https://www.navidrome.org/">https://www.navidrome.org/</a></p>
-<ul>
-<li>几乎可以播放任何音频格式</li>
-<li>多用户，每个用户都有自己的播放次数、播放列表、收藏夹等。</li>
-<li>资源使用率非常低。例如：300GB的资料库（约29000首歌曲），使用不到50MB的内存。</li>
-<li>界面简洁，支持中文。</li>
-<li>支持Subsonic API，也就是说Subsonic能用的客户端，Navidrome都能用。</li>
-</ul>
-<p>唯一的问题就是歌词显示有问题，似乎放到目录里也显示无歌词。</p>
-<p>我的docker-compose.yml：</p>
-<pre><code class="lang-yaml">version: &quot;3&quot;
-services:
-  navidrome:
-    container_name: navidrome
-    image: deluan/navidrome:latest
-    user: 0:0 #0:0代表用root用户运行
-    ports:
-      - &quot;4533:4533&quot;
-    restart: unless-stopped
-    environment:
-      # Optional: put your config options customization here. Examples:
-      ND_SCANSCHEDULE: 1h
-      ND_LOGLEVEL: info  
-      ND_SESSIONTIMEOUT: 24h
-      ND_BASEURL: &quot;&quot;
-      ND_ENABLETRANSCODINGCONFIG: &quot;true&quot;
-      ND_TRANSCODINGCACHESIZE: &quot;4000M&quot;
-      ND_IMAGECACHESIZE: &quot;1000M&quot;
-    volumes:
-      - &quot;/mnt/WDC/navidrome/data:/data&quot; //数据文件
-      - &quot;/mnt/WDC/navidrome/media:/music:ro&quot; //媒体文件
-</code></pre>
-<p>以下是支持的客户端：</p>
-<pre><code>iOS: play:Sub, substreamer, Amperfy, iSub
-Android: DSub, Subtracks, subreamer, Ultrasonic, Audinaut
-网页端: Subplayer, Airsonic Refix, Aurial, Jamstash, Subfire
-桌面端: Sublime Music（Linux）和Sonixd（Windows/Linux/MacOS）
-命令行: Jellycli（Windows/Linux）和STMP（Linux/MacOS）
-</code></pre>]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>Docker</tag>
-        <tag>linux</tag>
-        <tag>ubuntu</tag>
-        <tag>NAS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记一次Flask后端被渗透的经历</title>
-    <url>/2021/11/27/%E8%AE%B0%E4%B8%80%E6%AC%A1flask%E5%90%8E%E7%AB%AF%E8%A2%AB%E6%B8%97%E9%80%8F%E7%9A%84%E7%BB%8F%E5%8E%86/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154649.png" alt=""></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>2021-11-04中午，在flask文档的帮助下，我成功在一小时内搭建起一个带有沙盒的可以执行部分python语句的后端脚本，并第一次将项目部署在docker上。NekoBot新功能+1，在某十几个群开放了此功能，并特别标注为菜单的<strong>第-1项</strong>，开始期待几个群聊里做渗透的师傅们对其进行攻击。</p>
-<p>接下来的20多天里，如此明显的功能几乎没有人使用，这些人几乎全他妈的都在用Bot在看色图、犯病。不过好在有些人注意到了，其中有几位也是打CTF的师傅，可惜他们几乎都在瞎搞（）这期间有个南信大的朋友，对bot进行了一些列攻击，可惜这些方式都在我的预判之内，并没成功。但是单纯的部分绕过都做到了，因为真的很简单（）</p>
-<p>2021-11-27凌晨，在持续几个小时的尝试下，这个后端被巨佬<a href="https://blog.plusls.com/">plusls</a>（我也是从前小绿草的腿腿acdxvfsvd大仙贝那得知这位巨佬的）读取了源码，读取到了环境信息，最终利用flask的拒绝服务打了下来（我超我怎么不知道flask还有这个后门）。并在几个小时后发现了最后某几个关键字的绕过方法，基本就能get shell了。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154451.png" alt=""></p>
-<p>在写waf的时候我预先留了个open方法，这就能让所有人对任意文件进行读操作，还有dir()啥的也没过滤（要是过滤了很多东西也没法用了x）；当然还有一些然后以我浅薄的认知，封掉了几个可以利用os模块进行RCE的方法和关键词。我想看看，巨佬是怎么在这些阴间过滤的条件下成功get shell。很幸运，plusls的攻击过程十分精彩，让我学到许多，这波熬夜值了。记录一下记录一下.jpg</p>
-<p>（虽然说最后plusls师傅似乎发现了非常不错的绕过方式，但是我被他打掉的脚本不敢重启了，万一他手里有逃出docker的0day呢（害怕.jpg））</p>
-<h2 id="0x01文件源码"><a href="#0x01文件源码" class="headerlink" title="0x01文件源码"></a>0x01文件源码</h2><p>这么屑的源码有公开的必要吗（恼），直接<code>open(&#39;/proc/self/cwd/app/app.py&#39;, &#39;r&#39;).read()</code>，请。</p>
-<pre><code>#coding=utf-8
-from flask import Flask, request
-import random
-
-wrong_msg = [&quot;嘤嘤嘤，听不懂吖QAQ~&quot;, &quot;呜呜呜~咱好笨~&quot;, &quot;咱看不懂这些呀……&quot;, &quot;咿呀，好像出错了……&quot;, &quot;这超出窝的理解范围了QwQ&quot;, &quot;好难~咱听不懂~&quot;]
-
-
-def keyword_filter(keyword, msg):
-    for i in keyword:
-        if i not in msg:
-            return False
-    return True
-
-
-def py_filter(msg):
-    for keyword in [&quot;class&quot;, &quot;import&quot;, &quot;eval&quot;, &quot;exec&quot;, &quot;sys&quot;, &quot;globals&quot;, &quot;_&quot;, &quot;builtins&quot;, &quot;getattr&quot;, &quot;pow&quot;, &quot;&quot;,
-                    &quot;&amp;&quot;,]:
-        if keyword_filter(keyword, msg):
-            return False
-    if &quot;**&quot; in msg:
-        return False
-
-    return True
-
-
-def do_python(msg):
-    try:
-        if py_filter(msg):
-            temp = eval(msg)
-        else:
-            return &quot;Hacking for fun~&quot;
-
-        return str(temp)
-    except:
-        return random.choice(wrong_msg)
-
-
-app = Flask(__name__)
-
-
-@app.route(&quot;/submit&quot;, methods=[&quot;GET&quot;])
-def submit():
-    data = request.args.get(&quot;text&quot;)
-    print(data)
-    return do_python(data)
-
-
-if __name__ == &#39;__main__&#39;:
-    app.run(host=&quot;0.0.0.0&quot;)
-</code></pre><h2 id="0x02文件源码读取原理和-proc"><a href="#0x02文件源码读取原理和-proc" class="headerlink" title="0x02文件源码读取原理和/proc"></a>0x02文件源码读取原理和/proc</h2><p>我们都知道可以通过/proc/$pid/来获取指定进程的信息，例如内存映射、CPU绑定信息等等。如果某个进程想要获取本进程的系统信息，就可以通过进程的pid来访问/proc/$pid/目录。但是这个方法还需要获取进程pid，在fork、daemon等情况下pid还可能发生变化。为了更方便的获取本进程的信息，linux提供了/proc/self/目录，这个目录比较独特，不同的进程访问该目录时获得的信息是不同的，内容等价于/proc/本进程pid/。进程可以通过访问/proc/self/目录来获取自己的系统信息，而不用每次都获取pid。</p>
-<p>Linux 内核提供了一种通过 /proc 文件系统，在运行时访问内核内部数据结构、改变内核设置的机制。proc文件系统是一个伪文件系统，它只存在内存当中，而不占用外存空间。它以文件系统的方式为访问系统内核数据的操作提供接口。</p>
-<p>还有的是一些以数字命名的目录，他们是进程目录。系统中当前运行的每一个进程都有对应的一个目录在/proc下，以进程的PID号为目录名，他们是读取进程信息的接口。而self目录则是读取进程本身的信息接口，是一个link</p>
-<p>巨佬在做了一些常见的信息获取方式后，也试了一些关键字，然后就直接上手<code>/proc/self/</code>这个目录了（不愧是bin巨佬）</p>
-<p>读取/proc/self/maps可以得到当前进程的内存映射关系，通过读该文件的内容可以得到内存代码段基址。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154096.png" alt=""></p>
-<p>/proc/self/mem是进程的内存内容，通过修改该文件相当于直接修改当前进程的内存。</p>
-<p>（同样的，我们也可以通过写入mem文件来直接写入内存，例如直接修改代码段，放入我们的shellcode，从而在程序流程执行到这一步时执行shellcode来拿shell）</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155528.png" alt=""></p>
-<p>覆写got表我只在一些pwn题见过，python的PWN相关我一无所知（甚至没有我对pyc文件的逆向了解的多，乐），感觉非常难非常硬核，感觉现在以我的智商可能难以掌握（）</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155689.png" alt=""></p>
-<p>巨佬一直在尝试compile，并且试图向<code>/proc/self/mem</code>写入巨大多垃圾数据，应该是要搞堆栈溢出啥的，但好像没有什么太好的反馈（当然其他还有一些操作咱也看不懂QAQ）</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155838.png" alt=""></p>
-<p>说回读取文件目录的方法，一开始我看巨佬的操作我以为是通过<code>/proc/self/exe</code>啥的（毕竟c的话，确实可以用readlink这个函数），但是佬用的方法事利用format函数和八进制绕过，最后采取了lambda表达式</p>
-<pre><code>&quot;&#123;0.__globals__&#125;&quot;.format(lambda x:x)
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155959.png" alt=""></p>
-<p>不仅地址泄露了，函数什么的都泄露了（地址泄露了open也能用这些不是迟早的事吗x）</p>
-<h2 id="0x03Flask框架问题"><a href="#0x03Flask框架问题" class="headerlink" title="0x03Flask框架问题"></a>0x03Flask框架问题</h2><h3 id="debug模式"><a href="#debug模式" class="headerlink" title="debug模式"></a>debug模式</h3><p>Flask在生产环境中开启debug模式是一件非常危险的事，主要有3点原因：</p>
-<p>1、会泄露当前报错页面的源码，可供审计挖掘其他漏洞</p>
-<p>2、会泄露Web应用的绝对路径，及Python解释器的路径（可以配合写文件漏洞向指定目录的文件内写入构造好的恶意代码，利用方式可以参考安全客的这篇文章：<a href="https://link.zhihu.com/?target=https%3A//www.anquanke.com/post/id/86961">文件解压之过 Python中的代码执行</a>）</p>
-<p>3、<strong>debug页面中包含Python的交互式shell，可以执行任意Python代码</strong></p>
-<p>但是，进入这个Python shell是需要输入一个PIN码的。PIN码的生成和几个与机器以及脚本的参数有关，比较难；当然，Debug模式要是没开启PIN码验证的话，是可以直接进入shell的</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155210.png" alt=""></p>
-<h3 id="request-environ"><a href="#request-environ" class="headerlink" title="request.environ"></a>request.environ</h3><p>在Flask的官方文档中是这样介绍request的：对于 Web 应用，与客户端发送给服务器的数据交互至关重要。在 Flask 中由全局的 request 对象来提供这些信息。</p>
-<p>从Flask模块导入request：from flask import request</p>
-<p>request的属性众多，其中的environ，官方文档给出的描述是：WSGI隐含的环境配置。</p>
-<p>好啊</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156624.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156130.png" alt=""></p>
-<h3 id="werkzeug-server-shutdown"><a href="#werkzeug-server-shutdown" class="headerlink" title="werkzeug.server.shutdown"></a>werkzeug.server.shutdown</h3><p>request.environ字典中一个名为 shutdown_server 的方法名分配的键为 werkzeug.server.shutdown</p>
-<p>注射request.environ[‘werkzeug.server.shutdown’]()会造成拒绝服务。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156023.png" alt=""></p>
-<p>捏麻麻滴，我是真的之前不知道flask的这些细节😅😅😅</p>
-<p>我真的操了，最无语的是，<code>request.environ[&#39;werkzeug.server.shutdown&#39;]()</code>这玩意在我的过滤规则下根本不用绕过😅。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156231.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156972.png" alt=""></p>
-<p>😅😅😅😅😅😅😅😅😅😅😅😅😅😅😅😅</p>
-<hr>
-<h2 id="0x04参考资料"><a href="#0x04参考资料" class="headerlink" title="0x04参考资料"></a>0x04参考资料</h2><ol>
-<li>Linux的/proc/self/学习: <a href="https://blog.csdn.net/cjdgg/article/details/119860355">https://blog.csdn.net/cjdgg/article/details/119860355</a></li>
-<li>-——已搬运———-Linux的/proc/self/学习 ++ CTF例题: <a href="https://blog.csdn.net/Zero_Adam/article/details/114853022">https://blog.csdn.net/Zero_Adam/article/details/114853022</a></li>
-<li>渗透系列之flask框架开启debug模式漏洞分析: <a href="https://cloud.tencent.com/developer/article/1726330">https://cloud.tencent.com/developer/article/1726330</a></li>
+    <title>远程桌面（RDP）的迷思</title>
+    <url>/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340599.jpg" alt=""></p>
+<h2 id="0x00说在前面"><a href="#0x00说在前面" class="headerlink" title="0x00说在前面"></a>0x00说在前面</h2><p>新学期，在社团活动室组了一台主机。打算开个远程桌面，这样我在宿舍的话，也可以访问我的主机了。</p>
+<h2 id="0x01方案选择"><a href="#0x01方案选择" class="headerlink" title="0x01方案选择"></a>0x01方案选择</h2><p>无非就以下几个方案：</p>
+<ol>
+<li>第三方远程桌面软件/穿透软件来突破内网限制。这个的话属实没有必要，因为我就在学校里有这个需求，否定。</li>
+<li>IPv4+端口映射。想啥呢，暴露在校园网下，这是要给x1c的大哥们冲业绩吗？否定。</li>
+<li>IPv4+proxifier代理。这个方案是我一开始最认可的，当我搭好socks5隧道时发现，我确实可以访问192.*.*.*下的内网设备，包括我的网页服务器，pt下载机，以及别人乱七八糟的服务端API数据库接口Nas啥的，结果轮到我的主机的rdp端口，他就不行了。初步猜测可能和Windows的防火墙策略有关，但是我在网上找了半天没找到和我一样情况的人，少部分人思路和我一样，但是他们似乎没出现这么神奇的现象，否定。</li>
+<li>IPv6。这个方案是肯定可以的——我现在用的就是。学校里有自己的校园网和运营商网络，运营商网络是没法通过DHCP分配IPv6的，但是校园网是可以的。另外，社团的网也是可以的。</li>
 </ol>
-]]></content>
-      <categories>
-        <category>安全</category>
-      </categories>
-      <tags>
-        <tag>Flask</tag>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决Gravatar头像被墙的问题</title>
-    <url>/2021/03/09/%E8%A7%A3%E5%86%B3gravatar%E5%A4%B4%E5%83%8F%E8%A2%AB%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242337275.png" alt=""></p>
-<p>2月27日凌晨，我像往常一样打开了自己的博客，来到了留言板，却发现头像无法加载出来。</p>
-<p>原先我以为只是我的网络问题，可没想到gravatar官网都打不开了，这时我意识到不太对劲了，于是打开测速网：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242338698.png" alt=""></p>
-<p>我能说什么呢？反正当时我人麻了😅</p>
-<p>当时也是事发突然，本来也没几个玩wp的朋友，所以当时没有解决的方法。今天尝试百度了一下gravatar，时间限定这一个月，查到了这篇博客，<a href="https://kzyblog.com/5247.html/comment-page-1#comment-3542">完美解决Gravatar头像被墙</a></p>
-<p>抱着尝试的心态试了一下最后一个方法，下载了个WP-China-Yes插件，安装。</p>
-<p>我○，头像又出现了！！！！！！！！！！</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>wordpress</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>树莓派搭建Mirai QQ机器人</title>
-    <url>/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png" alt=""></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直以来，我都有一个搭建qq机器人的想法。可惜酷Q早已被腾讯橄榄，但好在还有Mirai这个框架。在翻出我用了五年的树莓派后，我打算在上面自己搭建一个qq机器人，以后或许还会写一写插件啥的（</p>
-<p>本文可能会时不时偶尔更新一下，做到哪步是哪步（咕咕咕预订</p>
-<p>项目地址：<a href="https://github.com/mamoe/mirai">https://github.com/mamoe/mirai</a></p>
-<h2 id="0x01下载Mirai控制台"><a href="#0x01下载Mirai控制台" class="headerlink" title="0x01下载Mirai控制台"></a>0x01下载Mirai控制台</h2><p><a href="https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md">https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md</a></p>
-<p>因为树莓派是arm架构的，所以我选择了arm的版本</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200411.png" alt=""></p>
-<p>建立文件夹，进入，并chmod一下</p>
-<pre><code>pi@raspberrypi:~/mirai $ ls
-mcl-installer-72b890d-linux-arm
-pi@raspberrypi:~/mirai $ sudo chmod +x ./mcl-installer-72b890d-linux-arm
-pi@raspberrypi:~/mirai $ ls
-mcl-installer-72b890d-linux-arm
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200451.png" alt=""></p>
-<p>然后无脑回车就是了</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200333.png" alt=""></p>
-<p>可以看到，目录下多了不少东西，先chmod运行mcl再说</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201423.png" alt=""></p>
-<p>第一次运行会初始化</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201727.png" alt=""></p>
-<h2 id="0x02下载和安装插件"><a href="#0x02下载和安装插件" class="headerlink" title="0x02下载和安装插件"></a>0x02下载和安装插件</h2><p>刚刚装好的 Mirai Console 是没有任何功能的。功能将由插件提供。</p>
-<p>Mirai 官方提供两个插件：</p>
-<ul>
-<li><a href="https://github.com/project-mirai/chat-command">chat-command</a>: 允许在聊天环境通过以 “/“ 起始的消息执行指令</li>
-<li><a href="https://github.com/project-mirai/mirai-api-http">mirai-api-http</a>：提供 HTTP 支持，允许使用其他编程语言的插件</li>
-</ul>
-<p>打开命令行 (Windows 系统按住Shift+鼠标右键，点击”在此处打开 PowerShell”),<br>可以使用 MCL 自动安装这些插件如：</p>
-<pre><code>./mcl --update-package net.mamoe:mirai-api-http --type plugin --channel stable
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201808.png" alt=""></p>
-<p>如果是 JAR 文件的插件，放入 <code>plugins</code> 即可。其他插件一般都有特殊说明如何使用，请参考它们的说明。</p>
-<h2 id="0x03使用控制台指令"><a href="#0x03使用控制台指令" class="headerlink" title="0x03使用控制台指令"></a>0x03使用控制台指令</h2><p>启动 <code>mcl.cmd</code> 就会看到控制台。在控制台可以输入指令，按回车执行这条指令。</p>
-<p>Mirai Console 内置一些指令，输入 <code>?</code> 并回车可以查看指令列表。</p>
+<p>IPv6的方案好就好在，我校的校园网虽然晚上会断网，但是校园网可以在未登录的情况下分配一个教育网段的地址。就算这个不行，也可以通过连接手机热点的方式，获取IPv6。注意，我校校园网不支持SLACC，安卓设备无法通过连接校园网WiFi来获取v6地址。</p>
+<p>至于客户端，我在Windows端选择的是mstsc（就是专业版自带的那个）。安卓用的是谷歌商店的RD客户端（同样微软出品）。注意，这个软件微软商店也有，但是不推荐，因为延迟远不如原生的mstsc。</p>
+<h2 id="0x02实测表现"><a href="#0x02实测表现" class="headerlink" title="0x02实测表现"></a>0x02实测表现</h2><p>总的来说还是非常不错的，44ms。其实这是最高延迟了，测到过26ms的。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340193.png" alt=""></p>
+<h2 id="0x03优化"><a href="#0x03优化" class="headerlink" title="0x03优化"></a>0x03优化</h2><h3 id="1-突破30fps限制"><a href="#1-突破30fps限制" class="headerlink" title="1.突破30fps限制"></a>1.突破30fps限制</h3><p>打开Windows<code>注册表编辑器 (regedit.exe)</code>，找到以下子项：</p>
+<pre><code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations
+</code></pre><p>右击新建一个<code>DWORD(32-bit)值</code>的项，改名为<code>DWMFRAMEINTERVAL</code>，修改为十进制下的15。</p>
+<p>为什么？因为这个时候的帧率限制为1000/15，也就是66FPS。</p>
+<p>结束后保存重启，可以远程桌面登录后，通过一些测试fps的网站来测试，你会发现fps不是之前30而是60或者更高了。</p>
+<h3 id="2-显卡加速"><a href="#2-显卡加速" class="headerlink" title="2.显卡加速"></a>2.显卡加速</h3><p>打开远程主机上的组策略（Win+R打开运行，输入<code>gpedit.msc</code>）</p>
+<p>依次找到计算机配置-&gt;管理模板-&gt;Windows组件-&gt;远程桌面服务-&gt;远程桌面会话主机-&gt;远程会话环境</p>
+<p>在右边选择<strong>将硬件图形适配器应用于所有远程桌面服务会话</strong></p>
+<p>同时也可以打开<strong>配置远程桌面连接的H.264/AVC硬件编码</strong></p>
+<p>其实这没啥太大用处，具体原因接着说。</p>
+<h2 id="0x04游戏玩家的十字路口"><a href="#0x04游戏玩家的十字路口" class="headerlink" title="0x04游戏玩家的十字路口"></a>0x04游戏玩家的十字路口</h2><p>首先我们要明白：<strong>微软RDP是不支持独显的。有需要远程玩游戏的话，需要第三方的远程桌面、远程遥控软件才行。</strong></p>
+<p>在我们连接到远程桌面时，打开任务管理器，会发现独显是可以正常显示的。但是这并不代表你可以打游戏或者开blender啥的。那么这是怎么回事呢？</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242341801.png" alt=""></p>
+<p>如果你在这时打开游戏，你会发现一些游戏确实可以打开。比如我打开文明6，帧率只有30+，cpu频率暴增到3.99GHz，占用暴增40%，显卡摆烂在3%一动不动，这和在本机打开后的表现天差地别。而像apex，那就根本打不开了。注意，这和有无集显没有关系，我是12400F，照样可以显示，说明是有个虚拟显卡的。</p>
+<p>当然，NVidia也注意到了这一点，于是推出了nvidia-opengl-rdp——恕我直言，这个驱动几乎没什么作用……都什么年代了，还在用传统OpenGL。DirectX有人说是原生支持了，我觉得他在放屁，要是真的原生支持我怎么可能出现以上情况？</p>
+<p>官网下载需要登陆注册developer账号，我找到个第三方的百度网盘下载，不大就0.3M大小。</p>
+<pre><code>链接：https://pan.baidu.com/s/1HKy\_Q\_rZx1oy3kq4XO0AuA  
+提取码：pntw
+</code></pre><p>至于想玩游戏嘛……可以试试其他的软件，可能在延迟方面不如微软原生的mstsc，也有是游戏识别的限制。这些东西，等我以后试到了再做反馈吧。</p>
 ]]></content>
       <categories>
         <category>野生技术协会</category>
       </categories>
       <tags>
-        <tag>Mirai</tag>
-        <tag>树莓派</tag>
+        <tag>RDP</tag>
       </tags>
   </entry>
   <entry>
@@ -4017,66 +4077,6 @@ mcl-installer-72b890d-linux-arm
       <tags>
         <tag>PHP</tag>
         <tag>文件上传</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
-    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg" alt=""></p>
-<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
-<pre><code class="lang-shell">apt install open-vm-tools
-apt install open-vm-tools-desktop
-</code></pre>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>Vmware</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>远程桌面（RDP）的迷思</title>
-    <url>/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340599.jpg" alt=""></p>
-<h2 id="0x00说在前面"><a href="#0x00说在前面" class="headerlink" title="0x00说在前面"></a>0x00说在前面</h2><p>新学期，在社团活动室组了一台主机。打算开个远程桌面，这样我在宿舍的话，也可以访问我的主机了。</p>
-<h2 id="0x01方案选择"><a href="#0x01方案选择" class="headerlink" title="0x01方案选择"></a>0x01方案选择</h2><p>无非就以下几个方案：</p>
-<ol>
-<li>第三方远程桌面软件/穿透软件来突破内网限制。这个的话属实没有必要，因为我就在学校里有这个需求，否定。</li>
-<li>IPv4+端口映射。想啥呢，暴露在校园网下，这是要给x1c的大哥们冲业绩吗？否定。</li>
-<li>IPv4+proxifier代理。这个方案是我一开始最认可的，当我搭好socks5隧道时发现，我确实可以访问192.*.*.*下的内网设备，包括我的网页服务器，pt下载机，以及别人乱七八糟的服务端API数据库接口Nas啥的，结果轮到我的主机的rdp端口，他就不行了。初步猜测可能和Windows的防火墙策略有关，但是我在网上找了半天没找到和我一样情况的人，少部分人思路和我一样，但是他们似乎没出现这么神奇的现象，否定。</li>
-<li>IPv6。这个方案是肯定可以的——我现在用的就是。学校里有自己的校园网和运营商网络，运营商网络是没法通过DHCP分配IPv6的，但是校园网是可以的。另外，社团的网也是可以的。</li>
-</ol>
-<p>IPv6的方案好就好在，我校的校园网虽然晚上会断网，但是校园网可以在未登录的情况下分配一个教育网段的地址。就算这个不行，也可以通过连接手机热点的方式，获取IPv6。注意，我校校园网不支持SLACC，安卓设备无法通过连接校园网WiFi来获取v6地址。</p>
-<p>至于客户端，我在Windows端选择的是mstsc（就是专业版自带的那个）。安卓用的是谷歌商店的RD客户端（同样微软出品）。注意，这个软件微软商店也有，但是不推荐，因为延迟远不如原生的mstsc。</p>
-<h2 id="0x02实测表现"><a href="#0x02实测表现" class="headerlink" title="0x02实测表现"></a>0x02实测表现</h2><p>总的来说还是非常不错的，44ms。其实这是最高延迟了，测到过26ms的。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340193.png" alt=""></p>
-<h2 id="0x03优化"><a href="#0x03优化" class="headerlink" title="0x03优化"></a>0x03优化</h2><h3 id="1-突破30fps限制"><a href="#1-突破30fps限制" class="headerlink" title="1.突破30fps限制"></a>1.突破30fps限制</h3><p>打开Windows<code>注册表编辑器 (regedit.exe)</code>，找到以下子项：</p>
-<pre><code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations
-</code></pre><p>右击新建一个<code>DWORD(32-bit)值</code>的项，改名为<code>DWMFRAMEINTERVAL</code>，修改为十进制下的15。</p>
-<p>为什么？因为这个时候的帧率限制为1000/15，也就是66FPS。</p>
-<p>结束后保存重启，可以远程桌面登录后，通过一些测试fps的网站来测试，你会发现fps不是之前30而是60或者更高了。</p>
-<h3 id="2-显卡加速"><a href="#2-显卡加速" class="headerlink" title="2.显卡加速"></a>2.显卡加速</h3><p>打开远程主机上的组策略（Win+R打开运行，输入<code>gpedit.msc</code>）</p>
-<p>依次找到计算机配置-&gt;管理模板-&gt;Windows组件-&gt;远程桌面服务-&gt;远程桌面会话主机-&gt;远程会话环境</p>
-<p>在右边选择<strong>将硬件图形适配器应用于所有远程桌面服务会话</strong></p>
-<p>同时也可以打开<strong>配置远程桌面连接的H.264/AVC硬件编码</strong></p>
-<p>其实这没啥太大用处，具体原因接着说。</p>
-<h2 id="0x04游戏玩家的十字路口"><a href="#0x04游戏玩家的十字路口" class="headerlink" title="0x04游戏玩家的十字路口"></a>0x04游戏玩家的十字路口</h2><p>首先我们要明白：<strong>微软RDP是不支持独显的。有需要远程玩游戏的话，需要第三方的远程桌面、远程遥控软件才行。</strong></p>
-<p>在我们连接到远程桌面时，打开任务管理器，会发现独显是可以正常显示的。但是这并不代表你可以打游戏或者开blender啥的。那么这是怎么回事呢？</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242341801.png" alt=""></p>
-<p>如果你在这时打开游戏，你会发现一些游戏确实可以打开。比如我打开文明6，帧率只有30+，cpu频率暴增到3.99GHz，占用暴增40%，显卡摆烂在3%一动不动，这和在本机打开后的表现天差地别。而像apex，那就根本打不开了。注意，这和有无集显没有关系，我是12400F，照样可以显示，说明是有个虚拟显卡的。</p>
-<p>当然，NVidia也注意到了这一点，于是推出了nvidia-opengl-rdp——恕我直言，这个驱动几乎没什么作用……都什么年代了，还在用传统OpenGL。DirectX有人说是原生支持了，我觉得他在放屁，要是真的原生支持我怎么可能出现以上情况？</p>
-<p>官网下载需要登陆注册developer账号，我找到个第三方的百度网盘下载，不大就0.3M大小。</p>
-<pre><code>链接：https://pan.baidu.com/s/1HKy\_Q\_rZx1oy3kq4XO0AuA  
-提取码：pntw
-</code></pre><p>至于想玩游戏嘛……可以试试其他的软件，可能在延迟方面不如微软原生的mstsc，也有是游戏识别的限制。这些东西，等我以后试到了再做反馈吧。</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>RDP</tag>
       </tags>
   </entry>
   <entry>
