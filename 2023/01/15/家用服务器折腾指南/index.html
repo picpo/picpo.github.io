@@ -26,12 +26,12 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301152005332.webp">
 <meta property="og:image" content="c:\Users\picpo\AppData\Roaming\Typora\typora-user-images\image-20230115201040737.png">
 <meta property="article:published_time" content="2023-01-15T10:14:03.000Z">
-<meta property="article:modified_time" content="2023-01-15T12:17:36.951Z">
+<meta property="article:modified_time" content="2023-01-18T10:58:39.626Z">
 <meta property="article:author" content="PiCpo">
 <meta property="article:tag" content="Docker">
 <meta property="article:tag" content="linux">
-<meta property="article:tag" content="NAS">
 <meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="NAS">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151847944.jpg">
 
@@ -614,7 +614,7 @@
 						
 						<div class="post-meta-detail post-meta-detail-time">
 							<i class="fa fa-clock-o" aria-hidden="true"></i>
-							<time title="发布于 2023-1-15 18:14:03 | 编辑于 2023-1-15 20:17:36">2023-1-15 18:14
+							<time title="发布于 2023-1-15 18:14:03 | 编辑于 2023-1-18 18:58:39">2023-1-15 18:14
 							</time>
 						</div>
 					
@@ -692,9 +692,8 @@
 </code></pre><h3 id="2-性能监控-amp-运维Cockpit"><a href="#2-性能监控-amp-运维Cockpit" class="headerlink" title="2.性能监控&amp;运维Cockpit"></a>2.性能监控&amp;运维Cockpit</h3><p><img class="lazyload lazyload-style-1" src="data:image/svg+xml;base64,PCEtLUFyZ29uTG9hZGluZy0tPgo8c3ZnIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3Ryb2tlPSIjZmZmZmZmMDAiPjxnPjwvZz4KPC9zdmc+"  data-original="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151939945.webp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" alt=""></p>
 
 <p>这个是Fedora Server自带的面板，作为debian系的Ubuntu肯定也能装：</p>
-<pre><code class="lang-brainfuck">$ sudo apt install cockpit -y
-</code></pre>
-<p>多的不说，光Storage能帮你格式化、分区、组软RAID就已经很好了。界面很素，但是很好用。</p>
+<pre><code>sudo apt install cockpit -y
+</code></pre><p>多的不说，光Storage能帮你格式化、分区、组软RAID就已经很好了。界面很素，但是很好用。</p>
 <p>安全性有自签名证书，不放心可以搞个其他的。</p>
 <h3 id="3-Portainer"><a href="#3-Portainer" class="headerlink" title="3.Portainer"></a>3.Portainer</h3><p>Deploy, configure, troubleshoot and secure containers in minutes  on Kubernetes, Docker, Swarm and Nomad in any data center, cloud,  network edge or IIOT device. </p>
 <p><img class="lazyload lazyload-style-1" src="data:image/svg+xml;base64,PCEtLUFyZ29uTG9hZGluZy0tPgo8c3ZnIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3Ryb2tlPSIjZmZmZmZmMDAiPjxnPjwvZz4KPC9zdmc+"  data-original="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151945605.webp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" alt=""></p>
@@ -740,9 +739,8 @@ available = yes
 writable = yes
 </code></pre>
 <p>重启服务：</p>
-<pre><code class="lang-text">sudo service smbd restart
-</code></pre>
-<p>推荐给samba新创建一个用户，而不是root和本机用户。</p>
+<pre><code>sudo service smbd restart
+</code></pre><p>推荐给samba新创建一个用户，而不是root和本机用户。</p>
 <h3 id="4-Nextcloud网盘"><a href="#4-Nextcloud网盘" class="headerlink" title="4.Nextcloud网盘"></a>4.Nextcloud网盘</h3><p>The most popular self-hosted collaboration solution for tens of millions of users at thousands of organizations across the globe</p>
 <p><img class="lazyload lazyload-style-1" src="data:image/svg+xml;base64,PCEtLUFyZ29uTG9hZGluZy0tPgo8c3ZnIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3Ryb2tlPSIjZmZmZmZmMDAiPjxnPjwvZz4KPC9zdmc+"  data-original="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301152005332.webp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" alt=""></p>
 
