@@ -2033,7 +2033,7 @@ docker run -d --net=host --restart=unless-stopped -v /var/run/docker.sock:/var/r
 </code></pre><p>原版界面太素，信息不够详尽，推荐用这个改善：</p>
 <p><a href="https://github.com/ronggang/transmission-web-control">https://github.com/ronggang/transmission-web-control</a></p>
 <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151954452.png" alt=""></p>
-<h3 id="2-LibreSpeed"><a href="#2-LibreSpeed" class="headerlink" title="2.LibreSpeed"></a>2.LibreSpeed</h3><p><img src="C:\Users\picpo\AppData\Roaming\Typora\typora-user-images\image-20230115195929602.png" alt="image-20230115195929602"></p>
+<h3 id="2-LibreSpeed"><a href="#2-LibreSpeed" class="headerlink" title="2.LibreSpeed"></a>2.LibreSpeed</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202302041435726.png" alt=""></p>
 <p>测速服务器。官方网址：<a href="https://github.com/librespeed/speedtest-go">https://github.com/librespeed/speedtest-go</a></p>
 <p>我的安装方式：</p>
 <pre><code>docker pull badapple9/speedtest-x
@@ -2066,7 +2066,7 @@ writable = yes
 <p>官方网址：<a href="https://nextcloud.com/">https://nextcloud.com/</a></p>
 <p>我的安装方式是docker而不是官网推荐的docker-compose，因为docker-compose出现了权限读取问题，没解决成功。推荐自己去官网看docker-compose.yml。</p>
 <p>挺好用的，每个平台都有客户端，主要用来同步手机照片和其他文件，当网盘用。</p>
-<h3 id="5-Navidrome私有音乐服务"><a href="#5-Navidrome私有音乐服务" class="headerlink" title="5.Navidrome私有音乐服务"></a>5.Navidrome私有音乐服务</h3><p><img src="C:\Users\picpo\AppData\Roaming\Typora\typora-user-images\image-20230115201040737.png" alt="image-20230115201040737"></p>
+<h3 id="5-Navidrome私有音乐服务"><a href="#5-Navidrome私有音乐服务" class="headerlink" title="5.Navidrome私有音乐服务"></a>5.Navidrome私有音乐服务</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202302041438738.png" alt=""></p>
 <p>受不了各大音乐平台的版权壁垒了，官方网址：<a href="https://www.navidrome.org/">https://www.navidrome.org/</a></p>
 <ul>
 <li>几乎可以播放任何音频格式</li>
@@ -2105,7 +2105,150 @@ Android: DSub, Subtracks, subreamer, Ultrasonic, Audinaut
 网页端: Subplayer, Airsonic Refix, Aurial, Jamstash, Subfire
 桌面端: Sublime Music（Linux）和Sonixd（Windows/Linux/MacOS）
 命令行: Jellycli（Windows/Linux）和STMP（Linux/MacOS）
-</code></pre>]]></content>
+</code></pre><h3 id="6-CUPS网络打印机"><a href="#6-CUPS网络打印机" class="headerlink" title="6.CUPS网络打印机"></a>6.CUPS网络打印机</h3><p>安装：</p>
+<pre><code>sudo apt-get install cups
+</code></pre><p>备份文件：</p>
+<pre><code>sudo cp /etc/cups/cupsd.conf /etc/cups/cupsd.conf.bak
+</code></pre><p>我的配置文档，仅供参考：</p>
+<pre><code>LogLevel warn
+PageLogFormat
+MaxLogSize 0
+ErrorPolicy retry-job
+//listen需要将localhost改为0.0.0.0，记得防火墙弄好
+# Allow remote access
+Port 631
+Listen /run/cups/cups.sock
+# Share local printers on the local network.
+Browsing On
+BrowseLocalProtocols dnssd
+DefaultAuthType Basic
+WebInterface Yes
+IdleExitTimeout 60
+
+//这块地方需要修改成这样，否则forbidden
+&lt;Location /&gt;
+  # Allow shared printing...
+  Order allow,deny
+  Allow all
+&lt;/Location&gt;
+&lt;Location /admin&gt;
+  AuthType Default
+  Require valid-user
+&lt;/Location&gt;
+
+
+&lt;Location /admin/conf&gt;
+  AuthType Default
+  Require user @SYSTEM
+&lt;/Location&gt;
+&lt;Location /admin/log&gt;
+  AuthType Default
+  Require user @SYSTEM
+&lt;/Location&gt;
+&lt;Policy default&gt;
+  JobPrivateAccess default
+  JobPrivateValues default
+  SubscriptionPrivateAccess default
+  SubscriptionPrivateValues default
+  &lt;Limit Create-Job Print-Job Print-URI Validate-Job&gt;
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit Send-Document Send-URI Hold-Job Release-Job Restart-Job Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription Cancel-Subscription Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job Resume-Job Cancel-My-Jobs Close-Job CUPS-Move-Job CUPS-Get-Document&gt;
+    Require user @OWNER @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit CUPS-Add-Modify-Printer CUPS-Delete-Printer CUPS-Add-Modify-Class CUPS-Delete-Class CUPS-Set-Default CUPS-Get-Devices&gt;
+    AuthType Default
+    Require user @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit Pause-Printer Resume-Printer Enable-Printer Disable-Printer Pause-Printer-After-Current-Job Hold-New-Jobs Release-Held-New-Jobs Deactivate-Printer Activate-Printer Restart-Printer Shutdown-Printer Startup-Printer Promote-Job Schedule-Job-After Cancel-Jobs CUPS-Accept-Jobs CUPS-Reject-Jobs&gt;
+    AuthType Default
+    Require user @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit Cancel-Job CUPS-Authenticate-Job&gt;
+    Require user @OWNER @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit All&gt;
+    Order deny,allow
+  &lt;/Limit&gt;
+&lt;/Policy&gt;
+&lt;Policy authenticated&gt;
+  JobPrivateAccess default
+  JobPrivateValues default
+  SubscriptionPrivateAccess default
+  SubscriptionPrivateValues default
+  &lt;Limit Create-Job Print-Job Print-URI Validate-Job&gt;
+    AuthType Default
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit Send-Document Send-URI Hold-Job Release-Job Restart-Job Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription Cancel-Subscription Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job Resume-Job Cancel-My-Jobs Close-Job CUPS-Move-Job CUPS-Get-Document&gt;
+    AuthType Default
+    Require user @OWNER @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit CUPS-Add-Modify-Printer CUPS-Delete-Printer CUPS-Add-Modify-Class CUPS-Delete-Class CUPS-Set-Default&gt;
+    AuthType Default
+    Require user @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit Pause-Printer Resume-Printer Enable-Printer Disable-Printer Pause-Printer-After-Current-Job Hold-New-Jobs Release-Held-New-Jobs Deactivate-Printer Activate-Printer Restart-Printer Shutdown-Printer Startup-Printer Promote-Job Schedule-Job-After Cancel-Jobs CUPS-Accept-Jobs CUPS-Reject-Jobs&gt;
+    AuthType Default
+    Require user @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit Cancel-Job CUPS-Authenticate-Job&gt;
+    AuthType Default
+    Require user @OWNER @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit All&gt;
+    Order deny,allow
+  &lt;/Limit&gt;
+&lt;/Policy&gt;
+&lt;Policy kerberos&gt;
+  JobPrivateAccess default
+  JobPrivateValues default
+  SubscriptionPrivateAccess default
+  SubscriptionPrivateValues default
+  &lt;Limit Create-Job Print-Job Print-URI Validate-Job&gt;
+    AuthType Negotiate
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit Send-Document Send-URI Hold-Job Release-Job Restart-Job Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription Cancel-Subscription Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job Resume-Job Cancel-My-Jobs Close-Job CUPS-Move-Job CUPS-Get-Document&gt;
+    AuthType Negotiate
+    Require user @OWNER @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit CUPS-Add-Modify-Printer CUPS-Delete-Printer CUPS-Add-Modify-Class CUPS-Delete-Class CUPS-Set-Default&gt;
+    AuthType Default
+    Require user @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit Pause-Printer Resume-Printer Enable-Printer Disable-Printer Pause-Printer-After-Current-Job Hold-New-Jobs Release-Held-New-Jobs Deactivate-Printer Activate-Printer Restart-Printer Shutdown-Printer Startup-Printer Promote-Job Schedule-Job-After Cancel-Jobs CUPS-Accept-Jobs CUPS-Reject-Jobs&gt;
+    AuthType Default
+    Require user @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit Cancel-Job CUPS-Authenticate-Job&gt;
+    AuthType Negotiate
+    Require user @OWNER @SYSTEM
+    Order deny,allow
+  &lt;/Limit&gt;
+  &lt;Limit All&gt;
+    Order deny,allow
+  &lt;/Limit&gt;
+&lt;/Policy&gt;
+</code></pre><p>重启：</p>
+<pre><code>sudo service cups restart
+</code></pre><p>然后输入内网IP:631进入管理页面并登陆</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202302041448968.png" alt=""></p>
+<p>选择usb的打印机即可，其他选项看自己，驱动需要选择对应的，别忘了开启share选项（包括截图页面的）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202302041450041.png" alt=""></p>
+<p>测试一下，打印成功</p>
+]]></content>
       <categories>
         <category>野生技术协会</category>
       </categories>
