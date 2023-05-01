@@ -1,82 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>AFP与Time Machine</title>
-    <url>/2023/05/01/AFP%E4%B8%8ETime%20Machine/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/20230501204251.png" alt=""></p>
-<h2 id="0x01安装"><a href="#0x01安装" class="headerlink" title="0x01安装"></a>0x01安装</h2><p>安装Netatalk服务，用来把Linux/Unix伪装成AFP协议传输的文件服务器：</p>
-<pre><code>sudo apt-get install netatalk
-</code></pre><p>安装avahi-daemon，用来在Linux/Unix中开启类似的Bonjour的服务：</p>
-<pre><code>sudo apt-get install avahi-daemon
-</code></pre><h2 id="0x02配置文件"><a href="#0x02配置文件" class="headerlink" title="0x02配置文件"></a>0x02配置文件</h2><p>编辑<code>/etc/netatalk/afp.conf</code></p>
-<pre><code>;
-; Netatalk 3.x configuration file
-;
-
-[Global]
-; Global server settings
-
-; [Homes]
-; basedir regex = /xxxx
-
-; [My AFP Volume]
-; path = /path/to/volume
-
-; [My Time Machine Volume]
-; path = /path/to/backup
-; time machine = yes
-
-[PiCpo Time Machine]
-path = /mnt/HGST01/Time ;这是我挂载的文件目录
-time machine = yes
-valid users = user ;选择登陆的用户
-</code></pre><p>最后别忘了restart</p>
-<p>选择添加afp://ip再输入用户名密码就能连接到自己的Time Machine服务器了</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/3145f8286ec543689a6b0a8614a2843e.jpeg" alt=""></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>AFP</tag>
-        <tag>ubuntu</tag>
-        <tag>Time Machine</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Flask的食用方法</title>
-    <url>/2021/11/04/flask%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252214256.png" alt=""></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直觉得python写后端是件很方便的事，所以我打算整一个Flask的学习</p>
-<h2 id="0x01PyCharm导入环境"><a href="#0x01PyCharm导入环境" class="headerlink" title="0x01PyCharm导入环境"></a>0x01PyCharm导入环境</h2><p>File-Settings-Project Interpreter，如下图所示：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215727.png" alt=""></p>
-<p>添加Flask server：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215040.png" alt=""></p>
-<h2 id="0x02Hello-Flask"><a href="#0x02Hello-Flask" class="headerlink" title="0x02Hello,Flask!"></a>0x02Hello,Flask!</h2><p>新建一个app.py，什么名字都行，记住不要Flask，会冲突</p>
-<pre><code>from flask import Flask
-app = Flask(__name__)
-
-@app.route(&#39;/&#39;)
-def hello_world():
-    return &#39;Hello,Flask!&#39;
-
-if __name__ == &#39;__main__&#39;:
-    app.run()
-</code></pre><p>我们点击运行，即终端输出：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215056.png" alt=""></p>
-<p>打开网址：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215977.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>Flask</tag>
-        <tag>PyCharm</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Docker+Flask构建后端的踩坑记录</title>
     <url>/2021/11/04/dockerflask%E6%9E%84%E5%BB%BA%E5%90%8E%E7%AB%AF%E7%9A%84%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252206491.png" alt=""></p>
@@ -158,8 +82,8 @@ ENTRYPOINT [ &quot;python&quot; ,&quot;app/app.py&quot; ]
         <category>后端</category>
       </categories>
       <tags>
-        <tag>Flask</tag>
         <tag>Docker</tag>
+        <tag>Flask</tag>
       </tags>
   </entry>
   <entry>
@@ -340,6 +264,97 @@ ENTRYPOINT [ &quot;python&quot; ,&quot;app/app.py&quot; ]
       </tags>
   </entry>
   <entry>
+    <title>AFP与Time Machine</title>
+    <url>/2023/05/01/AFP%E4%B8%8ETime%20Machine/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/20230501204251.png" alt=""></p>
+<h2 id="0x01安装"><a href="#0x01安装" class="headerlink" title="0x01安装"></a>0x01安装</h2><p>安装Netatalk服务，用来把Linux/Unix伪装成AFP协议传输的文件服务器：</p>
+<pre><code>sudo apt-get install netatalk
+</code></pre><p>安装avahi-daemon，用来在Linux/Unix中开启类似的Bonjour的服务：</p>
+<pre><code>sudo apt-get install avahi-daemon
+</code></pre><h2 id="0x02配置文件"><a href="#0x02配置文件" class="headerlink" title="0x02配置文件"></a>0x02配置文件</h2><p>编辑<code>/etc/netatalk/afp.conf</code></p>
+<pre><code>;
+; Netatalk 3.x configuration file
+;
+
+[Global]
+; Global server settings
+
+; [Homes]
+; basedir regex = /xxxx
+
+; [My AFP Volume]
+; path = /path/to/volume
+
+; [My Time Machine Volume]
+; path = /path/to/backup
+; time machine = yes
+
+[PiCpo Time Machine]
+path = /mnt/HGST01/Time ;这是我挂载的文件目录
+time machine = yes
+valid users = user ;选择登陆的用户
+</code></pre><p>最后别忘了restart</p>
+<p>选择添加afp://ip再输入用户名密码就能连接到自己的Time Machine服务器了</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/3145f8286ec543689a6b0a8614a2843e.jpeg" alt=""></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>AFP</tag>
+        <tag>ubuntu</tag>
+        <tag>Time Machine</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Flask的食用方法</title>
+    <url>/2021/11/04/flask%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252214256.png" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直觉得python写后端是件很方便的事，所以我打算整一个Flask的学习</p>
+<h2 id="0x01PyCharm导入环境"><a href="#0x01PyCharm导入环境" class="headerlink" title="0x01PyCharm导入环境"></a>0x01PyCharm导入环境</h2><p>File-Settings-Project Interpreter，如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215727.png" alt=""></p>
+<p>添加Flask server：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215040.png" alt=""></p>
+<h2 id="0x02Hello-Flask"><a href="#0x02Hello-Flask" class="headerlink" title="0x02Hello,Flask!"></a>0x02Hello,Flask!</h2><p>新建一个app.py，什么名字都行，记住不要Flask，会冲突</p>
+<pre><code>from flask import Flask
+app = Flask(__name__)
+
+@app.route(&#39;/&#39;)
+def hello_world():
+    return &#39;Hello,Flask!&#39;
+
+if __name__ == &#39;__main__&#39;:
+    app.run()
+</code></pre><p>我们点击运行，即终端输出：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215056.png" alt=""></p>
+<p>打开网址：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215977.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Flask</tag>
+        <tag>PyCharm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Github代理</title>
+    <url>/2022/10/08/github%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252133062.jpg" alt=""></p>
+<p>clash别忘了开LAN</p>
+<pre><code>git config --global http.proxy protocol://127.0.0.1:7890
+</code></pre>]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
+        <tag>github</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>git cz和合乎Angular规范的git commit message</title>
     <url>/2022/02/13/git-cz%E5%92%8C%E5%90%88%E4%B9%8Eangular%E8%A7%84%E8%8C%83%E7%9A%84git-commit-message/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242334513.jpg" alt=""></p>
@@ -405,23 +420,8 @@ This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
         <category>野生技术协会</category>
       </categories>
       <tags>
+        <tag>git</tag>
         <tag>Angular</tag>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Github代理</title>
-    <url>/2022/10/08/github%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252133062.jpg" alt=""></p>
-<p>clash别忘了开LAN</p>
-<pre><code>git config --global http.proxy protocol://127.0.0.1:7890
-</code></pre>]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>git</tag>
-        <tag>github</tag>
       </tags>
   </entry>
   <entry>
@@ -582,27 +582,6 @@ fun getNetImg(urlstr: String): InputStream? &#123;
       </tags>
   </entry>
   <entry>
-    <title>shell备份脚本</title>
-    <url>/2023/01/13/shell%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301132338163.png" alt=""></p>
-<p>写了个shell的备份脚本，自带删除过早存档的功能。</p>
-<p>本意是为饥荒服务器写的，虽然饥荒自带回档，但是人物数据、token以及mod配置没被备份。</p>
-<pre><code class="lang-shell">#! /bin/bash
-today=`date +%Y%m%d%H%M`
-tar -czvf /mnt/WDC/dst_backup/$today.tar.gz /home/picpo/.klei/DoNotStarveTogether/Cluster_1
-find /mnt/WDC/dst_backup/ -type f -mtime +1 -exec rm -f &#123;&#125; \; #自动删除+1是两天之前的存档
-echo &quot;backup!$today&quot;
-</code></pre>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>shell</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Selenium爬虫入门</title>
     <url>/2021/11/19/selenium%E7%88%AC%E8%99%AB%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252135855.jpg" alt=""></p>
@@ -709,6 +688,27 @@ if __name__ == &#39;__main__&#39;:
       </tags>
   </entry>
   <entry>
+    <title>shell备份脚本</title>
+    <url>/2023/01/13/shell%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301132338163.png" alt=""></p>
+<p>写了个shell的备份脚本，自带删除过早存档的功能。</p>
+<p>本意是为饥荒服务器写的，虽然饥荒自带回档，但是人物数据、token以及mod配置没被备份。</p>
+<pre><code class="lang-shell">#! /bin/bash
+today=`date +%Y%m%d%H%M`
+tar -czvf /mnt/WDC/dst_backup/$today.tar.gz /home/picpo/.klei/DoNotStarveTogether/Cluster_1
+find /mnt/WDC/dst_backup/ -type f -mtime +1 -exec rm -f &#123;&#125; \; #自动删除+1是两天之前的存档
+echo &quot;backup!$today&quot;
+</code></pre>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>shell</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>stable-diffusion-webui的食用方法</title>
     <url>/2022/10/08/stable-diffusion-webui%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252157828.png" alt=""></p>
@@ -742,51 +742,6 @@ if __name__ == &#39;__main__&#39;:
       </categories>
       <tags>
         <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Web网页小项目——天气预报Web页面的踩坑笔记</title>
-    <url>/2021/01/23/web%E7%BD%91%E9%A1%B5%E5%B0%8F%E9%A1%B9%E7%9B%AE%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5web%E9%A1%B5%E9%9D%A2/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252141067.jpg" alt=""></p>
-<p>寒假是个学习和提升技能的好时机，今年寒假我就参加了SAST2020前端组的WOC（Winter Of Code）项目，来借此好时机来锻炼自己的开发能力。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252142254.png" alt=""></p>
-<p>目前第一阶段我是写了一个天气预报Web页面，本以为，不就用ajax调用个api吗，在处理一下数据，调一个好看的式样，不就大功告成了吗？确实，理论上是这么简单，但是实际花了我三天时间，才写出了这么个小小的demo。很多东西根本不是我想象的那么简单的，我是踩一个坑学一些新东西，才做好一个模块的（悲）。</p>
-<h2 id="一、json跨域问题"><a href="#一、json跨域问题" class="headerlink" title="一、json跨域问题"></a>一、json跨域问题</h2><p>第一天就是和这个api斗智斗勇的一天，本来我在网上找到了百度定位api，进展颇为顺利，就是百度api配上谷歌内核的浏览器（比如chrome，qq浏览器），它的具体定位就很不准，而且比较慢，但是定位到城市还是没有问题的。后来要找个天气预报的api，这里选择了心知天气api，选了十五天试用套餐，一共可接入10000次。嘛，我就写个小demo，问题不大，又不是长期用。</p>
-<p>一开始我一直使用的是json调用方式，结果浏览器可以直接访问，但是用到我写的项目里，用jQuery的getJSON（“xxx”）发现获取不到数据。我一直以为自己的js代码哪里出了问题，知道晚上我才发现：json跨域的话，现在的浏览器会自动拦截。</p>
-<h3 id="（一）何为跨域？"><a href="#（一）何为跨域？" class="headerlink" title="（一）何为跨域？"></a>（一）何为跨域？</h3><p><strong>只要协议，端口，域名有一个不同，即为跨域！</strong></p>
-<p>首先，先了解浏览器有一个很重要安全性限制，即为同源策略：不同域的客户端脚本在无明确授权的情况下不能读些对方资源。</p>
-<p>然而，当进行一些api接口调用时，那肯定不可避免地需要进行跨域操作，这时候“同源策略”就显得过于苛刻。</p>
-<h3 id="（二）怎样解决"><a href="#（二）怎样解决" class="headerlink" title="（二）怎样解决"></a>（二）怎样解决</h3><p>我又花了一晚上的时间去百度这个方法那个方法，发现纯前端的话，json是根本行不通的，但我仍不死心，去请教了一下前段组的大仙贝：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143365.jpg" alt=""></p>
-<p>好，这波我死心了，老老实实用jsonp吧（悲）</p>
-<p>好在心知天气本身就有jsonp的调用方式，也有官方的demo。就是比较麻烦，这其中涉及密钥+公钥生成签名验证的机制，我硬着头皮的学习了一下，试着自己搞了一下，最后竟然成功了。好耶耶耶耶耶耶耶耶耶耶！</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143816.jpg" alt=""></p>
-<h2 id="二、Echarts绘制与适配问题"><a href="#二、Echarts绘制与适配问题" class="headerlink" title="二、Echarts绘制与适配问题"></a>二、Echarts绘制与适配问题</h2><p>Echarts是一个使用 JavaScript 实现的开源可视化库，涵盖各行业图表，非常的不错。但是这里还是踩到了两个坑：</p>
-<h3 id="（一）Echarts无法绘制图标"><a href="#（一）Echarts无法绘制图标" class="headerlink" title="（一）Echarts无法绘制图标"></a>（一）Echarts无法绘制图标</h3><p>当我打开网页调试时，控制台传入了如下错误：【Echarts】Uncaught TypeError: Cannot read property ‘getAttribute’ of null</p>
-<p>一开始我还以为是Echarts cdn解析出了错，后来才得知，Echarts是没有找到所要绘制的div，不是说我没有在HTML里写到它，而是js在body生成前就调用了，所以才会出现获取不到属性。解决方法就是把js扔到页脚：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144259.png" alt=""></p>
-<h3 id="（二）Echarts适配问题"><a href="#（二）Echarts适配问题" class="headerlink" title="（二）Echarts适配问题"></a>（二）Echarts适配问题</h3><p>这个就有点麻烦了，当你设置div的width为100%时，愚蠢的Echarts会自动识别为100px，其效果极其鬼畜：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144298.png" alt=""></p>
-<p>那咋办？网上给的方案都是echarts初始化之前再用js获取当前屏幕的大小，然后再给他设置宽度就可以了。而我只接给他设了个90vw的具体长度，问题也能解决（</p>
-<p>总的来说踩了不少的坑，当然也学了不少东西，比如ajax+jquery，bootstrap4的响应式界面搭建，当然啊，调css的过程也是坠痛苦的。</p>
-<p>项目地址：<a href="https://github.com/picpo/weather-demo">https://github.com/picpo/weather-demo</a></p>
-<p>大家可以将里面的key换成自己的玩玩，因为我的次数也估计只剩下6000多次了。</p>
-<ul>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145373.png" alt=""></p>
-</li>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145325.png" alt=""></p>
-</li>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252146972.png" alt=""></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>ajax</tag>
-        <tag>bootstrap</tag>
-        <tag>jQuery</tag>
       </tags>
   </entry>
   <entry>
@@ -860,18 +815,87 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </tags>
   </entry>
   <entry>
-    <title>右键程序文件夹卡死问题的解决</title>
-    <url>/2022/01/16/%E5%8F%B3%E9%94%AE%E7%A8%8B%E5%BA%8F%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252137988.jpg" alt=""></p>
-<p>困扰我半年多的老毛病了</p>
-<p>右键管理中删掉百度网盘就行了，出生啊百度网盘</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252138140.png" alt=""></p>
+    <title>Web网页小项目——天气预报Web页面的踩坑笔记</title>
+    <url>/2021/01/23/web%E7%BD%91%E9%A1%B5%E5%B0%8F%E9%A1%B9%E7%9B%AE%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5web%E9%A1%B5%E9%9D%A2/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252141067.jpg" alt=""></p>
+<p>寒假是个学习和提升技能的好时机，今年寒假我就参加了SAST2020前端组的WOC（Winter Of Code）项目，来借此好时机来锻炼自己的开发能力。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252142254.png" alt=""></p>
+<p>目前第一阶段我是写了一个天气预报Web页面，本以为，不就用ajax调用个api吗，在处理一下数据，调一个好看的式样，不就大功告成了吗？确实，理论上是这么简单，但是实际花了我三天时间，才写出了这么个小小的demo。很多东西根本不是我想象的那么简单的，我是踩一个坑学一些新东西，才做好一个模块的（悲）。</p>
+<h2 id="一、json跨域问题"><a href="#一、json跨域问题" class="headerlink" title="一、json跨域问题"></a>一、json跨域问题</h2><p>第一天就是和这个api斗智斗勇的一天，本来我在网上找到了百度定位api，进展颇为顺利，就是百度api配上谷歌内核的浏览器（比如chrome，qq浏览器），它的具体定位就很不准，而且比较慢，但是定位到城市还是没有问题的。后来要找个天气预报的api，这里选择了心知天气api，选了十五天试用套餐，一共可接入10000次。嘛，我就写个小demo，问题不大，又不是长期用。</p>
+<p>一开始我一直使用的是json调用方式，结果浏览器可以直接访问，但是用到我写的项目里，用jQuery的getJSON（“xxx”）发现获取不到数据。我一直以为自己的js代码哪里出了问题，知道晚上我才发现：json跨域的话，现在的浏览器会自动拦截。</p>
+<h3 id="（一）何为跨域？"><a href="#（一）何为跨域？" class="headerlink" title="（一）何为跨域？"></a>（一）何为跨域？</h3><p><strong>只要协议，端口，域名有一个不同，即为跨域！</strong></p>
+<p>首先，先了解浏览器有一个很重要安全性限制，即为同源策略：不同域的客户端脚本在无明确授权的情况下不能读些对方资源。</p>
+<p>然而，当进行一些api接口调用时，那肯定不可避免地需要进行跨域操作，这时候“同源策略”就显得过于苛刻。</p>
+<h3 id="（二）怎样解决"><a href="#（二）怎样解决" class="headerlink" title="（二）怎样解决"></a>（二）怎样解决</h3><p>我又花了一晚上的时间去百度这个方法那个方法，发现纯前端的话，json是根本行不通的，但我仍不死心，去请教了一下前段组的大仙贝：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143365.jpg" alt=""></p>
+<p>好，这波我死心了，老老实实用jsonp吧（悲）</p>
+<p>好在心知天气本身就有jsonp的调用方式，也有官方的demo。就是比较麻烦，这其中涉及密钥+公钥生成签名验证的机制，我硬着头皮的学习了一下，试着自己搞了一下，最后竟然成功了。好耶耶耶耶耶耶耶耶耶耶！</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143816.jpg" alt=""></p>
+<h2 id="二、Echarts绘制与适配问题"><a href="#二、Echarts绘制与适配问题" class="headerlink" title="二、Echarts绘制与适配问题"></a>二、Echarts绘制与适配问题</h2><p>Echarts是一个使用 JavaScript 实现的开源可视化库，涵盖各行业图表，非常的不错。但是这里还是踩到了两个坑：</p>
+<h3 id="（一）Echarts无法绘制图标"><a href="#（一）Echarts无法绘制图标" class="headerlink" title="（一）Echarts无法绘制图标"></a>（一）Echarts无法绘制图标</h3><p>当我打开网页调试时，控制台传入了如下错误：【Echarts】Uncaught TypeError: Cannot read property ‘getAttribute’ of null</p>
+<p>一开始我还以为是Echarts cdn解析出了错，后来才得知，Echarts是没有找到所要绘制的div，不是说我没有在HTML里写到它，而是js在body生成前就调用了，所以才会出现获取不到属性。解决方法就是把js扔到页脚：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144259.png" alt=""></p>
+<h3 id="（二）Echarts适配问题"><a href="#（二）Echarts适配问题" class="headerlink" title="（二）Echarts适配问题"></a>（二）Echarts适配问题</h3><p>这个就有点麻烦了，当你设置div的width为100%时，愚蠢的Echarts会自动识别为100px，其效果极其鬼畜：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144298.png" alt=""></p>
+<p>那咋办？网上给的方案都是echarts初始化之前再用js获取当前屏幕的大小，然后再给他设置宽度就可以了。而我只接给他设了个90vw的具体长度，问题也能解决（</p>
+<p>总的来说踩了不少的坑，当然也学了不少东西，比如ajax+jquery，bootstrap4的响应式界面搭建，当然啊，调css的过程也是坠痛苦的。</p>
+<p>项目地址：<a href="https://github.com/picpo/weather-demo">https://github.com/picpo/weather-demo</a></p>
+<p>大家可以将里面的key换成自己的玩玩，因为我的次数也估计只剩下6000多次了。</p>
+<ul>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145373.png" alt=""></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145325.png" alt=""></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252146972.png" alt=""></p>
+</li>
+</ul>
 ]]></content>
       <categories>
-        <category>野生技术协会</category>
+        <category>前端</category>
       </categories>
       <tags>
-        <tag>资源管理器</tag>
+        <tag>ajax</tag>
+        <tag>bootstrap</tag>
+        <tag>jQuery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>《汇编语言程序设计》求生指南</title>
+    <url>/2022/11/14/%E3%80%8A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png" alt=""></p>
+<h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><ol>
+<li>BCD码转换<br>1010—-1111是非法BCD码</li>
+<li>真值数和补码数之间的转换<br>正数的补码等于本身，负数的补码等于反码+1</li>
+<li>n位字长的有符号数、无符号数的数值范围<br>设机器数字长=n, 则n位补码数<br>其真值范围为 －2n-1 ～ +2n-1－1<br>无符号数其数值范围为 0 ～ 2n－1</li>
+<li>常用ASCII码范围：<br>0:48<br>A:65<br>a:97<br>(space):32<br>(回车):13</li>
+<li>C标表示进位，O标表示溢出</li>
+<li>冯诺依曼架构：<strong>运算器、控制器、存储器、输入、输出</strong><br>CPU：运算器和控制器</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image.png" alt=""></p>
+<h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><ol>
+<li>基本结构寄存器的名称、位长和作用<br>通用寄存器: AX, BX, CX, DX, SI（源变址）, DI（目的变址）, BP（基址指针）<br>段寄存器: CS, SS, DS, ES, FS, GS<br>指针寄存器: IP（指令指针）, SP（堆栈指针）<br>标志寄存器: FLAGS<br>15位标志分为两类: 状态标志和控制标志<br>6种状态标志：CF（进位） OF（溢出） ZF（全零） PF（最后一字节1为偶数为1） AF（辅助进位标志） SF（记录最高位的位值）</li>
+<li>80486的工作模式：实地址模式和保护虚拟地址模式<br>80486的三个存贮地址空间：逻辑空间、线性空间和物理空间<br>逻辑地址：即逻辑上的地址，实模式下由“段基地址+段内偏移”组成;保护模式下由“段选择符+段内偏移”组成。<br>线性地址：逻辑地址经分段机制后就成线性地址，它是平坦的;如果不启用分页，那么此线性地址即物理地址。<br>物理地址：线性地址经分页转换后就成了物理地址。<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-1.png" alt=""></li>
+<li>实地址模式下，物理地址的形成<br><strong>物理地址=段基址*16+偏移地址</strong><br><strong>内存容量=末地址-首地址+1</strong><br><strong>末地址=首地址+（字数-1）*2 末地址</strong></li>
+</ol>
+<h2 id="第三章"><a href="#第三章" class="headerlink" title="第三章"></a>第三章</h2><ol>
+<li>源程序中的语句类型<br>一个完整的源程序应包含2类语句:<br>指令性语句（符号指令）、指示性语句(伪指令)</li>
+<li>80486的寻址方式486有3类7种寻址方式<br>立即寻址方式：获得立即数<br>寄存器寻址方式：获得寄存器操作数<br>存储器操作数寻址方式：获得存储器操作数（内存操作数）</li>
+<li>内存寻址方式 16位寻址规定可使用的寄存器<br>直接寻址<br>寄存器间接寻址 [BX],[BP],[SI],[DI]。段寄存器：[间址寄存器]，某单元的物理地址=段寄存器内容×16+间址寄存器<br>基址寻址 [BX+位移量],[BP＋位移量]。段寄存器:[基址寄存器+位移量]。物理地址=段寄存器内容×16+基址寄存器+位移量<br>变址寻址 [SI+位移量],[DI+位移量]。<br>基址+变址寻址 [BX+SI],[BX+DI],[BP+SI]，[BP+DI]</li>
+<li>常用伪指令<br>数据字义伪指令 DB DW DD（一字节二字节四字节）<br>等值伪指令 EQU =</li>
+<li>常用运算符<br>$运算符：当前汇编计数器的值。通常$-地址，可以求长度<br>SEG运算符：获取段的基地址，SEG DATA<br>OFFSET运算符：相对于段首的基地址<br>PTR运算符：修改属性<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-2.png" alt=""></li>
+<li>目标程序的生成<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425716_POWERPNT_1065x313.png" alt=""></li>
+<li><p>16进制数加法及标志位的影响<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425885_POWERPNT_1101x202.png" alt="">80486基本指令集<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426216_POWERPNT_1132x505.png" alt="">  </p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426445_POWERPNT_1002x554.png" alt="">  </p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426487_POWERPNT_1014x818.png" alt=""></p>
+</li>
+</ol>
+<h2 id="第四章"><a href="#第四章" class="headerlink" title="第四章"></a>第四章</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-3-1024x461.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>我爱学习</category>
+      </categories>
+      <tags>
+        <tag>求生指南</tag>
       </tags>
   </entry>
   <entry>
@@ -999,6 +1023,21 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </categories>
       <tags>
         <tag>求生指南</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>右键程序文件夹卡死问题的解决</title>
+    <url>/2022/01/16/%E5%8F%B3%E9%94%AE%E7%A8%8B%E5%BA%8F%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252137988.jpg" alt=""></p>
+<p>困扰我半年多的老毛病了</p>
+<p>右键管理中删掉百度网盘就行了，出生啊百度网盘</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252138140.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>资源管理器</tag>
       </tags>
   </entry>
   <entry>
@@ -1303,6 +1342,562 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </tags>
   </entry>
   <entry>
+    <title>右键菜单，用VSCode打开文件和文件夹</title>
+    <url>/2021/06/18/%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%EF%BC%8C%E7%94%A8vscode%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252139401.jpg" alt=""></p>
+<p>由于之前在安装VSCODE的时候，没注意详细阅读提示，而且第一次安装比较随意，只是带着想试一下VSCODE才安装的，所以安装的时候漏了勾选open with code这个非常好用的功能！</p>
+<p>那么我们应该怎么解决这个问题呢？？？<br>看了看网上的方法，分为两种：</p>
+<ul>
+<li>重装VSCODE，重装大法好啊有没有？(不，重装了好多插件要重新装很麻烦的)</li>
+<li>修改注册表(一点都不难，但是要仔细一点)</li>
+</ul>
+<p>重装我就不讲了，谁都会的了吧?</p>
+<p>那么我来讲一下修改注册表</p>
+<p>首先新建一个文本文件。在文本文件中输入以下代码修改注册表，这里要注意一下，<strong>里面的路径要修改为自己电脑里VSCODE的绝对路径，而且注意路径的书写，因为在字符串中，所以注意 \ 的转义</strong></p>
+<pre><code>Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\*\shell\VSCode]
+@=&quot;Open with Code&quot;
+&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
+
+[HKEY_CLASSES_ROOT\*\shell\VSCode\command]
+@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%1\&quot;&quot;
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\shell\VSCode]
+@=&quot;Open with Code&quot;
+&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
+
+[HKEY_CLASSES_ROOT\Directory\shell\VSCode\command]
+@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode]
+@=&quot;Open with Code&quot;
+&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode\command]
+@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
+</code></pre><p>保存文件，随便放在哪里都可以，然后命名为： vsCodeOpenFolder.reg，这里你命名为什么都没关系，但是后缀必须要为 <strong>.reg</strong>最后，双击点开该文件，注册完成！</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252140939.png" alt=""></p>
+<hr>
+<p>参考文章：VSCODE添加open with code功能，实现右键打开文件夹 <a href="https://blog.csdn.net/qq_37810453/article/details/88101745">https://blog.csdn.net/qq_37810453/article/details/88101745</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>VSCode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在linux平台上搭建求生之路服务器</title>
+    <url>/2022/01/18/%E5%9C%A8linux%E5%B9%B3%E5%8F%B0%E4%B8%8A%E6%90%AD%E5%BB%BA%E6%B1%82%E7%94%9F%E4%B9%8B%E8%B7%AF%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242326346.png" alt=""></p>
+<p>L4D2一直是一款我特别喜欢的多人娱乐向游戏，除了MC基本上每次高中好友线上团建就是在这里面。</p>
+<p>可惜最近V社的服务器ping值令人忍无可忍，不过好在我手上有一台2核4G的服务器，开个私服应该没啥问题。</p>
+<h2 id="安装运行环境（我的是ubuntu）"><a href="#安装运行环境（我的是ubuntu）" class="headerlink" title="安装运行环境（我的是ubuntu）"></a>安装运行环境（我的是ubuntu）</h2><pre><code>sudo apt-get install lib32gcc1
+</code></pre><h2 id="下载安装steamCMD"><a href="#下载安装steamCMD" class="headerlink" title="下载安装steamCMD"></a>下载安装steamCMD</h2><pre><code>mkdir ~/Steam //创建Steam文件夹
+cd ~/Steam //进入Steam文件夹
+wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz
+tar -zxvf steamcmd_linux.tar.gz //解压
+</code></pre><p>输入</p>
+<pre><code>./steamcmd.sh
+</code></pre><p>开始下载安装</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242326169.png" alt=""></p>
+<p>会要求登录，匿名登录就行</p>
+<pre><code>login anonymous
+</code></pre><h2 id="下载L4D2服务端"><a href="#下载L4D2服务端" class="headerlink" title="下载L4D2服务端"></a>下载L4D2服务端</h2><pre><code>app_update 222860 validate
+</code></pre><p>一开始几次没连上，多试几次就行</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327693.png" alt=""></p>
+<p>退出quit</p>
+<h2 id="配置文档"><a href="#配置文档" class="headerlink" title="配置文档"></a>配置文档</h2><p>修改H键公告的标题需修改文件/home/steam/l4d2/left4dead2/host.txt，修改内容需修改/home/steam/l4d2/left4dead2/motd.txt</p>
+<p>Steam/steamapps/common/Left 4 Dead 2 Dedicated Server/left4dead2/cfg下，新建一个 server.cfg 文件</p>
+<p>战役模式</p>
+<pre><code>hostname &quot;PiCpo&#39;s L4D2&quot;
+//模式选择
+//sm_cvar mp_gamemode &quot;coop&quot;
+//隐藏服务器
+sv_tags &quot;hidden&quot;
+ads_delay 45
+sv_allow_lobby_connect_only 0
+//mod一致性检查
+sv_consistency 0
+//正版服务器匹配参数限制
+sv_region 4
+sv_steamgroup &quot;&quot; //第一个组编号数字改成自己的组，其他为热门求生组
+sv_steamgroup_exclusive 1
+//人数设置
+sm_cvar sv_maxplayers 8
+sm_cvar sv_visiblemaxplayers 8
+sm_cvar sv_removehumanlimit 1
+sm_cvar sv_force_unreserved 1
+sm_cvar fps_max 300
+sm_cvar allow_all_bot_survivor_team 1
+</code></pre><p>对抗模式</p>
+<pre><code>//100tick
+sm_cvar fps_max 0
+sm_cvar net_splitpacket_maxrate 30000
+sm_cvar nb_update_frequency 0.06
+sm_cvar sv_minrate 100000
+sm_cvar sv_maxrate 101000
+sm_cvar sv_mincmdrate 100
+sm_cvar sv_maxcmdrate 100
+sm_cvar sv_minupdaterate 100
+sm_cvar sv_maxupdaterate 100
+sm_cvar sv_client_min_interp_ratio -1
+sm_cvar sv_client_max_interp_ratio 2
+sm_cvar sv_maxplayers 8
+sm_cvar sv_visiblemaxplayers 8
+sm_cvar sv_allow_lobby_connect_only 1
+
+sv_tags &quot;hidden&quot;
+sm_cvar mp_gamemode &quot;versus&quot;// 设定为对抗模式
+sv_gametypes versus// 设定为对抗模式
+sm_cvar sb_all_bot_game 1// 防止人数不足而自动关闭
+sm_cvar sb_all_bot_team 1
+sm_cvar allow_all_bot_survivor_team 1// 真人玩家死亡后由电脑玩家组队进行游戏
+sm_cvar sb_escort 1 // 强制电脑玩家紧随其后
+sm_cvar director_allow_infected_bots 0// 关闭AI特感
+sv_allow_wait_command 0// 封禁wait指令
+</code></pre><pre><code>coop //战役模式
+
+realism //写实模式
+
+versus //对抗模式
+
+teamversus //团队对抗模式
+
+mutation12 //写实对抗模式
+
+survival //生存模式
+
+scavenge //清道夫模式
+
+teamscavenge //团队清道夫模式
+
+community(1-6)&amp;&amp;mutation(1-20) //突变模式(总共26种不同内容)
+&#123;
+community1 【特感速递】 4人合作 同屏最多8特，无小丧尸，每种特感的出现时间间隔20秒，特感刷新时间0秒，所以是8个槽位同时刷，每个槽位20秒刷一个，无等待时间，不停的刷。
+community2 【感染季节】 4人合作 同屏最多8特，只有bommer和spitter两种特感，特感刷新倒计时固定20秒。无小丧尸，但是被bommer喷到、打到警报车和开机关有丧尸群。
+community3 【骑师派对】 8人对抗 特感方都是jockey，而且移动超快，无小丧尸(包括开警报后)
+community4 【梦魇】 4人合作 生存者模式，只有17个场景 同屏最多8特，战役模式设定，但无队友轮廓，场景有浓雾。
+community5 【死亡之门】 4人合作 每关开始只有药没有包，倒地即死。
+community6 【药抗】 8人对抗，只有药和针，取消高级武器，每关tank，更合理的对抗记分方式。
+mutation1 【孤身一人】 1人单机 只有一个人没有小丧尸，只有特感(除BOOMER)，倒地自起、控制的特感也会放开，但是会黑白。
+mutation2 【枪枪爆头】 4人合作 小丧尸只有爆头才会死。
+mutation3 【血流不止】 4人合作 这个模式从关卡开头就是虚血【并持续减血】，全图无包，只有靠药瓶和针维持血量。
+mutation4 【绝境求生】 4人合作 同屏最多8特，战役模式设定，每种特感的出现时间间隔20秒，特感刷新时间15秒，所以是8个槽位同时刷，每个槽位15-20秒刷一个，但特感刷新由导演系统控制，倒计时结束，不会不停的刷新。
+mutation5 【四剑客】 4人合作 一出场只有4把武士刀
+mutation7 【电锯帮】 4人合作 武器只有4个无限油的电锯
+mutation8 【铁人意志】 4人合作 团灭以后直接回到大厅，不会重新开始某个小关游戏
+mutation9 【侏儒卫队】 4人合作 玩家必须携带一个侏儒玩偶来躲避丧尸的攻击到达安全门
+mutation10 【一人救赎】 4人合作 只有一个人能终关逃生
+mutation11 【没有救赎】 8人对抗 全关没有包和药
+mutation12 【写实对抗】 8人对抗 写实模式设定的对抗
+mutation13 【清道肆虐】 8人对抗 线性清道夫，每次只有1个位置出现油桶， 每个新位置比上一个+2桶
+mutation14 【无法近身】 4人合作 全关没有近战武器，只有一把无限子弹M60和麦林手枪
+mutation15 【生存对抗】 8人对抗 使用生存模式计分规则
+mutation16 【猎人派对】 4人合作 特殊感染者都是hunter
+mutation17 【孤胆枪手】 1人单机 只有一个人一把沙鹰，特感保留bommer、witch和tank，小丧尸伤害高
+mutation18 【失血对抗】 8人对抗 所有幸存者虚血(并持续减血)，全图无包
+mutation19 【Tank!!!!!!】 8人对抗 扮演感染者方全是做tank
+mutation20 【侏儒治愈】 4人合作 所有幸存者虚血【并持续减血】，全图无包，抱着侏儒的人可以回复血量
+&#125; 
+dash Dash
+l4d1coop Left 4 Dead 1 Coop
+l4d1vs Left 4 Dead 1 Versus
+l4d1survival Left 4 Dead 1 Survival
+gunbrain GunBrain
+holdout Holdout
+shootzones Shootzones
+tankrun Tank Run
+rocketdude RocketDude
+</code></pre><p>完整版</p>
+<pre><code>//管理密码
+rcon_password &quot;0&quot;
+
+//游戏模式
+sm_cvar mp_gamemode &quot;coop&quot;
+
+//服务器人数破解
+l4d_maxplayers 4
+sv_maxplayers 4
+sv_visiblemaxplayers 4
+sv_removehumanlimit 1
+sv_force_unreserved 1
+
+//服务器难度锁定
+// Difficulty Setting: easy, normal, hard, impossible
+z_difficulty &quot;impossible&quot;
+
+//限制投票
+sm_cvar sv_allow_votes &quot;1&quot;
+
+//正版服务器匹配参数限制
+sv_region 4 
+sv_steamgroup &quot;114514&quot;
+sv_steamgroup_exclusive 0
+
+
+//插件开关 1=ON/0=OFF
+sm_advertisements_enabled 1
+
+//广告播放延时默认30s
+sm_advertisements_interval 60
+ads_delay 45
+
+//不允许正版大厅匹配到
+sv_allow_lobby_connect_only 0
+
+//地区代码:
+sm_cvar sv_region &quot;4&quot;
+
+// 作弊开关（1\0)
+sv_cheats 0  
+
+
+//关闭模型[MOD]冲突
+sm_cvar sv_consistency 0
+
+//隐藏服务器
+sv_tags hidden
+sv_tags &quot;hidden&quot;
+
+//tick
+sm_cvar fps_max 300
+sm_cvar sv_minrate 100000
+sm_cvar sv_maxrate 100000
+sm_cvar sv_minupdaterate 100
+sm_cvar sv_maxupdaterate 100
+sm_cvar sv_mincmdrate 100
+sm_cvar sv_maxcmdrate 100
+sm_cvar nb_update_frequency 0.1
+sm_cvar net_splitrate 2 
+sm_cvar net_splitpacket_maxrate 100000
+sm_cvar sv_client_min_interp_ratio 1
+sm_cvar sv_client_max_interp_ratio 1
+
+// 防止人数不足而自动关闭
+sm_cvar sb_all_bot_game 1
+
+//玩家死亡时电脑组成队伍继续游戏
+sm_cvar allow_all_bot_survivor_team 1
+</code></pre><p>幸存者参数介绍</p>
+<pre><code>队友伤害，0为关闭
+survivor_friendly_fire_factor_easy 0.2
+survivor_friendly_fire_factor_normal 0.2
+survivor_friendly_fire_factor_hard 0.4
+survivor_friendly_fire_factor_expert 0.6
+火焰伤害，0为关闭
+survivor_burn_factor_easy 0.1
+survivor_burn_factor_normal 0.2
+survivor_burn_factor_hard 0.3
+survivor_burn_factor_expert 0.5
+
+
+survivor_crouch_speed 75 蹲著的速度(默认：75 数字越大越快)
+rescue_min_dead_time &quot;3&quot; 人死掉后3秒就可以出现在任一房间给人救
+survivor_revive_health &quot;75&quot; 躺在地上被人拉起来的血量
+survivor_revive_duration &quot;1.75&quot; 拉人起来的时间1.75秒
+first_aid_kit_use_duration &quot;1&quot; 用急救包的时间 ，这里是1秒救治疗好了。
+
+sm_cvar first_aid_heal_percent &quot;1&quot; //医疗包恢复生命百分比，这里为1，即100%
+sm_cvar first_aid_kit_max_heal &quot;500&quot; //医疗包恢复生命数
+sm_cvar first_aid_kit_range &quot;200&quot; //医疗包恢复生命距离
+sm_cvar first_aid_kit_use_duration &quot;1&quot; //医疗包恢复生命所需时间（秒）
+sm_cvar z_survivor_respawn_health &quot;100&quot; //重生后的血量
+sm_cvar pain_pills_health_value &quot;100&quot; //止痛药的补血量，默认40
+sm_cvar pain_pills_decay_rate &quot;0.10&quot; //止痛药的损耗速度，默认0.34
+
+
+//丢东西的力量
+sm_cvar z_throw_force &quot;5000&quot;
+//右键推的力量，默认为25
+sm_cvar z_gun_physics_force &quot;500&quot;
+//右键推的范围
+sm_cvar z_gun_range &quot;75&quot;
+//盖特机枪冷却时间
+sm_cvar z_minigun_cooldown_time &quot;3&quot;
+//盖特机枪过热时间
+sm_cvar z_minigun_overheat_time &quot;60&quot;
+//盖特机枪攻击范围
+sm_cvar z_minigun_rate_of_fire &quot;1500&quot;
+
+
+//AI随机放置汽油弹密度（设为0就等于禁止了汽油弹）
+//sm_cvar director_molotov_density &quot;0&quot;
+//AI随机放置土制****密度（设为0就等于禁止了土制）
+//sm_cvar director_pipe_bomb_density &quot;0&quot;
+//土制****的爆炸时间
+sm_cvar pipe_bomb_timer_duration &quot;8&quot;
+
+
+sm_cvar inferno_damage 10 说明:这是火焰的燃烧秒数(明火)
+sm_cvar inferno_flame_lifetime 10 说明:这是燃烧持续的秒数(实际火焰-暗火)
+sm_cvar inferno_flame_spacing 1000 说明:这是燃烧刚开始的距离
+sm_cvar inferno_max_range 2000 说明:这是燃烧距离的最大值(最后出现火焰的最大范围)
+sm_cvar inferno_max_flames 32 说明:这是火焰扩散的次数
+
+// 队友伤害
+sm_cvar survivor_friendly_fire_factor_expert &quot;0.2&quot;
+//服务器密码
+rcon_password &quot;250631941&quot;
+
+//关闭队友投票权
+sm_cvar sv_allow_votes &quot;0&quot;
+
+//电脑BOT开枪延迟，默认0，改成10电脑BOT完全没用
+sm_cvar sb_open_fire &quot;0&quot;
+
+// 激活服务端中文名称
+sm_namehost 1
+
+//开启修改
+Sv_Cheats 0
+
+//躺下后依然可以移动
+sm_cvar survivor_allow_crawling &quot;1&quot;
+sm_cvar survivor_crawl_speed &quot;160&quot;
+
+//双重跳指令
+sm_cvar sm_doublejump_enabled &quot;0&quot;
+sm_cvar sm_doublejump_max &quot;0&quot;
+//---------------------------------------
+
+//人死掉后3秒就可以出现在任一房间给人救，默认60
+sm_cvar rescue_min_dead_time &quot;300&quot;
+
+/没有电脑BOT帮助
+sm_cvar director_no_survivor_bots &quot;0&quot;
+
+//右键速度默认 0.7 越低越快 （0.19）
+sm_cvar z_gun_swing_interval &quot;0.5&quot;
+
+//蹲下移动速度变快
+sm_cvar survivor_crouch_speed &quot;120&quot;
+
+//丢东西的力量
+sm_cvar z_throw_force &quot;1000&quot;
+
+//右键推的力量，默认为25
+sm_cvar z_gun_physics_force &quot;100&quot;
+
+//右键推的范围 默认为75
+sm_cvar z_gun_range &quot;100&quot;
+
+// 近战武器每次攻击间隔 (默认1.2秒)
+sm_cvar melee_combo_reset_time &quot;0.5&quot;
+
+// 近战武器最大推怪数量
+sm_cvar melee_collateral_shove_count &quot;20&quot;
+
+// 近战武器伤害范围数值越高能砍得越远 (默认70)
+sm_cvar melee_range &quot;180&quot;
+
+// 近战武器力量(默认20)
+sm_cvar melee_force_scalar &quot;100&quot;
+
+// 近战武器显示摆动(默认0)
+sm_cvar melee_show_swing &quot;1&quot;
+
+//生还者受伤时行走速度
+sm_cvar survivor_limp_walk_speed &quot;120&quot;
+
+倒下后到了这个数值后就会死（不确定，可能是倒下血到了1后仍然没有被队友拉起的话就会死亡）
+sm_cvar survivor_max_incapacitated_count &quot;1&quot;
+
+此数值以下称为受伤（貌似是40、20还是10忘了，血量到了这个数值后玩家就会变成瘸腿）
+sm_cvar survivor_limp_health &quot;10&quot;
+
+ //口水婆吐在地面酸液的存在时间，默认10秒（PS：即受到10秒伤害。）
+sm_cvar z_spitter_high_chance &quot;30&quot;
+
+//口水婆喷吐距离半径默认900（PS：这个距离是指以spitte为起点吐向玩家的距离半径）
+sm_cvar z_spit_range &quot;1000&quot;
+
+//酸液每0.5秒加乘默认0.3的扣血量（PS：这个参数是配合上面酸液存在的时间相互使用的。酸液存在10的秒里，每半秒扣除3点血。10秒即为受到30点血的损伤，修改时须保留小数点后一位。）
+sm_cvar z_spit_latency &quot;0.9&quot;
+
+//口水婆吐出酸液之前的僵直时间默认0.1秒（PS：即口水婆原地立正过X秒后才可向玩家吐出酸液）
+sm_cvar z_spit_detonate_delay &quot;0.1&quot;
+
+// Spitter 大吐婆的移动速度
+z_spitter_speed 500
+
+//--------------------------------------------
+
+//爆炸子弹爆裂度
+sm_cvar upgrade_explosive_bullet_force &quot;800&quot;
+sm_cvar upgrade_explosive_slug_force &quot;800&quot;
+upgrade_laser_sight_spread_factor 1
+
+//榴弹炮伤害
+grenadelauncher_damage &quot;100&quot;
+
+//对其它玩家的伤害面
+grenadelauncher_ff_scale &quot;1&quot;
+
+//对自身的伤害面
+grenadelauncher_ff_scale_self &quot;1&quot;
+
+//范围伤害力
+grenadelauncher_force_kill &quot;100&quot;
+
+//绝对伤害范围,此范围内小僵尸必杀
+grenadelauncher_radius_kill &quot;100 &quot;
+
+//伤害范围冲击波大小
+grenadelauncher_radius_stumble &quot;500&quot;
+
+//是否显示伤害范围
+grenadelauncher_show_radius &quot;1&quot;
+
+//榴弹炮发射速度(默认1200）
+grenadelauncher_velocity &quot;1200&quot;
+//--------------------------------------------
+
+//每次刷新出现的胖子的数量，默认1
+sm_cvar z_boomer_limit &quot;3&quot;
+
+//每次刷新出现的烟鬼的数量
+sm_cvar z_gas_limit &quot;3&quot;
+
+//每次刷新出现的猎人的数量
+sm_cvar z_hunter_limit &quot;5&quot;
+
+// Charge同时出现数量(默认1)
+sm_cvar z_charger_limit &quot;4&quot;
+
+//最大同时出现数量
+z_jockey_limit &quot;3&quot;
+
+//口水婆最高刷新数量(已测试能用,嘿..注意不是同时在一个地点刷这么多)
+z_spitter_limit &quot;3&quot;
+
+//----------------------------------------
+
+//Boomer 胖子的生命值
+z_exploding_health &quot;2000&quot;
+
+// Charge生命(默认600)
+sm_cvar z_charger_health &quot;1200&quot;
+
+// Hunter生命(默认250)
+sm_cvar z_hunter_health &quot;600&quot;
+
+//烟鬼生命值 默认250(默认250)
+sm_cvar z_gas_health &quot;800&quot;
+
+// Jockey生命(默认325)
+sm_cvar z_jockey_health &quot;800&quot;
+
+// 大吐婆的生命值
+z_spitter_health &quot;800&quot;
+//-----------------------------------------
+
+// 设置为1，使用有效出现雾气
+sm_cvar z_fog_spawn 1
+//----------------------------------------
+
+
+//-----------------------------------------
+
+//女巫生命值，默认1000
+z_witch_health &quot;1000&quot;
+
+//女巫的发飙范围，默认200
+sm_cvar z_witch_berserk_range &quot;100&quot;
+
+//女巫的燃烧时间，烧完就死了
+sm_cvar z_witch_burn_time &quot;5&quot;
+
+//女巫的伤害，默认100
+sm_cvar z_witch_damage &quot;150&quot;
+
+//女巫对手电筒照射的反应范围，默认400
+sm_cvar z_witch_flashlight_range &quot;50&quot;
+
+//Witch 女巫的移动速度
+z_witch_speed 1000
+
+//-----------------------------------------
+
+//猎人跳跃角度
+sm_cvar hunter_pounce_max_loft_angle &quot;150&quot;
+
+//猎人爪子伤害值，默认6
+sm_cvar hunter_pz_claw_dmg &quot;50&quot;
+
+//猎人行走速度，默认300
+sm_cvar z_hunter_speed &quot;1000&quot;
+
+//猎人飞扑的速度，默认700
+sm_cvar hunter_pounce_air_speed &quot;1500&quot;
+
+//猎人飞跃距离，默认1000
+sm_cvar hunter_leap_away_give_up_range &quot;2000&quot;
+
+//猎人最长距离的飞扑仰角，默认45
+sm_cvar hunter_pounce_max_loft_angle &quot;45&quot;
+
+//猎人的扑倒范围，默认240
+sm_cvar z_hunter_claw_force &quot;800&quot;
+
+//猎人扑倒后的攻击力，默认5
+sm_cvar z_pounce_damage &quot;20&quot;
+
+//猎人扑倒持续伤害间隔，默认1
+sm_cvar z_pounce_damage_delay &quot;0.5&quot;
+
+//-----------------------------------------
+</code></pre><h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><pre><code>cd ~/Steam/steamapps/common/&quot;Left 4 Dead 2 Dedicated Server&quot;/
+screen -S coop
+./srcds_run -game left4dead2 -condebug -secure +port 27015 +map c2m1_highway +exec server.cfg
+</code></pre><p>别忘记开防火墙里端口UDP协议</p>
+<h2 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h2><h3 id="sourcemod"><a href="#sourcemod" class="headerlink" title="sourcemod"></a>sourcemod</h3><pre><code>https://www.sourcemod.net/downloads.php?branch=stable
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327679.png" alt=""></p>
+<h3 id="metamod"><a href="#metamod" class="headerlink" title="metamod"></a><strong>metamod</strong></h3><pre><code>https://www.sourcemm.net/downloads.php?branch=stable
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327160.png" alt=""></p>
+<h3 id="L4DtoolZ"><a href="#L4DtoolZ" class="headerlink" title="L4DtoolZ"></a>L4DtoolZ</h3><pre><code>https://github.com/Accelerator74/l4dtoolz/releases
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328765.png" alt=""></p>
+<h3 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h3><p>将下载来的三个压缩包解压到一起，得到addons和cfg两个文件夹。如果得到多个文件夹，就把多余文件夹移入addons文件夹，只剩下addons和cfg两个文件夹。</p>
+<p>控制台输入<code>meta list</code>，即可查看安装是否成功</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328944.png" alt=""></p>
+<p>控制台输入<code>sm plugins list</code>，即可查看安装的插件</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328083.png" alt=""></p>
+<h2 id="安装插件（以MultiSlots多人插件为例）"><a href="#安装插件（以MultiSlots多人插件为例）" class="headerlink" title="安装插件（以MultiSlots多人插件为例）"></a>安装插件（以MultiSlots多人插件为例）</h2><p>啊，这个插件<strong><a href="https://forums.alliedmods.net/showthread.php?t=132408">MultiSlots</a></strong>搞了我半天==</p>
+<p>因为网上流传的许多是win版本的整合包，我在里面寻找，拿过去用之后发现总是给我报错，说缺失dhooks.ext.so这个运行库</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328268.png" alt=""></p>
+<p>但是整合包里全是dll，找半天才搜到</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329548.png" alt=""></p>
+<p>emmm，之后找到了放到extension里面也没用，还是同样的报错</p>
+<p>看似穷途末路了，但是还是让我找到了这个插件的最初版本</p>
+<p><a href="https://forums.alliedmods.net/showthread.php?t=132408">https://forums.alliedmods.net/showthread.php?t=132408</a></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329006.png" alt=""></p>
+<p>好耶！（所以说应该能用了）</p>
+<h2 id="添加管理员"><a href="#添加管理员" class="headerlink" title="添加管理员"></a>添加管理员</h2><p>/addons/sourcemod/configs里找admins_simple.ini</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329116.png" alt=""></p>
+<h2 id="插件推荐"><a href="#插件推荐" class="headerlink" title="插件推荐"></a>插件推荐</h2><h3 id="sourcemod的官方论坛"><a href="#sourcemod的官方论坛" class="headerlink" title="sourcemod的官方论坛"></a>sourcemod的官方论坛</h3><p><a href="http://alliedmods.net">alliedmods.net</a></p>
+<h3 id="电击器修复"><a href="#电击器修复" class="headerlink" title="电击器修复"></a>电击器修复</h3><p>这个是电击器修复，5人及以上的时候不会电起来错误的人</p>
+<p><a href="https://forums.alliedmods.net/showthread.php?p=2647018">https://forums.alliedmods.net/showthread.php?p=2647018</a></p>
+<h3 id="witch惊扰修复"><a href="#witch惊扰修复" class="headerlink" title="witch惊扰修复"></a>witch惊扰修复</h3><p>防止惊扰的witch只会找tab列表里能看到的人等等</p>
+<p><a href="https://forums.alliedmods.net/showthread.php?p=2647014">https://forums.alliedmods.net/showthread.php?p=2647014</a></p>
+<h3 id="榴弹M60正常化"><a href="#榴弹M60正常化" class="headerlink" title="榴弹M60正常化"></a>榴弹M60正常化</h3><p><a href="https://forums.alliedmods.net/showthread.php?p=2694504">https://forums.alliedmods.net/showthread.php?p=2694504</a></p>
+<h3 id="特感血量显示"><a href="#特感血量显示" class="headerlink" title="特感血量显示"></a>特感血量显示</h3><p><a href="https://forums.alliedmods.net/showthread.php?p=2694504">https://forums.alliedmods.net/showthread.php?p=2694504</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>ubuntu</tag>
+        <tag>求生之路</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>家用服务器折腾指南</title>
     <url>/2023/01/15/%E5%AE%B6%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8A%98%E8%85%BE%E6%8C%87%E5%8D%97/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301151847944.jpg" alt=""></p>
@@ -1571,10 +2166,90 @@ IdleExitTimeout 60
         <category>野生技术协会</category>
       </categories>
       <tags>
+        <tag>Docker</tag>
         <tag>linux</tag>
         <tag>ubuntu</tag>
-        <tag>Docker</tag>
         <tag>NAS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>树莓派搭建Mirai QQ机器人</title>
+    <url>/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直以来，我都有一个搭建qq机器人的想法。可惜酷Q早已被腾讯橄榄，但好在还有Mirai这个框架。在翻出我用了五年的树莓派后，我打算在上面自己搭建一个qq机器人，以后或许还会写一写插件啥的（</p>
+<p>本文可能会时不时偶尔更新一下，做到哪步是哪步（咕咕咕预订</p>
+<p>项目地址：<a href="https://github.com/mamoe/mirai">https://github.com/mamoe/mirai</a></p>
+<h2 id="0x01下载Mirai控制台"><a href="#0x01下载Mirai控制台" class="headerlink" title="0x01下载Mirai控制台"></a>0x01下载Mirai控制台</h2><p><a href="https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md">https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md</a></p>
+<p>因为树莓派是arm架构的，所以我选择了arm的版本</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200411.png" alt=""></p>
+<p>建立文件夹，进入，并chmod一下</p>
+<pre><code>pi@raspberrypi:~/mirai $ ls
+mcl-installer-72b890d-linux-arm
+pi@raspberrypi:~/mirai $ sudo chmod +x ./mcl-installer-72b890d-linux-arm
+pi@raspberrypi:~/mirai $ ls
+mcl-installer-72b890d-linux-arm
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200451.png" alt=""></p>
+<p>然后无脑回车就是了</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200333.png" alt=""></p>
+<p>可以看到，目录下多了不少东西，先chmod运行mcl再说</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201423.png" alt=""></p>
+<p>第一次运行会初始化</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201727.png" alt=""></p>
+<h2 id="0x02下载和安装插件"><a href="#0x02下载和安装插件" class="headerlink" title="0x02下载和安装插件"></a>0x02下载和安装插件</h2><p>刚刚装好的 Mirai Console 是没有任何功能的。功能将由插件提供。</p>
+<p>Mirai 官方提供两个插件：</p>
+<ul>
+<li><a href="https://github.com/project-mirai/chat-command">chat-command</a>: 允许在聊天环境通过以 “/“ 起始的消息执行指令</li>
+<li><a href="https://github.com/project-mirai/mirai-api-http">mirai-api-http</a>：提供 HTTP 支持，允许使用其他编程语言的插件</li>
+</ul>
+<p>打开命令行 (Windows 系统按住Shift+鼠标右键，点击”在此处打开 PowerShell”),<br>可以使用 MCL 自动安装这些插件如：</p>
+<pre><code>./mcl --update-package net.mamoe:mirai-api-http --type plugin --channel stable
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201808.png" alt=""></p>
+<p>如果是 JAR 文件的插件，放入 <code>plugins</code> 即可。其他插件一般都有特殊说明如何使用，请参考它们的说明。</p>
+<h2 id="0x03使用控制台指令"><a href="#0x03使用控制台指令" class="headerlink" title="0x03使用控制台指令"></a>0x03使用控制台指令</h2><p>启动 <code>mcl.cmd</code> 就会看到控制台。在控制台可以输入指令，按回车执行这条指令。</p>
+<p>Mirai Console 内置一些指令，输入 <code>?</code> 并回车可以查看指令列表。</p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>Mirai</tag>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决Gravatar头像被墙的问题</title>
+    <url>/2021/03/09/%E8%A7%A3%E5%86%B3gravatar%E5%A4%B4%E5%83%8F%E8%A2%AB%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242337275.png" alt=""></p>
+<p>2月27日凌晨，我像往常一样打开了自己的博客，来到了留言板，却发现头像无法加载出来。</p>
+<p>原先我以为只是我的网络问题，可没想到gravatar官网都打不开了，这时我意识到不太对劲了，于是打开测速网：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242338698.png" alt=""></p>
+<p>我能说什么呢？反正当时我人麻了😅</p>
+<p>当时也是事发突然，本来也没几个玩wp的朋友，所以当时没有解决的方法。今天尝试百度了一下gravatar，时间限定这一个月，查到了这篇博客，<a href="https://kzyblog.com/5247.html/comment-page-1#comment-3542">完美解决Gravatar头像被墙</a></p>
+<p>抱着尝试的心态试了一下最后一个方法，下载了个WP-China-Yes插件，安装。</p>
+<p>我○，头像又出现了！！！！！！！！！！</p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>wordpress</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
+    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg" alt=""></p>
+<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
+<pre><code class="lang-shell">apt install open-vm-tools
+apt install open-vm-tools-desktop
+</code></pre>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>Vmware</tag>
       </tags>
   </entry>
   <entry>
@@ -1709,122 +2384,57 @@ IdleExitTimeout 60
       </tags>
   </entry>
   <entry>
-    <title>树莓派搭建Mirai QQ机器人</title>
-    <url>/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png" alt=""></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直以来，我都有一个搭建qq机器人的想法。可惜酷Q早已被腾讯橄榄，但好在还有Mirai这个框架。在翻出我用了五年的树莓派后，我打算在上面自己搭建一个qq机器人，以后或许还会写一写插件啥的（</p>
-<p>本文可能会时不时偶尔更新一下，做到哪步是哪步（咕咕咕预订</p>
-<p>项目地址：<a href="https://github.com/mamoe/mirai">https://github.com/mamoe/mirai</a></p>
-<h2 id="0x01下载Mirai控制台"><a href="#0x01下载Mirai控制台" class="headerlink" title="0x01下载Mirai控制台"></a>0x01下载Mirai控制台</h2><p><a href="https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md">https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md</a></p>
-<p>因为树莓派是arm架构的，所以我选择了arm的版本</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200411.png" alt=""></p>
-<p>建立文件夹，进入，并chmod一下</p>
-<pre><code>pi@raspberrypi:~/mirai $ ls
-mcl-installer-72b890d-linux-arm
-pi@raspberrypi:~/mirai $ sudo chmod +x ./mcl-installer-72b890d-linux-arm
-pi@raspberrypi:~/mirai $ ls
-mcl-installer-72b890d-linux-arm
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200451.png" alt=""></p>
-<p>然后无脑回车就是了</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200333.png" alt=""></p>
-<p>可以看到，目录下多了不少东西，先chmod运行mcl再说</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201423.png" alt=""></p>
-<p>第一次运行会初始化</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201727.png" alt=""></p>
-<h2 id="0x02下载和安装插件"><a href="#0x02下载和安装插件" class="headerlink" title="0x02下载和安装插件"></a>0x02下载和安装插件</h2><p>刚刚装好的 Mirai Console 是没有任何功能的。功能将由插件提供。</p>
-<p>Mirai 官方提供两个插件：</p>
-<ul>
-<li><a href="https://github.com/project-mirai/chat-command">chat-command</a>: 允许在聊天环境通过以 “/“ 起始的消息执行指令</li>
-<li><a href="https://github.com/project-mirai/mirai-api-http">mirai-api-http</a>：提供 HTTP 支持，允许使用其他编程语言的插件</li>
-</ul>
-<p>打开命令行 (Windows 系统按住Shift+鼠标右键，点击”在此处打开 PowerShell”),<br>可以使用 MCL 自动安装这些插件如：</p>
-<pre><code>./mcl --update-package net.mamoe:mirai-api-http --type plugin --channel stable
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201808.png" alt=""></p>
-<p>如果是 JAR 文件的插件，放入 <code>plugins</code> 即可。其他插件一般都有特殊说明如何使用，请参考它们的说明。</p>
-<h2 id="0x03使用控制台指令"><a href="#0x03使用控制台指令" class="headerlink" title="0x03使用控制台指令"></a>0x03使用控制台指令</h2><p>启动 <code>mcl.cmd</code> 就会看到控制台。在控制台可以输入指令，按回车执行这条指令。</p>
-<p>Mirai Console 内置一些指令，输入 <code>?</code> 并回车可以查看指令列表。</p>
+    <title>记一次文件上传类型渗透</title>
+    <url>/2022/05/07/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%B1%BB%E5%9E%8B%E6%B8%97%E9%80%8F/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252151241.jpg" alt=""></p>
+<p>仅用于信息安全教学和演示，请勿用于其他用途</p>
+<blockquote>
+<p>“从未如此美妙的开局！”</p>
+</blockquote>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>很久没有做安全相关的事了，昨天在好奇心的驱使下，尝试挖了一个比较简单的洞，过程不复杂，但是对于以后的可能进行的后端开发敲响了警钟。</p>
+<h2 id="0x01过程"><a href="#0x01过程" class="headerlink" title="0x01过程"></a><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252151117.png" alt="">0x01过程</h2><p>这个网站是一个某类表情包（一眼丁真）的分享网站，有随机表情包、按照id搜索表情包、按照id点赞表情包、上传表情包等功能。显然，有上传就一定有审核，有审核就一定有管理员端，而且这是肯定进不去的。（下图为按照id点赞表情包的api，没啥用其实）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152233.png" alt=""></p>
+<p>还是看看他的主界面吧，有一个上传，看看源码</p>
+<pre><code>&lt;div id=&quot;upload-pic-box&quot;&gt;
+    &lt;a id=&quot;pic-path&quot;&gt;上传一张图片吧&lt;/a&gt;
+    &lt;form id=&quot;upload-form&quot;&gt;
+        &lt;input onchange=&quot;validateFileType()&quot; type=&quot;file&quot; accept=&quot;image/gif,image/jpeg,image/jpg,image/png,image/svg&quot; name=&quot;user-upload&quot; id=&quot;user-upload&quot;&gt;
+    &lt;/div&gt;
+
+//...此处省略114514行~
+
+
+    var fileName = document.getElementById(&quot;user-upload&quot;).value;
+    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+    if (extFile == &quot;jpg&quot;  extFile == &quot;jpeg&quot;  extFile == &quot;png&quot;  extFile == &#39;gif&#39;) &#123;
+        showfilename();
+    &#125; else &#123;
+        alert(&quot;你怎么骗我，\n哼，上传点正常格式的照片！（jpg/png/gif）&quot;);
+    &#125;
+</code></pre><p>可以看出，如果服务端没做验证的话，这里的前端校验就是马奇诺防线，轻松上传我们的🐴</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152111.png" alt=""></p>
+<p>然后我们需要定位我们的🐴在哪里了，本来这有些棘手，毕竟万一人家后端有个杀🐴程序呢？（虽然能上传成功的话就说明大概率不会有了233）</p>
+<p>然鹅，在审查其他api时，我发现了有个叫做/admin-get.php的get请求。我试着直接curl了一下，结果大跌眼镜的是，这玩意谁都能访问，而且一堆较为敏感的信息，虽然没有标识，但是能一眼看出有些字段是图片id和<strong>图片地址</strong>的。这极为致命，因为这就告诉了我上传的🐴的位置。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152329.png" alt=""></p>
+<p>这就离谱了嗷xdm，让我们连一下蚁剑</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152852.png" alt=""></p>
+<p><img src="http://192.168.1.35/wp-content/uploads/2022/05/图片-7-1024x168.png" alt=""></p>
+<p>xswl</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152256.png" alt=""></p>
+<p>不过还是要提issue的，这是道德底线</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152256.png" alt=""></p>
+<p>作者也在后面做了补救措施，看得出来还是个比较核善的人😋😋😋</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252153180.png" alt=""></p>
+<h2 id="0x02后记"><a href="#0x02后记" class="headerlink" title="0x02后记"></a>0x02后记</h2><p>实际上，我一直是在做黑盒测试，我是在拿到shell后才注意到它原来本身就开源了（离谱，那我浪费时间干嘛）。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252153366.png" alt=""></p>
+<p>可以看出来作者本人真的强，但是再强的人也难免有些地方不如成熟框架做的细致。想起我这种彩笔以前直接用几个组件拼接了一个后端，还自以为是地写了个恶心人的黑盒，就以为能抵御95%的入侵了，结果某个“阿喀琉斯之踵”被别人（plusls）拒绝服务攻击了，寄。</p>
 ]]></content>
       <categories>
-        <category>野生技术协会</category>
+        <category>安全</category>
       </categories>
       <tags>
-        <tag>Mirai</tag>
-        <tag>树莓派</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>《汇编语言程序设计》求生指南</title>
-    <url>/2022/11/14/%E3%80%8A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png" alt=""></p>
-<h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><ol>
-<li>BCD码转换<br>1010—-1111是非法BCD码</li>
-<li>真值数和补码数之间的转换<br>正数的补码等于本身，负数的补码等于反码+1</li>
-<li>n位字长的有符号数、无符号数的数值范围<br>设机器数字长=n, 则n位补码数<br>其真值范围为 －2n-1 ～ +2n-1－1<br>无符号数其数值范围为 0 ～ 2n－1</li>
-<li>常用ASCII码范围：<br>0:48<br>A:65<br>a:97<br>(space):32<br>(回车):13</li>
-<li>C标表示进位，O标表示溢出</li>
-<li>冯诺依曼架构：<strong>运算器、控制器、存储器、输入、输出</strong><br>CPU：运算器和控制器</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image.png" alt=""></p>
-<h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><ol>
-<li>基本结构寄存器的名称、位长和作用<br>通用寄存器: AX, BX, CX, DX, SI（源变址）, DI（目的变址）, BP（基址指针）<br>段寄存器: CS, SS, DS, ES, FS, GS<br>指针寄存器: IP（指令指针）, SP（堆栈指针）<br>标志寄存器: FLAGS<br>15位标志分为两类: 状态标志和控制标志<br>6种状态标志：CF（进位） OF（溢出） ZF（全零） PF（最后一字节1为偶数为1） AF（辅助进位标志） SF（记录最高位的位值）</li>
-<li>80486的工作模式：实地址模式和保护虚拟地址模式<br>80486的三个存贮地址空间：逻辑空间、线性空间和物理空间<br>逻辑地址：即逻辑上的地址，实模式下由“段基地址+段内偏移”组成;保护模式下由“段选择符+段内偏移”组成。<br>线性地址：逻辑地址经分段机制后就成线性地址，它是平坦的;如果不启用分页，那么此线性地址即物理地址。<br>物理地址：线性地址经分页转换后就成了物理地址。<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-1.png" alt=""></li>
-<li>实地址模式下，物理地址的形成<br><strong>物理地址=段基址*16+偏移地址</strong><br><strong>内存容量=末地址-首地址+1</strong><br><strong>末地址=首地址+（字数-1）*2 末地址</strong></li>
-</ol>
-<h2 id="第三章"><a href="#第三章" class="headerlink" title="第三章"></a>第三章</h2><ol>
-<li>源程序中的语句类型<br>一个完整的源程序应包含2类语句:<br>指令性语句（符号指令）、指示性语句(伪指令)</li>
-<li>80486的寻址方式486有3类7种寻址方式<br>立即寻址方式：获得立即数<br>寄存器寻址方式：获得寄存器操作数<br>存储器操作数寻址方式：获得存储器操作数（内存操作数）</li>
-<li>内存寻址方式 16位寻址规定可使用的寄存器<br>直接寻址<br>寄存器间接寻址 [BX],[BP],[SI],[DI]。段寄存器：[间址寄存器]，某单元的物理地址=段寄存器内容×16+间址寄存器<br>基址寻址 [BX+位移量],[BP＋位移量]。段寄存器:[基址寄存器+位移量]。物理地址=段寄存器内容×16+基址寄存器+位移量<br>变址寻址 [SI+位移量],[DI+位移量]。<br>基址+变址寻址 [BX+SI],[BX+DI],[BP+SI]，[BP+DI]</li>
-<li>常用伪指令<br>数据字义伪指令 DB DW DD（一字节二字节四字节）<br>等值伪指令 EQU =</li>
-<li>常用运算符<br>$运算符：当前汇编计数器的值。通常$-地址，可以求长度<br>SEG运算符：获取段的基地址，SEG DATA<br>OFFSET运算符：相对于段首的基地址<br>PTR运算符：修改属性<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-2.png" alt=""></li>
-<li>目标程序的生成<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425716_POWERPNT_1065x313.png" alt=""></li>
-<li><p>16进制数加法及标志位的影响<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425885_POWERPNT_1101x202.png" alt="">80486基本指令集<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426216_POWERPNT_1132x505.png" alt="">  </p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426445_POWERPNT_1002x554.png" alt="">  </p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426487_POWERPNT_1014x818.png" alt=""></p>
-</li>
-</ol>
-<h2 id="第四章"><a href="#第四章" class="headerlink" title="第四章"></a>第四章</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-3-1024x461.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>我爱学习</category>
-      </categories>
-      <tags>
-        <tag>求生指南</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决Gravatar头像被墙的问题</title>
-    <url>/2021/03/09/%E8%A7%A3%E5%86%B3gravatar%E5%A4%B4%E5%83%8F%E8%A2%AB%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242337275.png" alt=""></p>
-<p>2月27日凌晨，我像往常一样打开了自己的博客，来到了留言板，却发现头像无法加载出来。</p>
-<p>原先我以为只是我的网络问题，可没想到gravatar官网都打不开了，这时我意识到不太对劲了，于是打开测速网：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242338698.png" alt=""></p>
-<p>我能说什么呢？反正当时我人麻了😅</p>
-<p>当时也是事发突然，本来也没几个玩wp的朋友，所以当时没有解决的方法。今天尝试百度了一下gravatar，时间限定这一个月，查到了这篇博客，<a href="https://kzyblog.com/5247.html/comment-page-1#comment-3542">完美解决Gravatar头像被墙</a></p>
-<p>抱着尝试的心态试了一下最后一个方法，下载了个WP-China-Yes插件，安装。</p>
-<p>我○，头像又出现了！！！！！！！！！！</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>wordpress</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
-    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg" alt=""></p>
-<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
-<pre><code class="lang-shell">apt install open-vm-tools
-apt install open-vm-tools-desktop
-</code></pre>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>Vmware</tag>
+        <tag>PHP</tag>
+        <tag>文件上传</tag>
       </tags>
   </entry>
   <entry>
@@ -1937,103 +2547,6 @@ if __name__ == &#39;__main__&#39;:
       <tags>
         <tag>Flask</tag>
         <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记一次文件上传类型渗透</title>
-    <url>/2022/05/07/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%B1%BB%E5%9E%8B%E6%B8%97%E9%80%8F/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252151241.jpg" alt=""></p>
-<p>仅用于信息安全教学和演示，请勿用于其他用途</p>
-<blockquote>
-<p>“从未如此美妙的开局！”</p>
-</blockquote>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>很久没有做安全相关的事了，昨天在好奇心的驱使下，尝试挖了一个比较简单的洞，过程不复杂，但是对于以后的可能进行的后端开发敲响了警钟。</p>
-<h2 id="0x01过程"><a href="#0x01过程" class="headerlink" title="0x01过程"></a><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252151117.png" alt="">0x01过程</h2><p>这个网站是一个某类表情包（一眼丁真）的分享网站，有随机表情包、按照id搜索表情包、按照id点赞表情包、上传表情包等功能。显然，有上传就一定有审核，有审核就一定有管理员端，而且这是肯定进不去的。（下图为按照id点赞表情包的api，没啥用其实）</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152233.png" alt=""></p>
-<p>还是看看他的主界面吧，有一个上传，看看源码</p>
-<pre><code>&lt;div id=&quot;upload-pic-box&quot;&gt;
-    &lt;a id=&quot;pic-path&quot;&gt;上传一张图片吧&lt;/a&gt;
-    &lt;form id=&quot;upload-form&quot;&gt;
-        &lt;input onchange=&quot;validateFileType()&quot; type=&quot;file&quot; accept=&quot;image/gif,image/jpeg,image/jpg,image/png,image/svg&quot; name=&quot;user-upload&quot; id=&quot;user-upload&quot;&gt;
-    &lt;/div&gt;
-
-//...此处省略114514行~
-
-
-    var fileName = document.getElementById(&quot;user-upload&quot;).value;
-    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-    if (extFile == &quot;jpg&quot;  extFile == &quot;jpeg&quot;  extFile == &quot;png&quot;  extFile == &#39;gif&#39;) &#123;
-        showfilename();
-    &#125; else &#123;
-        alert(&quot;你怎么骗我，\n哼，上传点正常格式的照片！（jpg/png/gif）&quot;);
-    &#125;
-</code></pre><p>可以看出，如果服务端没做验证的话，这里的前端校验就是马奇诺防线，轻松上传我们的🐴</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152111.png" alt=""></p>
-<p>然后我们需要定位我们的🐴在哪里了，本来这有些棘手，毕竟万一人家后端有个杀🐴程序呢？（虽然能上传成功的话就说明大概率不会有了233）</p>
-<p>然鹅，在审查其他api时，我发现了有个叫做/admin-get.php的get请求。我试着直接curl了一下，结果大跌眼镜的是，这玩意谁都能访问，而且一堆较为敏感的信息，虽然没有标识，但是能一眼看出有些字段是图片id和<strong>图片地址</strong>的。这极为致命，因为这就告诉了我上传的🐴的位置。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152329.png" alt=""></p>
-<p>这就离谱了嗷xdm，让我们连一下蚁剑</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152852.png" alt=""></p>
-<p><img src="http://192.168.1.35/wp-content/uploads/2022/05/图片-7-1024x168.png" alt=""></p>
-<p>xswl</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152256.png" alt=""></p>
-<p>不过还是要提issue的，这是道德底线</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152256.png" alt=""></p>
-<p>作者也在后面做了补救措施，看得出来还是个比较核善的人😋😋😋</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252153180.png" alt=""></p>
-<h2 id="0x02后记"><a href="#0x02后记" class="headerlink" title="0x02后记"></a>0x02后记</h2><p>实际上，我一直是在做黑盒测试，我是在拿到shell后才注意到它原来本身就开源了（离谱，那我浪费时间干嘛）。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252153366.png" alt=""></p>
-<p>可以看出来作者本人真的强，但是再强的人也难免有些地方不如成熟框架做的细致。想起我这种彩笔以前直接用几个组件拼接了一个后端，还自以为是地写了个恶心人的黑盒，就以为能抵御95%的入侵了，结果某个“阿喀琉斯之踵”被别人（plusls）拒绝服务攻击了，寄。</p>
-]]></content>
-      <categories>
-        <category>安全</category>
-      </categories>
-      <tags>
-        <tag>PHP</tag>
-        <tag>文件上传</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>远程桌面（RDP）的迷思</title>
-    <url>/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340599.jpg" alt=""></p>
-<h2 id="0x00说在前面"><a href="#0x00说在前面" class="headerlink" title="0x00说在前面"></a>0x00说在前面</h2><p>新学期，在社团活动室组了一台主机。打算开个远程桌面，这样我在宿舍的话，也可以访问我的主机了。</p>
-<h2 id="0x01方案选择"><a href="#0x01方案选择" class="headerlink" title="0x01方案选择"></a>0x01方案选择</h2><p>无非就以下几个方案：</p>
-<ol>
-<li>第三方远程桌面软件/穿透软件来突破内网限制。这个的话属实没有必要，因为我就在学校里有这个需求，否定。</li>
-<li>IPv4+端口映射。想啥呢，暴露在校园网下，这是要给x1c的大哥们冲业绩吗？否定。</li>
-<li>IPv4+proxifier代理。这个方案是我一开始最认可的，当我搭好socks5隧道时发现，我确实可以访问192.*.*.*下的内网设备，包括我的网页服务器，pt下载机，以及别人乱七八糟的服务端API数据库接口Nas啥的，结果轮到我的主机的rdp端口，他就不行了。初步猜测可能和Windows的防火墙策略有关，但是我在网上找了半天没找到和我一样情况的人，少部分人思路和我一样，但是他们似乎没出现这么神奇的现象，否定。</li>
-<li>IPv6。这个方案是肯定可以的——我现在用的就是。学校里有自己的校园网和运营商网络，运营商网络是没法通过DHCP分配IPv6的，但是校园网是可以的。另外，社团的网也是可以的。</li>
-</ol>
-<p>IPv6的方案好就好在，我校的校园网虽然晚上会断网，但是校园网可以在未登录的情况下分配一个教育网段的地址。就算这个不行，也可以通过连接手机热点的方式，获取IPv6。注意，我校校园网不支持SLACC，安卓设备无法通过连接校园网WiFi来获取v6地址。</p>
-<p>至于客户端，我在Windows端选择的是mstsc（就是专业版自带的那个）。安卓用的是谷歌商店的RD客户端（同样微软出品）。注意，这个软件微软商店也有，但是不推荐，因为延迟远不如原生的mstsc。</p>
-<h2 id="0x02实测表现"><a href="#0x02实测表现" class="headerlink" title="0x02实测表现"></a>0x02实测表现</h2><p>总的来说还是非常不错的，44ms。其实这是最高延迟了，测到过26ms的。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340193.png" alt=""></p>
-<h2 id="0x03优化"><a href="#0x03优化" class="headerlink" title="0x03优化"></a>0x03优化</h2><h3 id="1-突破30fps限制"><a href="#1-突破30fps限制" class="headerlink" title="1.突破30fps限制"></a>1.突破30fps限制</h3><p>打开Windows<code>注册表编辑器 (regedit.exe)</code>，找到以下子项：</p>
-<pre><code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations
-</code></pre><p>右击新建一个<code>DWORD(32-bit)值</code>的项，改名为<code>DWMFRAMEINTERVAL</code>，修改为十进制下的15。</p>
-<p>为什么？因为这个时候的帧率限制为1000/15，也就是66FPS。</p>
-<p>结束后保存重启，可以远程桌面登录后，通过一些测试fps的网站来测试，你会发现fps不是之前30而是60或者更高了。</p>
-<h3 id="2-显卡加速"><a href="#2-显卡加速" class="headerlink" title="2.显卡加速"></a>2.显卡加速</h3><p>打开远程主机上的组策略（Win+R打开运行，输入<code>gpedit.msc</code>）</p>
-<p>依次找到计算机配置-&gt;管理模板-&gt;Windows组件-&gt;远程桌面服务-&gt;远程桌面会话主机-&gt;远程会话环境</p>
-<p>在右边选择<strong>将硬件图形适配器应用于所有远程桌面服务会话</strong></p>
-<p>同时也可以打开<strong>配置远程桌面连接的H.264/AVC硬件编码</strong></p>
-<p>其实这没啥太大用处，具体原因接着说。</p>
-<h2 id="0x04游戏玩家的十字路口"><a href="#0x04游戏玩家的十字路口" class="headerlink" title="0x04游戏玩家的十字路口"></a>0x04游戏玩家的十字路口</h2><p>首先我们要明白：<strong>微软RDP是不支持独显的。有需要远程玩游戏的话，需要第三方的远程桌面、远程遥控软件才行。</strong></p>
-<p>在我们连接到远程桌面时，打开任务管理器，会发现独显是可以正常显示的。但是这并不代表你可以打游戏或者开blender啥的。那么这是怎么回事呢？</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242341801.png" alt=""></p>
-<p>如果你在这时打开游戏，你会发现一些游戏确实可以打开。比如我打开文明6，帧率只有30+，cpu频率暴增到3.99GHz，占用暴增40%，显卡摆烂在3%一动不动，这和在本机打开后的表现天差地别。而像apex，那就根本打不开了。注意，这和有无集显没有关系，我是12400F，照样可以显示，说明是有个虚拟显卡的。</p>
-<p>当然，NVidia也注意到了这一点，于是推出了nvidia-opengl-rdp——恕我直言，这个驱动几乎没什么作用……都什么年代了，还在用传统OpenGL。DirectX有人说是原生支持了，我觉得他在放屁，要是真的原生支持我怎么可能出现以上情况？</p>
-<p>官网下载需要登陆注册developer账号，我找到个第三方的百度网盘下载，不大就0.3M大小。</p>
-<pre><code>链接：https://pan.baidu.com/s/1HKy\_Q\_rZx1oy3kq4XO0AuA  
-提取码：pntw
-</code></pre><p>至于想玩游戏嘛……可以试试其他的软件，可能在延迟方面不如微软原生的mstsc，也有是游戏识别的限制。这些东西，等我以后试到了再做反馈吧。</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>RDP</tag>
       </tags>
   </entry>
   <entry>
@@ -3709,6 +4222,49 @@ void MergeSort(List *list)
       </tags>
   </entry>
   <entry>
+    <title>远程桌面（RDP）的迷思</title>
+    <url>/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340599.jpg" alt=""></p>
+<h2 id="0x00说在前面"><a href="#0x00说在前面" class="headerlink" title="0x00说在前面"></a>0x00说在前面</h2><p>新学期，在社团活动室组了一台主机。打算开个远程桌面，这样我在宿舍的话，也可以访问我的主机了。</p>
+<h2 id="0x01方案选择"><a href="#0x01方案选择" class="headerlink" title="0x01方案选择"></a>0x01方案选择</h2><p>无非就以下几个方案：</p>
+<ol>
+<li>第三方远程桌面软件/穿透软件来突破内网限制。这个的话属实没有必要，因为我就在学校里有这个需求，否定。</li>
+<li>IPv4+端口映射。想啥呢，暴露在校园网下，这是要给x1c的大哥们冲业绩吗？否定。</li>
+<li>IPv4+proxifier代理。这个方案是我一开始最认可的，当我搭好socks5隧道时发现，我确实可以访问192.*.*.*下的内网设备，包括我的网页服务器，pt下载机，以及别人乱七八糟的服务端API数据库接口Nas啥的，结果轮到我的主机的rdp端口，他就不行了。初步猜测可能和Windows的防火墙策略有关，但是我在网上找了半天没找到和我一样情况的人，少部分人思路和我一样，但是他们似乎没出现这么神奇的现象，否定。</li>
+<li>IPv6。这个方案是肯定可以的——我现在用的就是。学校里有自己的校园网和运营商网络，运营商网络是没法通过DHCP分配IPv6的，但是校园网是可以的。另外，社团的网也是可以的。</li>
+</ol>
+<p>IPv6的方案好就好在，我校的校园网虽然晚上会断网，但是校园网可以在未登录的情况下分配一个教育网段的地址。就算这个不行，也可以通过连接手机热点的方式，获取IPv6。注意，我校校园网不支持SLACC，安卓设备无法通过连接校园网WiFi来获取v6地址。</p>
+<p>至于客户端，我在Windows端选择的是mstsc（就是专业版自带的那个）。安卓用的是谷歌商店的RD客户端（同样微软出品）。注意，这个软件微软商店也有，但是不推荐，因为延迟远不如原生的mstsc。</p>
+<h2 id="0x02实测表现"><a href="#0x02实测表现" class="headerlink" title="0x02实测表现"></a>0x02实测表现</h2><p>总的来说还是非常不错的，44ms。其实这是最高延迟了，测到过26ms的。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340193.png" alt=""></p>
+<h2 id="0x03优化"><a href="#0x03优化" class="headerlink" title="0x03优化"></a>0x03优化</h2><h3 id="1-突破30fps限制"><a href="#1-突破30fps限制" class="headerlink" title="1.突破30fps限制"></a>1.突破30fps限制</h3><p>打开Windows<code>注册表编辑器 (regedit.exe)</code>，找到以下子项：</p>
+<pre><code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations
+</code></pre><p>右击新建一个<code>DWORD(32-bit)值</code>的项，改名为<code>DWMFRAMEINTERVAL</code>，修改为十进制下的15。</p>
+<p>为什么？因为这个时候的帧率限制为1000/15，也就是66FPS。</p>
+<p>结束后保存重启，可以远程桌面登录后，通过一些测试fps的网站来测试，你会发现fps不是之前30而是60或者更高了。</p>
+<h3 id="2-显卡加速"><a href="#2-显卡加速" class="headerlink" title="2.显卡加速"></a>2.显卡加速</h3><p>打开远程主机上的组策略（Win+R打开运行，输入<code>gpedit.msc</code>）</p>
+<p>依次找到计算机配置-&gt;管理模板-&gt;Windows组件-&gt;远程桌面服务-&gt;远程桌面会话主机-&gt;远程会话环境</p>
+<p>在右边选择<strong>将硬件图形适配器应用于所有远程桌面服务会话</strong></p>
+<p>同时也可以打开<strong>配置远程桌面连接的H.264/AVC硬件编码</strong></p>
+<p>其实这没啥太大用处，具体原因接着说。</p>
+<h2 id="0x04游戏玩家的十字路口"><a href="#0x04游戏玩家的十字路口" class="headerlink" title="0x04游戏玩家的十字路口"></a>0x04游戏玩家的十字路口</h2><p>首先我们要明白：<strong>微软RDP是不支持独显的。有需要远程玩游戏的话，需要第三方的远程桌面、远程遥控软件才行。</strong></p>
+<p>在我们连接到远程桌面时，打开任务管理器，会发现独显是可以正常显示的。但是这并不代表你可以打游戏或者开blender啥的。那么这是怎么回事呢？</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242341801.png" alt=""></p>
+<p>如果你在这时打开游戏，你会发现一些游戏确实可以打开。比如我打开文明6，帧率只有30+，cpu频率暴增到3.99GHz，占用暴增40%，显卡摆烂在3%一动不动，这和在本机打开后的表现天差地别。而像apex，那就根本打不开了。注意，这和有无集显没有关系，我是12400F，照样可以显示，说明是有个虚拟显卡的。</p>
+<p>当然，NVidia也注意到了这一点，于是推出了nvidia-opengl-rdp——恕我直言，这个驱动几乎没什么作用……都什么年代了，还在用传统OpenGL。DirectX有人说是原生支持了，我觉得他在放屁，要是真的原生支持我怎么可能出现以上情况？</p>
+<p>官网下载需要登陆注册developer账号，我找到个第三方的百度网盘下载，不大就0.3M大小。</p>
+<pre><code>链接：https://pan.baidu.com/s/1HKy\_Q\_rZx1oy3kq4XO0AuA  
+提取码：pntw
+</code></pre><p>至于想玩游戏嘛……可以试试其他的软件，可能在延迟方面不如微软原生的mstsc，也有是游戏识别的限制。这些东西，等我以后试到了再做反馈吧。</p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>RDP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>青年大学习（江苏）的HTTP请求分析</title>
     <url>/2022/04/05/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0%EF%BC%88%E6%B1%9F%E8%8B%8F%EF%BC%89%E7%9A%84http%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242318378.png" alt=""></p>
@@ -3728,562 +4284,6 @@ void MergeSort(List *list)
       <tags>
         <tag>HTTP</tag>
         <tag>青年大学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>右键菜单，用VSCode打开文件和文件夹</title>
-    <url>/2021/06/18/%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%EF%BC%8C%E7%94%A8vscode%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252139401.jpg" alt=""></p>
-<p>由于之前在安装VSCODE的时候，没注意详细阅读提示，而且第一次安装比较随意，只是带着想试一下VSCODE才安装的，所以安装的时候漏了勾选open with code这个非常好用的功能！</p>
-<p>那么我们应该怎么解决这个问题呢？？？<br>看了看网上的方法，分为两种：</p>
-<ul>
-<li>重装VSCODE，重装大法好啊有没有？(不，重装了好多插件要重新装很麻烦的)</li>
-<li>修改注册表(一点都不难，但是要仔细一点)</li>
-</ul>
-<p>重装我就不讲了，谁都会的了吧?</p>
-<p>那么我来讲一下修改注册表</p>
-<p>首先新建一个文本文件。在文本文件中输入以下代码修改注册表，这里要注意一下，<strong>里面的路径要修改为自己电脑里VSCODE的绝对路径，而且注意路径的书写，因为在字符串中，所以注意 \ 的转义</strong></p>
-<pre><code>Windows Registry Editor Version 5.00
-
-[HKEY_CLASSES_ROOT\*\shell\VSCode]
-@=&quot;Open with Code&quot;
-&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
-
-[HKEY_CLASSES_ROOT\*\shell\VSCode\command]
-@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%1\&quot;&quot;
-
-Windows Registry Editor Version 5.00
-
-[HKEY_CLASSES_ROOT\Directory\shell\VSCode]
-@=&quot;Open with Code&quot;
-&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
-
-[HKEY_CLASSES_ROOT\Directory\shell\VSCode\command]
-@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
-
-Windows Registry Editor Version 5.00
-
-[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode]
-@=&quot;Open with Code&quot;
-&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
-
-[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode\command]
-@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
-</code></pre><p>保存文件，随便放在哪里都可以，然后命名为： vsCodeOpenFolder.reg，这里你命名为什么都没关系，但是后缀必须要为 <strong>.reg</strong>最后，双击点开该文件，注册完成！</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252140939.png" alt=""></p>
-<hr>
-<p>参考文章：VSCODE添加open with code功能，实现右键打开文件夹 <a href="https://blog.csdn.net/qq_37810453/article/details/88101745">https://blog.csdn.net/qq_37810453/article/details/88101745</a></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>VSCode</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在linux平台上搭建求生之路服务器</title>
-    <url>/2022/01/18/%E5%9C%A8linux%E5%B9%B3%E5%8F%B0%E4%B8%8A%E6%90%AD%E5%BB%BA%E6%B1%82%E7%94%9F%E4%B9%8B%E8%B7%AF%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242326346.png" alt=""></p>
-<p>L4D2一直是一款我特别喜欢的多人娱乐向游戏，除了MC基本上每次高中好友线上团建就是在这里面。</p>
-<p>可惜最近V社的服务器ping值令人忍无可忍，不过好在我手上有一台2核4G的服务器，开个私服应该没啥问题。</p>
-<h2 id="安装运行环境（我的是ubuntu）"><a href="#安装运行环境（我的是ubuntu）" class="headerlink" title="安装运行环境（我的是ubuntu）"></a>安装运行环境（我的是ubuntu）</h2><pre><code>sudo apt-get install lib32gcc1
-</code></pre><h2 id="下载安装steamCMD"><a href="#下载安装steamCMD" class="headerlink" title="下载安装steamCMD"></a>下载安装steamCMD</h2><pre><code>mkdir ~/Steam //创建Steam文件夹
-cd ~/Steam //进入Steam文件夹
-wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz
-tar -zxvf steamcmd_linux.tar.gz //解压
-</code></pre><p>输入</p>
-<pre><code>./steamcmd.sh
-</code></pre><p>开始下载安装</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242326169.png" alt=""></p>
-<p>会要求登录，匿名登录就行</p>
-<pre><code>login anonymous
-</code></pre><h2 id="下载L4D2服务端"><a href="#下载L4D2服务端" class="headerlink" title="下载L4D2服务端"></a>下载L4D2服务端</h2><pre><code>app_update 222860 validate
-</code></pre><p>一开始几次没连上，多试几次就行</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327693.png" alt=""></p>
-<p>退出quit</p>
-<h2 id="配置文档"><a href="#配置文档" class="headerlink" title="配置文档"></a>配置文档</h2><p>修改H键公告的标题需修改文件/home/steam/l4d2/left4dead2/host.txt，修改内容需修改/home/steam/l4d2/left4dead2/motd.txt</p>
-<p>Steam/steamapps/common/Left 4 Dead 2 Dedicated Server/left4dead2/cfg下，新建一个 server.cfg 文件</p>
-<p>战役模式</p>
-<pre><code>hostname &quot;PiCpo&#39;s L4D2&quot;
-//模式选择
-//sm_cvar mp_gamemode &quot;coop&quot;
-//隐藏服务器
-sv_tags &quot;hidden&quot;
-ads_delay 45
-sv_allow_lobby_connect_only 0
-//mod一致性检查
-sv_consistency 0
-//正版服务器匹配参数限制
-sv_region 4
-sv_steamgroup &quot;&quot; //第一个组编号数字改成自己的组，其他为热门求生组
-sv_steamgroup_exclusive 1
-//人数设置
-sm_cvar sv_maxplayers 8
-sm_cvar sv_visiblemaxplayers 8
-sm_cvar sv_removehumanlimit 1
-sm_cvar sv_force_unreserved 1
-sm_cvar fps_max 300
-sm_cvar allow_all_bot_survivor_team 1
-</code></pre><p>对抗模式</p>
-<pre><code>//100tick
-sm_cvar fps_max 0
-sm_cvar net_splitpacket_maxrate 30000
-sm_cvar nb_update_frequency 0.06
-sm_cvar sv_minrate 100000
-sm_cvar sv_maxrate 101000
-sm_cvar sv_mincmdrate 100
-sm_cvar sv_maxcmdrate 100
-sm_cvar sv_minupdaterate 100
-sm_cvar sv_maxupdaterate 100
-sm_cvar sv_client_min_interp_ratio -1
-sm_cvar sv_client_max_interp_ratio 2
-sm_cvar sv_maxplayers 8
-sm_cvar sv_visiblemaxplayers 8
-sm_cvar sv_allow_lobby_connect_only 1
-
-sv_tags &quot;hidden&quot;
-sm_cvar mp_gamemode &quot;versus&quot;// 设定为对抗模式
-sv_gametypes versus// 设定为对抗模式
-sm_cvar sb_all_bot_game 1// 防止人数不足而自动关闭
-sm_cvar sb_all_bot_team 1
-sm_cvar allow_all_bot_survivor_team 1// 真人玩家死亡后由电脑玩家组队进行游戏
-sm_cvar sb_escort 1 // 强制电脑玩家紧随其后
-sm_cvar director_allow_infected_bots 0// 关闭AI特感
-sv_allow_wait_command 0// 封禁wait指令
-</code></pre><pre><code>coop //战役模式
-
-realism //写实模式
-
-versus //对抗模式
-
-teamversus //团队对抗模式
-
-mutation12 //写实对抗模式
-
-survival //生存模式
-
-scavenge //清道夫模式
-
-teamscavenge //团队清道夫模式
-
-community(1-6)&amp;&amp;mutation(1-20) //突变模式(总共26种不同内容)
-&#123;
-community1 【特感速递】 4人合作 同屏最多8特，无小丧尸，每种特感的出现时间间隔20秒，特感刷新时间0秒，所以是8个槽位同时刷，每个槽位20秒刷一个，无等待时间，不停的刷。
-community2 【感染季节】 4人合作 同屏最多8特，只有bommer和spitter两种特感，特感刷新倒计时固定20秒。无小丧尸，但是被bommer喷到、打到警报车和开机关有丧尸群。
-community3 【骑师派对】 8人对抗 特感方都是jockey，而且移动超快，无小丧尸(包括开警报后)
-community4 【梦魇】 4人合作 生存者模式，只有17个场景 同屏最多8特，战役模式设定，但无队友轮廓，场景有浓雾。
-community5 【死亡之门】 4人合作 每关开始只有药没有包，倒地即死。
-community6 【药抗】 8人对抗，只有药和针，取消高级武器，每关tank，更合理的对抗记分方式。
-mutation1 【孤身一人】 1人单机 只有一个人没有小丧尸，只有特感(除BOOMER)，倒地自起、控制的特感也会放开，但是会黑白。
-mutation2 【枪枪爆头】 4人合作 小丧尸只有爆头才会死。
-mutation3 【血流不止】 4人合作 这个模式从关卡开头就是虚血【并持续减血】，全图无包，只有靠药瓶和针维持血量。
-mutation4 【绝境求生】 4人合作 同屏最多8特，战役模式设定，每种特感的出现时间间隔20秒，特感刷新时间15秒，所以是8个槽位同时刷，每个槽位15-20秒刷一个，但特感刷新由导演系统控制，倒计时结束，不会不停的刷新。
-mutation5 【四剑客】 4人合作 一出场只有4把武士刀
-mutation7 【电锯帮】 4人合作 武器只有4个无限油的电锯
-mutation8 【铁人意志】 4人合作 团灭以后直接回到大厅，不会重新开始某个小关游戏
-mutation9 【侏儒卫队】 4人合作 玩家必须携带一个侏儒玩偶来躲避丧尸的攻击到达安全门
-mutation10 【一人救赎】 4人合作 只有一个人能终关逃生
-mutation11 【没有救赎】 8人对抗 全关没有包和药
-mutation12 【写实对抗】 8人对抗 写实模式设定的对抗
-mutation13 【清道肆虐】 8人对抗 线性清道夫，每次只有1个位置出现油桶， 每个新位置比上一个+2桶
-mutation14 【无法近身】 4人合作 全关没有近战武器，只有一把无限子弹M60和麦林手枪
-mutation15 【生存对抗】 8人对抗 使用生存模式计分规则
-mutation16 【猎人派对】 4人合作 特殊感染者都是hunter
-mutation17 【孤胆枪手】 1人单机 只有一个人一把沙鹰，特感保留bommer、witch和tank，小丧尸伤害高
-mutation18 【失血对抗】 8人对抗 所有幸存者虚血(并持续减血)，全图无包
-mutation19 【Tank!!!!!!】 8人对抗 扮演感染者方全是做tank
-mutation20 【侏儒治愈】 4人合作 所有幸存者虚血【并持续减血】，全图无包，抱着侏儒的人可以回复血量
-&#125; 
-dash Dash
-l4d1coop Left 4 Dead 1 Coop
-l4d1vs Left 4 Dead 1 Versus
-l4d1survival Left 4 Dead 1 Survival
-gunbrain GunBrain
-holdout Holdout
-shootzones Shootzones
-tankrun Tank Run
-rocketdude RocketDude
-</code></pre><p>完整版</p>
-<pre><code>//管理密码
-rcon_password &quot;0&quot;
-
-//游戏模式
-sm_cvar mp_gamemode &quot;coop&quot;
-
-//服务器人数破解
-l4d_maxplayers 4
-sv_maxplayers 4
-sv_visiblemaxplayers 4
-sv_removehumanlimit 1
-sv_force_unreserved 1
-
-//服务器难度锁定
-// Difficulty Setting: easy, normal, hard, impossible
-z_difficulty &quot;impossible&quot;
-
-//限制投票
-sm_cvar sv_allow_votes &quot;1&quot;
-
-//正版服务器匹配参数限制
-sv_region 4 
-sv_steamgroup &quot;114514&quot;
-sv_steamgroup_exclusive 0
-
-
-//插件开关 1=ON/0=OFF
-sm_advertisements_enabled 1
-
-//广告播放延时默认30s
-sm_advertisements_interval 60
-ads_delay 45
-
-//不允许正版大厅匹配到
-sv_allow_lobby_connect_only 0
-
-//地区代码:
-sm_cvar sv_region &quot;4&quot;
-
-// 作弊开关（1\0)
-sv_cheats 0  
-
-
-//关闭模型[MOD]冲突
-sm_cvar sv_consistency 0
-
-//隐藏服务器
-sv_tags hidden
-sv_tags &quot;hidden&quot;
-
-//tick
-sm_cvar fps_max 300
-sm_cvar sv_minrate 100000
-sm_cvar sv_maxrate 100000
-sm_cvar sv_minupdaterate 100
-sm_cvar sv_maxupdaterate 100
-sm_cvar sv_mincmdrate 100
-sm_cvar sv_maxcmdrate 100
-sm_cvar nb_update_frequency 0.1
-sm_cvar net_splitrate 2 
-sm_cvar net_splitpacket_maxrate 100000
-sm_cvar sv_client_min_interp_ratio 1
-sm_cvar sv_client_max_interp_ratio 1
-
-// 防止人数不足而自动关闭
-sm_cvar sb_all_bot_game 1
-
-//玩家死亡时电脑组成队伍继续游戏
-sm_cvar allow_all_bot_survivor_team 1
-</code></pre><p>幸存者参数介绍</p>
-<pre><code>队友伤害，0为关闭
-survivor_friendly_fire_factor_easy 0.2
-survivor_friendly_fire_factor_normal 0.2
-survivor_friendly_fire_factor_hard 0.4
-survivor_friendly_fire_factor_expert 0.6
-火焰伤害，0为关闭
-survivor_burn_factor_easy 0.1
-survivor_burn_factor_normal 0.2
-survivor_burn_factor_hard 0.3
-survivor_burn_factor_expert 0.5
-
-
-survivor_crouch_speed 75 蹲著的速度(默认：75 数字越大越快)
-rescue_min_dead_time &quot;3&quot; 人死掉后3秒就可以出现在任一房间给人救
-survivor_revive_health &quot;75&quot; 躺在地上被人拉起来的血量
-survivor_revive_duration &quot;1.75&quot; 拉人起来的时间1.75秒
-first_aid_kit_use_duration &quot;1&quot; 用急救包的时间 ，这里是1秒救治疗好了。
-
-sm_cvar first_aid_heal_percent &quot;1&quot; //医疗包恢复生命百分比，这里为1，即100%
-sm_cvar first_aid_kit_max_heal &quot;500&quot; //医疗包恢复生命数
-sm_cvar first_aid_kit_range &quot;200&quot; //医疗包恢复生命距离
-sm_cvar first_aid_kit_use_duration &quot;1&quot; //医疗包恢复生命所需时间（秒）
-sm_cvar z_survivor_respawn_health &quot;100&quot; //重生后的血量
-sm_cvar pain_pills_health_value &quot;100&quot; //止痛药的补血量，默认40
-sm_cvar pain_pills_decay_rate &quot;0.10&quot; //止痛药的损耗速度，默认0.34
-
-
-//丢东西的力量
-sm_cvar z_throw_force &quot;5000&quot;
-//右键推的力量，默认为25
-sm_cvar z_gun_physics_force &quot;500&quot;
-//右键推的范围
-sm_cvar z_gun_range &quot;75&quot;
-//盖特机枪冷却时间
-sm_cvar z_minigun_cooldown_time &quot;3&quot;
-//盖特机枪过热时间
-sm_cvar z_minigun_overheat_time &quot;60&quot;
-//盖特机枪攻击范围
-sm_cvar z_minigun_rate_of_fire &quot;1500&quot;
-
-
-//AI随机放置汽油弹密度（设为0就等于禁止了汽油弹）
-//sm_cvar director_molotov_density &quot;0&quot;
-//AI随机放置土制****密度（设为0就等于禁止了土制）
-//sm_cvar director_pipe_bomb_density &quot;0&quot;
-//土制****的爆炸时间
-sm_cvar pipe_bomb_timer_duration &quot;8&quot;
-
-
-sm_cvar inferno_damage 10 说明:这是火焰的燃烧秒数(明火)
-sm_cvar inferno_flame_lifetime 10 说明:这是燃烧持续的秒数(实际火焰-暗火)
-sm_cvar inferno_flame_spacing 1000 说明:这是燃烧刚开始的距离
-sm_cvar inferno_max_range 2000 说明:这是燃烧距离的最大值(最后出现火焰的最大范围)
-sm_cvar inferno_max_flames 32 说明:这是火焰扩散的次数
-
-// 队友伤害
-sm_cvar survivor_friendly_fire_factor_expert &quot;0.2&quot;
-//服务器密码
-rcon_password &quot;250631941&quot;
-
-//关闭队友投票权
-sm_cvar sv_allow_votes &quot;0&quot;
-
-//电脑BOT开枪延迟，默认0，改成10电脑BOT完全没用
-sm_cvar sb_open_fire &quot;0&quot;
-
-// 激活服务端中文名称
-sm_namehost 1
-
-//开启修改
-Sv_Cheats 0
-
-//躺下后依然可以移动
-sm_cvar survivor_allow_crawling &quot;1&quot;
-sm_cvar survivor_crawl_speed &quot;160&quot;
-
-//双重跳指令
-sm_cvar sm_doublejump_enabled &quot;0&quot;
-sm_cvar sm_doublejump_max &quot;0&quot;
-//---------------------------------------
-
-//人死掉后3秒就可以出现在任一房间给人救，默认60
-sm_cvar rescue_min_dead_time &quot;300&quot;
-
-/没有电脑BOT帮助
-sm_cvar director_no_survivor_bots &quot;0&quot;
-
-//右键速度默认 0.7 越低越快 （0.19）
-sm_cvar z_gun_swing_interval &quot;0.5&quot;
-
-//蹲下移动速度变快
-sm_cvar survivor_crouch_speed &quot;120&quot;
-
-//丢东西的力量
-sm_cvar z_throw_force &quot;1000&quot;
-
-//右键推的力量，默认为25
-sm_cvar z_gun_physics_force &quot;100&quot;
-
-//右键推的范围 默认为75
-sm_cvar z_gun_range &quot;100&quot;
-
-// 近战武器每次攻击间隔 (默认1.2秒)
-sm_cvar melee_combo_reset_time &quot;0.5&quot;
-
-// 近战武器最大推怪数量
-sm_cvar melee_collateral_shove_count &quot;20&quot;
-
-// 近战武器伤害范围数值越高能砍得越远 (默认70)
-sm_cvar melee_range &quot;180&quot;
-
-// 近战武器力量(默认20)
-sm_cvar melee_force_scalar &quot;100&quot;
-
-// 近战武器显示摆动(默认0)
-sm_cvar melee_show_swing &quot;1&quot;
-
-//生还者受伤时行走速度
-sm_cvar survivor_limp_walk_speed &quot;120&quot;
-
-倒下后到了这个数值后就会死（不确定，可能是倒下血到了1后仍然没有被队友拉起的话就会死亡）
-sm_cvar survivor_max_incapacitated_count &quot;1&quot;
-
-此数值以下称为受伤（貌似是40、20还是10忘了，血量到了这个数值后玩家就会变成瘸腿）
-sm_cvar survivor_limp_health &quot;10&quot;
-
- //口水婆吐在地面酸液的存在时间，默认10秒（PS：即受到10秒伤害。）
-sm_cvar z_spitter_high_chance &quot;30&quot;
-
-//口水婆喷吐距离半径默认900（PS：这个距离是指以spitte为起点吐向玩家的距离半径）
-sm_cvar z_spit_range &quot;1000&quot;
-
-//酸液每0.5秒加乘默认0.3的扣血量（PS：这个参数是配合上面酸液存在的时间相互使用的。酸液存在10的秒里，每半秒扣除3点血。10秒即为受到30点血的损伤，修改时须保留小数点后一位。）
-sm_cvar z_spit_latency &quot;0.9&quot;
-
-//口水婆吐出酸液之前的僵直时间默认0.1秒（PS：即口水婆原地立正过X秒后才可向玩家吐出酸液）
-sm_cvar z_spit_detonate_delay &quot;0.1&quot;
-
-// Spitter 大吐婆的移动速度
-z_spitter_speed 500
-
-//--------------------------------------------
-
-//爆炸子弹爆裂度
-sm_cvar upgrade_explosive_bullet_force &quot;800&quot;
-sm_cvar upgrade_explosive_slug_force &quot;800&quot;
-upgrade_laser_sight_spread_factor 1
-
-//榴弹炮伤害
-grenadelauncher_damage &quot;100&quot;
-
-//对其它玩家的伤害面
-grenadelauncher_ff_scale &quot;1&quot;
-
-//对自身的伤害面
-grenadelauncher_ff_scale_self &quot;1&quot;
-
-//范围伤害力
-grenadelauncher_force_kill &quot;100&quot;
-
-//绝对伤害范围,此范围内小僵尸必杀
-grenadelauncher_radius_kill &quot;100 &quot;
-
-//伤害范围冲击波大小
-grenadelauncher_radius_stumble &quot;500&quot;
-
-//是否显示伤害范围
-grenadelauncher_show_radius &quot;1&quot;
-
-//榴弹炮发射速度(默认1200）
-grenadelauncher_velocity &quot;1200&quot;
-//--------------------------------------------
-
-//每次刷新出现的胖子的数量，默认1
-sm_cvar z_boomer_limit &quot;3&quot;
-
-//每次刷新出现的烟鬼的数量
-sm_cvar z_gas_limit &quot;3&quot;
-
-//每次刷新出现的猎人的数量
-sm_cvar z_hunter_limit &quot;5&quot;
-
-// Charge同时出现数量(默认1)
-sm_cvar z_charger_limit &quot;4&quot;
-
-//最大同时出现数量
-z_jockey_limit &quot;3&quot;
-
-//口水婆最高刷新数量(已测试能用,嘿..注意不是同时在一个地点刷这么多)
-z_spitter_limit &quot;3&quot;
-
-//----------------------------------------
-
-//Boomer 胖子的生命值
-z_exploding_health &quot;2000&quot;
-
-// Charge生命(默认600)
-sm_cvar z_charger_health &quot;1200&quot;
-
-// Hunter生命(默认250)
-sm_cvar z_hunter_health &quot;600&quot;
-
-//烟鬼生命值 默认250(默认250)
-sm_cvar z_gas_health &quot;800&quot;
-
-// Jockey生命(默认325)
-sm_cvar z_jockey_health &quot;800&quot;
-
-// 大吐婆的生命值
-z_spitter_health &quot;800&quot;
-//-----------------------------------------
-
-// 设置为1，使用有效出现雾气
-sm_cvar z_fog_spawn 1
-//----------------------------------------
-
-
-//-----------------------------------------
-
-//女巫生命值，默认1000
-z_witch_health &quot;1000&quot;
-
-//女巫的发飙范围，默认200
-sm_cvar z_witch_berserk_range &quot;100&quot;
-
-//女巫的燃烧时间，烧完就死了
-sm_cvar z_witch_burn_time &quot;5&quot;
-
-//女巫的伤害，默认100
-sm_cvar z_witch_damage &quot;150&quot;
-
-//女巫对手电筒照射的反应范围，默认400
-sm_cvar z_witch_flashlight_range &quot;50&quot;
-
-//Witch 女巫的移动速度
-z_witch_speed 1000
-
-//-----------------------------------------
-
-//猎人跳跃角度
-sm_cvar hunter_pounce_max_loft_angle &quot;150&quot;
-
-//猎人爪子伤害值，默认6
-sm_cvar hunter_pz_claw_dmg &quot;50&quot;
-
-//猎人行走速度，默认300
-sm_cvar z_hunter_speed &quot;1000&quot;
-
-//猎人飞扑的速度，默认700
-sm_cvar hunter_pounce_air_speed &quot;1500&quot;
-
-//猎人飞跃距离，默认1000
-sm_cvar hunter_leap_away_give_up_range &quot;2000&quot;
-
-//猎人最长距离的飞扑仰角，默认45
-sm_cvar hunter_pounce_max_loft_angle &quot;45&quot;
-
-//猎人的扑倒范围，默认240
-sm_cvar z_hunter_claw_force &quot;800&quot;
-
-//猎人扑倒后的攻击力，默认5
-sm_cvar z_pounce_damage &quot;20&quot;
-
-//猎人扑倒持续伤害间隔，默认1
-sm_cvar z_pounce_damage_delay &quot;0.5&quot;
-
-//-----------------------------------------
-</code></pre><h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><pre><code>cd ~/Steam/steamapps/common/&quot;Left 4 Dead 2 Dedicated Server&quot;/
-screen -S coop
-./srcds_run -game left4dead2 -condebug -secure +port 27015 +map c2m1_highway +exec server.cfg
-</code></pre><p>别忘记开防火墙里端口UDP协议</p>
-<h2 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h2><h3 id="sourcemod"><a href="#sourcemod" class="headerlink" title="sourcemod"></a>sourcemod</h3><pre><code>https://www.sourcemod.net/downloads.php?branch=stable
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327679.png" alt=""></p>
-<h3 id="metamod"><a href="#metamod" class="headerlink" title="metamod"></a><strong>metamod</strong></h3><pre><code>https://www.sourcemm.net/downloads.php?branch=stable
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242327160.png" alt=""></p>
-<h3 id="L4DtoolZ"><a href="#L4DtoolZ" class="headerlink" title="L4DtoolZ"></a>L4DtoolZ</h3><pre><code>https://github.com/Accelerator74/l4dtoolz/releases
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328765.png" alt=""></p>
-<h3 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h3><p>将下载来的三个压缩包解压到一起，得到addons和cfg两个文件夹。如果得到多个文件夹，就把多余文件夹移入addons文件夹，只剩下addons和cfg两个文件夹。</p>
-<p>控制台输入<code>meta list</code>，即可查看安装是否成功</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328944.png" alt=""></p>
-<p>控制台输入<code>sm plugins list</code>，即可查看安装的插件</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328083.png" alt=""></p>
-<h2 id="安装插件（以MultiSlots多人插件为例）"><a href="#安装插件（以MultiSlots多人插件为例）" class="headerlink" title="安装插件（以MultiSlots多人插件为例）"></a>安装插件（以MultiSlots多人插件为例）</h2><p>啊，这个插件<strong><a href="https://forums.alliedmods.net/showthread.php?t=132408">MultiSlots</a></strong>搞了我半天==</p>
-<p>因为网上流传的许多是win版本的整合包，我在里面寻找，拿过去用之后发现总是给我报错，说缺失dhooks.ext.so这个运行库</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242328268.png" alt=""></p>
-<p>但是整合包里全是dll，找半天才搜到</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329548.png" alt=""></p>
-<p>emmm，之后找到了放到extension里面也没用，还是同样的报错</p>
-<p>看似穷途末路了，但是还是让我找到了这个插件的最初版本</p>
-<p><a href="https://forums.alliedmods.net/showthread.php?t=132408">https://forums.alliedmods.net/showthread.php?t=132408</a></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329006.png" alt=""></p>
-<p>好耶！（所以说应该能用了）</p>
-<h2 id="添加管理员"><a href="#添加管理员" class="headerlink" title="添加管理员"></a>添加管理员</h2><p>/addons/sourcemod/configs里找admins_simple.ini</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329116.png" alt=""></p>
-<h2 id="插件推荐"><a href="#插件推荐" class="headerlink" title="插件推荐"></a>插件推荐</h2><h3 id="sourcemod的官方论坛"><a href="#sourcemod的官方论坛" class="headerlink" title="sourcemod的官方论坛"></a>sourcemod的官方论坛</h3><p><a href="http://alliedmods.net">alliedmods.net</a></p>
-<h3 id="电击器修复"><a href="#电击器修复" class="headerlink" title="电击器修复"></a>电击器修复</h3><p>这个是电击器修复，5人及以上的时候不会电起来错误的人</p>
-<p><a href="https://forums.alliedmods.net/showthread.php?p=2647018">https://forums.alliedmods.net/showthread.php?p=2647018</a></p>
-<h3 id="witch惊扰修复"><a href="#witch惊扰修复" class="headerlink" title="witch惊扰修复"></a>witch惊扰修复</h3><p>防止惊扰的witch只会找tab列表里能看到的人等等</p>
-<p><a href="https://forums.alliedmods.net/showthread.php?p=2647014">https://forums.alliedmods.net/showthread.php?p=2647014</a></p>
-<h3 id="榴弹M60正常化"><a href="#榴弹M60正常化" class="headerlink" title="榴弹M60正常化"></a>榴弹M60正常化</h3><p><a href="https://forums.alliedmods.net/showthread.php?p=2694504">https://forums.alliedmods.net/showthread.php?p=2694504</a></p>
-<h3 id="特感血量显示"><a href="#特感血量显示" class="headerlink" title="特感血量显示"></a>特感血量显示</h3><p><a href="https://forums.alliedmods.net/showthread.php?p=2694504">https://forums.alliedmods.net/showthread.php?p=2694504</a></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>ubuntu</tag>
-        <tag>求生之路</tag>
       </tags>
   </entry>
 </search>
