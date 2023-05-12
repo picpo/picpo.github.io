@@ -1,6 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AFP与Time Machine</title>
+    <url>/2023/05/01/AFP%E4%B8%8ETime%20Machine/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/20230501204251.png" alt=""></p>
+<h2 id="0x01安装"><a href="#0x01安装" class="headerlink" title="0x01安装"></a>0x01安装</h2><p>安装Netatalk服务，用来把Linux/Unix伪装成AFP协议传输的文件服务器：</p>
+<pre><code>sudo apt-get install netatalk
+</code></pre><p>安装avahi-daemon，用来在Linux/Unix中开启类似的Bonjour的服务：</p>
+<pre><code>sudo apt-get install avahi-daemon
+</code></pre><h2 id="0x02配置文件"><a href="#0x02配置文件" class="headerlink" title="0x02配置文件"></a>0x02配置文件</h2><p>编辑<code>/etc/netatalk/afp.conf</code></p>
+<pre><code>;
+; Netatalk 3.x configuration file
+;
+
+[Global]
+; Global server settings
+
+; [Homes]
+; basedir regex = /xxxx
+
+; [My AFP Volume]
+; path = /path/to/volume
+
+; [My Time Machine Volume]
+; path = /path/to/backup
+; time machine = yes
+
+[PiCpo Time Machine]
+path = /mnt/HGST01/Time ;这是我挂载的文件目录
+time machine = yes
+valid users = user ;选择登陆的用户
+</code></pre><p>最后别忘了restart</p>
+<p>选择添加afp://ip再输入用户名密码就能连接到自己的Time Machine服务器了</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/3145f8286ec543689a6b0a8614a2843e.jpeg" alt=""></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>AFP</tag>
+        <tag>ubuntu</tag>
+        <tag>Time Machine</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker+Flask构建后端的踩坑记录</title>
     <url>/2021/11/04/dockerflask%E6%9E%84%E5%BB%BA%E5%90%8E%E7%AB%AF%E7%9A%84%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252206491.png" alt=""></p>
@@ -264,6 +308,38 @@ ENTRYPOINT [ &quot;python&quot; ,&quot;app/app.py&quot; ]
       </tags>
   </entry>
   <entry>
+    <title>Flask的食用方法</title>
+    <url>/2021/11/04/flask%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252214256.png" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直觉得python写后端是件很方便的事，所以我打算整一个Flask的学习</p>
+<h2 id="0x01PyCharm导入环境"><a href="#0x01PyCharm导入环境" class="headerlink" title="0x01PyCharm导入环境"></a>0x01PyCharm导入环境</h2><p>File-Settings-Project Interpreter，如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215727.png" alt=""></p>
+<p>添加Flask server：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215040.png" alt=""></p>
+<h2 id="0x02Hello-Flask"><a href="#0x02Hello-Flask" class="headerlink" title="0x02Hello,Flask!"></a>0x02Hello,Flask!</h2><p>新建一个app.py，什么名字都行，记住不要Flask，会冲突</p>
+<pre><code>from flask import Flask
+app = Flask(__name__)
+
+@app.route(&#39;/&#39;)
+def hello_world():
+    return &#39;Hello,Flask!&#39;
+
+if __name__ == &#39;__main__&#39;:
+    app.run()
+</code></pre><p>我们点击运行，即终端输出：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215056.png" alt=""></p>
+<p>打开网址：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215977.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Flask</tag>
+        <tag>PyCharm</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Github代理</title>
     <url>/2022/10/08/github%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252133062.jpg" alt=""></p>
@@ -422,35 +498,109 @@ fun getNetImg(urlstr: String): InputStream? &#123;
       </tags>
   </entry>
   <entry>
-    <title>Flask的食用方法</title>
-    <url>/2021/11/04/flask%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252214256.png" alt=""></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直觉得python写后端是件很方便的事，所以我打算整一个Flask的学习</p>
-<h2 id="0x01PyCharm导入环境"><a href="#0x01PyCharm导入环境" class="headerlink" title="0x01PyCharm导入环境"></a>0x01PyCharm导入环境</h2><p>File-Settings-Project Interpreter，如下图所示：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215727.png" alt=""></p>
-<p>添加Flask server：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215040.png" alt=""></p>
-<h2 id="0x02Hello-Flask"><a href="#0x02Hello-Flask" class="headerlink" title="0x02Hello,Flask!"></a>0x02Hello,Flask!</h2><p>新建一个app.py，什么名字都行，记住不要Flask，会冲突</p>
-<pre><code>from flask import Flask
-app = Flask(__name__)
+    <title>Selenium爬虫入门</title>
+    <url>/2021/11/19/selenium%E7%88%AC%E8%99%AB%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252135855.jpg" alt=""></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>曾经我以为爬虫只要学会get和post就行了</p>
+<p>直到遇上了某些不分离的js原生网页</p>
+<p>最后，是Selenium拯救了我</p>
+<h2 id="0x01环境搭建"><a href="#0x01环境搭建" class="headerlink" title="0x01环境搭建"></a>0x01环境搭建</h2><h3 id="安装selenium模块"><a href="#安装selenium模块" class="headerlink" title="安装selenium模块"></a><strong>安装selenium模块</strong></h3><p>这里是使用python里的selenium模块；java的话，也有selenium的jar包</p>
+<pre><code>pip install -U selenium
+</code></pre><p>我用的是PyCharm，可以直接在里面的包管理工具添加这个包</p>
+<h3 id="安装浏览器"><a href="#安装浏览器" class="headerlink" title="安装浏览器"></a>安装浏览器</h3><p>安装一款浏览器（谷歌，火狐，IE），selenium是基于浏览器运作的，想要selenium能驱动浏览器，必须要安装浏览器驱动，将驱动放到python的安装根目录下即可</p>
+<p>此处以谷歌浏览器为例：谷歌驱动（chromedriver）下载地址：<a href="http://npm.taobao.org/mirrors/chromedriver">http://npm.taobao.org/mirrors/chromedriver</a></p>
+<p><img src="http://101.35.52.235/wp-content/uploads/2021/11/图片-14.png" alt=""></p>
+<h2 id="0x02使用"><a href="#0x02使用" class="headerlink" title="0x02使用"></a>0x02使用</h2><pre><code>from selenium import webdriver       #引用selenium
+driver=webdriver.Chrome() #启动谷歌浏览器
+driver.get(&quot;http://www.baidu.com&quot;) #访问一个网页 
+driver.quit() #退出浏览器
+driver.get(&quot;http://www.baidu.com&quot;)  #访问浏览器
+driver.back()       #回到上一页
+driver.forward()    #回到下一页
+driver.refresh()        #刷新
+print(driver.title)        #获取标题
+print(driver.current_url)        #获取网址
+print(driver.current_window_handle)        #获取到句柄
+print(driver.get_window_size())       #获取浏览器尺寸
+print(driver.get_screenshot_as_file(&#39;&#39;))       #获取截图
+driver.maximize_window()              #窗口最大化
+driver.minimize_window()              #窗口最小化
+</code></pre><h2 id="0x03示例"><a href="#0x03示例" class="headerlink" title="0x03示例"></a>0x03示例</h2><p>这次参加了学校里的一场比赛，其中有一道题就是爬取各个购物平台的商品数据</p>
+<p>我第一个选择了某宝，这里放出示例代码</p>
+<pre><code>from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.keys import Keys
+from urllib.parse import quote
+from pyquery import PyQuery as pq
+import time
 
-@app.route(&#39;/&#39;)
-def hello_world():
-    return &#39;Hello,Flask!&#39;
+browser = webdriver.Chrome()
+# 需要手动扫码登陆淘宝！
+wait = WebDriverWait(browser, 20)
+
+
+def taobao_index_page(page, text):
+    print(&#39;正在爬取第&#39;, page, &#39;页&#39;)
+    try:
+        # 网址url
+        url = &#39;https://s.taobao.com/search?q=&#39; + quote(text)
+        browser.get(url)
+        time.sleep(1.5)
+        if page &gt; 1
+            input = wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, &#39;#mainsrp-pager div.form &gt; input&#39;))
+            )
+            submit = wait.until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, &#39;#mainsrp-pager div.form &gt; span.btn.J_Submit&#39;))
+            )
+            input.clear()
+            input.send_keys(page)
+            # 模拟点击确认
+            submit.click()
+        # 找到每页数据的标签
+        wait.until(
+            EC.text_to_be_present_in_element((By.CSS_SELECTOR, &#39;#mainsrp-pager li.item.active &gt; span&#39;), str(page))
+        )
+        wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, &#39;.m-itemlist .items .item&#39;))
+        )
+        # 调用函数，获取数据
+        taobao_get_products()
+    except TimeoutException:
+        taobao_index_page(page, text)
+
+
+def taobao_get_products():
+    # page_source获取网页源代码
+    html = browser.page_source
+    doc = pq(html)
+    items = doc(&#39;#mainsrp-itemlist .items .item&#39;).items()
+    for item in items:
+        # 数据存入字典
+        product = &#123;
+            &#39;title&#39;: item.find(&#39;.title&#39;).text(),
+            &#39;price&#39;: item.find(&#39;.price&#39;).text(),
+            &#39;image&#39;: item.find(&#39;.pic .img&#39;).attr(&#39;data-src&#39;),
+        &#125;
+        print(product)
+
+def main():
+    for i in range(1, 10):#爬取1-9页
+        taobao_index_page(i, &quot;iphone13&quot;)
 
 if __name__ == &#39;__main__&#39;:
-    app.run()
-</code></pre><p>我们点击运行，即终端输出：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215056.png" alt=""></p>
-<p>打开网址：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252215977.png" alt=""></p>
+    main()
+</code></pre><p>另外，对于某些页面的懒加载问题，可以自己想想看如何解决（</p>
 ]]></content>
       <categories>
-        <category>后端</category>
+        <category>野生技术协会</category>
       </categories>
       <tags>
-        <tag>Flask</tag>
-        <tag>PyCharm</tag>
+        <tag>Selenium</tag>
+        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -559,112 +709,6 @@ echo &quot;backup!$today&quot;
       </tags>
   </entry>
   <entry>
-    <title>Selenium爬虫入门</title>
-    <url>/2021/11/19/selenium%E7%88%AC%E8%99%AB%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252135855.jpg" alt=""></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>曾经我以为爬虫只要学会get和post就行了</p>
-<p>直到遇上了某些不分离的js原生网页</p>
-<p>最后，是Selenium拯救了我</p>
-<h2 id="0x01环境搭建"><a href="#0x01环境搭建" class="headerlink" title="0x01环境搭建"></a>0x01环境搭建</h2><h3 id="安装selenium模块"><a href="#安装selenium模块" class="headerlink" title="安装selenium模块"></a><strong>安装selenium模块</strong></h3><p>这里是使用python里的selenium模块；java的话，也有selenium的jar包</p>
-<pre><code>pip install -U selenium
-</code></pre><p>我用的是PyCharm，可以直接在里面的包管理工具添加这个包</p>
-<h3 id="安装浏览器"><a href="#安装浏览器" class="headerlink" title="安装浏览器"></a>安装浏览器</h3><p>安装一款浏览器（谷歌，火狐，IE），selenium是基于浏览器运作的，想要selenium能驱动浏览器，必须要安装浏览器驱动，将驱动放到python的安装根目录下即可</p>
-<p>此处以谷歌浏览器为例：谷歌驱动（chromedriver）下载地址：<a href="http://npm.taobao.org/mirrors/chromedriver">http://npm.taobao.org/mirrors/chromedriver</a></p>
-<p><img src="http://101.35.52.235/wp-content/uploads/2021/11/图片-14.png" alt=""></p>
-<h2 id="0x02使用"><a href="#0x02使用" class="headerlink" title="0x02使用"></a>0x02使用</h2><pre><code>from selenium import webdriver       #引用selenium
-driver=webdriver.Chrome() #启动谷歌浏览器
-driver.get(&quot;http://www.baidu.com&quot;) #访问一个网页 
-driver.quit() #退出浏览器
-driver.get(&quot;http://www.baidu.com&quot;)  #访问浏览器
-driver.back()       #回到上一页
-driver.forward()    #回到下一页
-driver.refresh()        #刷新
-print(driver.title)        #获取标题
-print(driver.current_url)        #获取网址
-print(driver.current_window_handle)        #获取到句柄
-print(driver.get_window_size())       #获取浏览器尺寸
-print(driver.get_screenshot_as_file(&#39;&#39;))       #获取截图
-driver.maximize_window()              #窗口最大化
-driver.minimize_window()              #窗口最小化
-</code></pre><h2 id="0x03示例"><a href="#0x03示例" class="headerlink" title="0x03示例"></a>0x03示例</h2><p>这次参加了学校里的一场比赛，其中有一道题就是爬取各个购物平台的商品数据</p>
-<p>我第一个选择了某宝，这里放出示例代码</p>
-<pre><code>from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.common.keys import Keys
-from urllib.parse import quote
-from pyquery import PyQuery as pq
-import time
-
-browser = webdriver.Chrome()
-# 需要手动扫码登陆淘宝！
-wait = WebDriverWait(browser, 20)
-
-
-def taobao_index_page(page, text):
-    print(&#39;正在爬取第&#39;, page, &#39;页&#39;)
-    try:
-        # 网址url
-        url = &#39;https://s.taobao.com/search?q=&#39; + quote(text)
-        browser.get(url)
-        time.sleep(1.5)
-        if page &gt; 1
-            input = wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, &#39;#mainsrp-pager div.form &gt; input&#39;))
-            )
-            submit = wait.until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, &#39;#mainsrp-pager div.form &gt; span.btn.J_Submit&#39;))
-            )
-            input.clear()
-            input.send_keys(page)
-            # 模拟点击确认
-            submit.click()
-        # 找到每页数据的标签
-        wait.until(
-            EC.text_to_be_present_in_element((By.CSS_SELECTOR, &#39;#mainsrp-pager li.item.active &gt; span&#39;), str(page))
-        )
-        wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, &#39;.m-itemlist .items .item&#39;))
-        )
-        # 调用函数，获取数据
-        taobao_get_products()
-    except TimeoutException:
-        taobao_index_page(page, text)
-
-
-def taobao_get_products():
-    # page_source获取网页源代码
-    html = browser.page_source
-    doc = pq(html)
-    items = doc(&#39;#mainsrp-itemlist .items .item&#39;).items()
-    for item in items:
-        # 数据存入字典
-        product = &#123;
-            &#39;title&#39;: item.find(&#39;.title&#39;).text(),
-            &#39;price&#39;: item.find(&#39;.price&#39;).text(),
-            &#39;image&#39;: item.find(&#39;.pic .img&#39;).attr(&#39;data-src&#39;),
-        &#125;
-        print(product)
-
-def main():
-    for i in range(1, 10):#爬取1-9页
-        taobao_index_page(i, &quot;iphone13&quot;)
-
-if __name__ == &#39;__main__&#39;:
-    main()
-</code></pre><p>另外，对于某些页面的懒加载问题，可以自己想想看如何解决（</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>Selenium</tag>
-        <tag>爬虫</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Ubuntu18以上系统64位的glibc的payload调用system函数时，所需注意的堆栈平衡问题</title>
     <url>/2021/07/19/ubuntu18%E4%BB%A5%E4%B8%8A%E7%B3%BB%E7%BB%9F64%E4%BD%8D%E7%9A%84glibc%E7%9A%84payload%E8%B0%83%E7%94%A8system%E5%87%BD%E6%95%B0%E6%97%B6%EF%BC%8C%E6%89%80%E9%9C%80%E6%B3%A8%E6%84%8F%E7%9A%84%E5%A0%86/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252147635.jpg" alt=""></p>
@@ -735,42 +779,6 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </tags>
   </entry>
   <entry>
-    <title>stable-diffusion-webui的食用方法</title>
-    <url>/2022/10/08/stable-diffusion-webui%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252157828.png" alt=""></p>
-<h2 id="0x01-Anaconda安装"><a href="#0x01-Anaconda安装" class="headerlink" title="0x01 Anaconda安装"></a>0x01 Anaconda安装</h2><p>这个没啥好说的，主要是要记住你的安装路径</p>
-<h2 id="0x02-安装CUDA"><a href="#0x02-安装CUDA" class="headerlink" title="0x02 安装CUDA"></a>0x02 安装CUDA</h2><p>到官网：</p>
-<pre><code>https://developer.nvidia.com/cuda-downloads?target_os=Windows&amp;target_arch=x86_64&amp;target_version=10&amp;target_type=exe_local
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158948.png" alt=""></p>
-<h2 id="0x03-安装stable-diffusion-webui"><a href="#0x03-安装stable-diffusion-webui" class="headerlink" title="0x03 安装stable-diffusion-webui"></a>0x03 安装stable-diffusion-webui</h2><h3 id="1-sd-webui"><a href="#1-sd-webui" class="headerlink" title="1.sd-webui"></a>1.sd-webui</h3><pre><code>git clone https://github.com/sd-webui/stable-diffusion-webui.git
-</code></pre><p>安装后按他所说的在根目录建立<strong>custom-conda-path.txt</strong>，并写上自己的Anaconda根目录</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158626.png" alt=""></p>
-<p>下载模型文件，放在<strong>\stable-diffusion-webui\models\ldm\stable-diffusion-v1</strong>下</p>
-<p>其实也可以mklink，不过我没试过，因为我的novelaileak文件在下载盘里，下载盘是个远古机械，速度不是很快</p>
-<h3 id="2-另一个更好的web-ui"><a href="#2-另一个更好的web-ui" class="headerlink" title="2.另一个更好的web-ui"></a>2.另一个更好的web-ui</h3><p>这个更好，可以过滤一些negative prompt</p>
-<pre><code>git clone  https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
-</code></pre><p>安装过程过于缓慢，建议先pip安装他的requirements.txt</p>
-<h3 id="3-泄露模型"><a href="#3-泄露模型" class="headerlink" title="3.泄露模型"></a>3.泄露模型</h3><p>我这里用的是novelaileak的，你也可以用其他的</p>
-<pre><code>magnet:?xt=urn:btih:5bde442da86265b670a3e5ea3163afad2c6f8ecc&amp;dn=novelaileak&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2F9.rarbg.com%3A2810%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A6969%2Fannounce&amp;tr=http%3A%2F%2Ftracker.openbittorrent.com%3A80%2Fannounce&amp;tr=udp%3A%2F%2Fopentracker.i2p.rocks%3A6969%2Fannounce
-</code></pre><p>第二版（125G）</p>
-<pre><code>magnet:?xt=urn:btih:a20087e7807f28476dd7b0b2e0174981709d89cd&amp;dn=novelaileakpt2&amp;tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&amp;tr=http%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&amp;tr=https%3a%2f%2ftracker.nanoha.org%3a443%2fannounce
-</code></pre><p>今天流出的新版本，效果更好但是空间占用更大</p>
-<h2 id="0x04-食用"><a href="#0x04-食用" class="headerlink" title="0x04 食用"></a>0x04 食用</h2><p>到根目录，运行一下webui的cmd，会自动安装环境</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
-<p>我的GTX1060 6G生成速度不是很快，我这有块Tesla p4，不知道加上去会不会加快点速度</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
-<p>更多关键词请见：</p>
-<p><a href="https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords">https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords</a></p>
-<p><a href="https://gelbooru.com/index.php?page=tags&amp;s=list">https://gelbooru.com/index.php?page=tags&amp;s=list</a></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Web网页小项目——天气预报Web页面的踩坑笔记</title>
     <url>/2021/01/23/web%E7%BD%91%E9%A1%B5%E5%B0%8F%E9%A1%B9%E7%9B%AE%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5web%E9%A1%B5%E9%9D%A2/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252141067.jpg" alt=""></p>
@@ -813,6 +821,42 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
         <tag>ajax</tag>
         <tag>bootstrap</tag>
         <tag>jQuery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>stable-diffusion-webui的食用方法</title>
+    <url>/2022/10/08/stable-diffusion-webui%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252157828.png" alt=""></p>
+<h2 id="0x01-Anaconda安装"><a href="#0x01-Anaconda安装" class="headerlink" title="0x01 Anaconda安装"></a>0x01 Anaconda安装</h2><p>这个没啥好说的，主要是要记住你的安装路径</p>
+<h2 id="0x02-安装CUDA"><a href="#0x02-安装CUDA" class="headerlink" title="0x02 安装CUDA"></a>0x02 安装CUDA</h2><p>到官网：</p>
+<pre><code>https://developer.nvidia.com/cuda-downloads?target_os=Windows&amp;target_arch=x86_64&amp;target_version=10&amp;target_type=exe_local
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158948.png" alt=""></p>
+<h2 id="0x03-安装stable-diffusion-webui"><a href="#0x03-安装stable-diffusion-webui" class="headerlink" title="0x03 安装stable-diffusion-webui"></a>0x03 安装stable-diffusion-webui</h2><h3 id="1-sd-webui"><a href="#1-sd-webui" class="headerlink" title="1.sd-webui"></a>1.sd-webui</h3><pre><code>git clone https://github.com/sd-webui/stable-diffusion-webui.git
+</code></pre><p>安装后按他所说的在根目录建立<strong>custom-conda-path.txt</strong>，并写上自己的Anaconda根目录</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158626.png" alt=""></p>
+<p>下载模型文件，放在<strong>\stable-diffusion-webui\models\ldm\stable-diffusion-v1</strong>下</p>
+<p>其实也可以mklink，不过我没试过，因为我的novelaileak文件在下载盘里，下载盘是个远古机械，速度不是很快</p>
+<h3 id="2-另一个更好的web-ui"><a href="#2-另一个更好的web-ui" class="headerlink" title="2.另一个更好的web-ui"></a>2.另一个更好的web-ui</h3><p>这个更好，可以过滤一些negative prompt</p>
+<pre><code>git clone  https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
+</code></pre><p>安装过程过于缓慢，建议先pip安装他的requirements.txt</p>
+<h3 id="3-泄露模型"><a href="#3-泄露模型" class="headerlink" title="3.泄露模型"></a>3.泄露模型</h3><p>我这里用的是novelaileak的，你也可以用其他的</p>
+<pre><code>magnet:?xt=urn:btih:5bde442da86265b670a3e5ea3163afad2c6f8ecc&amp;dn=novelaileak&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2F9.rarbg.com%3A2810%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A6969%2Fannounce&amp;tr=http%3A%2F%2Ftracker.openbittorrent.com%3A80%2Fannounce&amp;tr=udp%3A%2F%2Fopentracker.i2p.rocks%3A6969%2Fannounce
+</code></pre><p>第二版（125G）</p>
+<pre><code>magnet:?xt=urn:btih:a20087e7807f28476dd7b0b2e0174981709d89cd&amp;dn=novelaileakpt2&amp;tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&amp;tr=http%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&amp;tr=https%3a%2f%2ftracker.nanoha.org%3a443%2fannounce
+</code></pre><p>今天流出的新版本，效果更好但是空间占用更大</p>
+<h2 id="0x04-食用"><a href="#0x04-食用" class="headerlink" title="0x04 食用"></a>0x04 食用</h2><p>到根目录，运行一下webui的cmd，会自动安装环境</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
+<p>我的GTX1060 6G生成速度不是很快，我这有块Tesla p4，不知道加上去会不会加快点速度</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
+<p>更多关键词请见：</p>
+<p><a href="https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords">https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords</a></p>
+<p><a href="https://gelbooru.com/index.php?page=tags&amp;s=list">https://gelbooru.com/index.php?page=tags&amp;s=list</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
       </tags>
   </entry>
   <entry>
@@ -2253,9 +2297,9 @@ IdleExitTimeout 60
         <category>野生技术协会</category>
       </categories>
       <tags>
-        <tag>Docker</tag>
         <tag>linux</tag>
         <tag>ubuntu</tag>
+        <tag>Docker</tag>
         <tag>NAS</tag>
       </tags>
   </entry>
@@ -3932,6 +3976,25 @@ void MergeSort(List *list)
       </tags>
   </entry>
   <entry>
+    <title>解决Gravatar头像被墙的问题</title>
+    <url>/2021/03/09/%E8%A7%A3%E5%86%B3gravatar%E5%A4%B4%E5%83%8F%E8%A2%AB%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242337275.png" alt=""></p>
+<p>2月27日凌晨，我像往常一样打开了自己的博客，来到了留言板，却发现头像无法加载出来。</p>
+<p>原先我以为只是我的网络问题，可没想到gravatar官网都打不开了，这时我意识到不太对劲了，于是打开测速网：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242338698.png" alt=""></p>
+<p>我能说什么呢？反正当时我人麻了😅</p>
+<p>当时也是事发突然，本来也没几个玩wp的朋友，所以当时没有解决的方法。今天尝试百度了一下gravatar，时间限定这一个月，查到了这篇博客，<a href="https://kzyblog.com/5247.html/comment-page-1#comment-3542">完美解决Gravatar头像被墙</a></p>
+<p>抱着尝试的心态试了一下最后一个方法，下载了个WP-China-Yes插件，安装。</p>
+<p>我○，头像又出现了！！！！！！！！！！</p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>wordpress</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>树莓派搭建Mirai QQ机器人</title>
     <url>/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png" alt=""></p>
@@ -3973,42 +4036,6 @@ mcl-installer-72b890d-linux-arm
       <tags>
         <tag>Mirai</tag>
         <tag>树莓派</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决Gravatar头像被墙的问题</title>
-    <url>/2021/03/09/%E8%A7%A3%E5%86%B3gravatar%E5%A4%B4%E5%83%8F%E8%A2%AB%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242337275.png" alt=""></p>
-<p>2月27日凌晨，我像往常一样打开了自己的博客，来到了留言板，却发现头像无法加载出来。</p>
-<p>原先我以为只是我的网络问题，可没想到gravatar官网都打不开了，这时我意识到不太对劲了，于是打开测速网：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242338698.png" alt=""></p>
-<p>我能说什么呢？反正当时我人麻了😅</p>
-<p>当时也是事发突然，本来也没几个玩wp的朋友，所以当时没有解决的方法。今天尝试百度了一下gravatar，时间限定这一个月，查到了这篇博客，<a href="https://kzyblog.com/5247.html/comment-page-1#comment-3542">完美解决Gravatar头像被墙</a></p>
-<p>抱着尝试的心态试了一下最后一个方法，下载了个WP-China-Yes插件，安装。</p>
-<p>我○，头像又出现了！！！！！！！！！！</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>wordpress</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
-    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg" alt=""></p>
-<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
-<pre><code class="lang-shell">apt install open-vm-tools
-apt install open-vm-tools-desktop
-</code></pre>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>Vmware</tag>
       </tags>
   </entry>
   <entry>
@@ -4124,6 +4151,23 @@ if __name__ == &#39;__main__&#39;:
       </tags>
   </entry>
   <entry>
+    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
+    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg" alt=""></p>
+<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
+<pre><code class="lang-shell">apt install open-vm-tools
+apt install open-vm-tools-desktop
+</code></pre>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>Vmware</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记一次文件上传类型渗透</title>
     <url>/2022/05/07/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%B1%BB%E5%9E%8B%E6%B8%97%E9%80%8F/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252151241.jpg" alt=""></p>
@@ -4178,6 +4222,28 @@ if __name__ == &#39;__main__&#39;:
       </tags>
   </entry>
   <entry>
+    <title>青年大学习（江苏）的HTTP请求分析</title>
+    <url>/2022/04/05/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0%EF%BC%88%E6%B1%9F%E8%8B%8F%EF%BC%89%E7%9A%84http%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242318378.png" alt=""></p>
+<h2 id="0x01抓包"><a href="#0x01抓包" class="headerlink" title="0x01抓包"></a>0x01抓包</h2><p>江苏省青年大学习的接口：<a href="https://service.jiangsugqt.org/youth/lesson">https://service.jiangsugqt.org/youth/lesson</a></p>
+<p><strong>确认课程</strong>的接口：<a href="https://service.jiangsugqt.org/youth/lesson/confirm">https://service.jiangsugqt.org/youth/lesson/confirm</a></p>
+<p>微信打开xweb调试界面，打开就行：<a href="http://debugxweb.qq.com/?inspector=true">http://debugxweb.qq.com/?inspector=true</a></p>
+<h2 id="0x02获取cookie"><a href="#0x02获取cookie" class="headerlink" title="0x02获取cookie"></a>0x02获取cookie</h2><p>青年大学习是通过cookie中的laravel_session来获取用户信息的，现在微信早就不支持vconsole了（要是支持我还这么抓包干嘛？），需要手机usb连接电脑，用Google chrome（建议edge浏览器，Google的有些资源加载不出来，或者很慢）的chrome://inspect/#devices里面进行调试</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242319220.png" alt=""></p>
+<h2 id="0x03发送请求"><a href="#0x03发送请求" class="headerlink" title="0x03发送请求"></a>0x03发送请求</h2><p>我们只要发送两个请求，一个是江苏省青年大学习的接口，还有一个是<strong>确认课程</strong>的接口。</p>
+<p>江苏省青年大学习的接口是用于获取课程信息的，里面能解析到下一个接口所需的_token和lesson_id字段</p>
+<p>然后就是发post请求啦</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242320313.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>HTTP</tag>
+        <tag>青年大学习</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>远程桌面（RDP）的迷思</title>
     <url>/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340599.jpg" alt=""></p>
@@ -4218,28 +4284,6 @@ if __name__ == &#39;__main__&#39;:
       </categories>
       <tags>
         <tag>RDP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>青年大学习（江苏）的HTTP请求分析</title>
-    <url>/2022/04/05/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0%EF%BC%88%E6%B1%9F%E8%8B%8F%EF%BC%89%E7%9A%84http%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242318378.png" alt=""></p>
-<h2 id="0x01抓包"><a href="#0x01抓包" class="headerlink" title="0x01抓包"></a>0x01抓包</h2><p>江苏省青年大学习的接口：<a href="https://service.jiangsugqt.org/youth/lesson">https://service.jiangsugqt.org/youth/lesson</a></p>
-<p><strong>确认课程</strong>的接口：<a href="https://service.jiangsugqt.org/youth/lesson/confirm">https://service.jiangsugqt.org/youth/lesson/confirm</a></p>
-<p>微信打开xweb调试界面，打开就行：<a href="http://debugxweb.qq.com/?inspector=true">http://debugxweb.qq.com/?inspector=true</a></p>
-<h2 id="0x02获取cookie"><a href="#0x02获取cookie" class="headerlink" title="0x02获取cookie"></a>0x02获取cookie</h2><p>青年大学习是通过cookie中的laravel_session来获取用户信息的，现在微信早就不支持vconsole了（要是支持我还这么抓包干嘛？），需要手机usb连接电脑，用Google chrome（建议edge浏览器，Google的有些资源加载不出来，或者很慢）的chrome://inspect/#devices里面进行调试</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242319220.png" alt=""></p>
-<h2 id="0x03发送请求"><a href="#0x03发送请求" class="headerlink" title="0x03发送请求"></a>0x03发送请求</h2><p>我们只要发送两个请求，一个是江苏省青年大学习的接口，还有一个是<strong>确认课程</strong>的接口。</p>
-<p>江苏省青年大学习的接口是用于获取课程信息的，里面能解析到下一个接口所需的_token和lesson_id字段</p>
-<p>然后就是发post请求啦</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242320313.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>HTTP</tag>
-        <tag>青年大学习</tag>
       </tags>
   </entry>
 </search>
