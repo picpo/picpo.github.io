@@ -4269,7 +4269,8 @@ screen -S coop
 <p><a href="https://forums.alliedmods.net/showthread.php?t=132408">https://forums.alliedmods.net/showthread.php?t=132408</a></p>
 <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329006.png" alt=""></p>
 <p>好耶！（所以说应该能用了）</p>
-<h2 id="添加管理员"><a href="#添加管理员" class="headerlink" title="添加管理员"></a>添加管理员</h2><p>/addons/sourcemod/configs里找admins_simple.ini</p>
+<h2 id="添加管理员"><a href="#添加管理员" class="headerlink" title="添加管理员"></a>添加管理员</h2><p>在l4d2控制台输入status会出现 “STEAM_1:1:xxxxxxxxx”这一串就是你的Steam UniqueID，复制一下</p>
+<p>/addons/sourcemod/configs里找admins_simple.ini</p>
 <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329116.png" alt=""></p>
 <h2 id="插件推荐"><a href="#插件推荐" class="headerlink" title="插件推荐"></a>插件推荐</h2><h3 id="sourcemod的官方论坛"><a href="#sourcemod的官方论坛" class="headerlink" title="sourcemod的官方论坛"></a>sourcemod的官方论坛</h3><p><a href="http://alliedmods.net">alliedmods.net</a></p>
 <h3 id="电击器修复"><a href="#电击器修复" class="headerlink" title="电击器修复"></a>电击器修复</h3><p>这个是电击器修复，5人及以上的时候不会电起来错误的人</p>
