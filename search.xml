@@ -4337,6 +4337,18 @@ dd if=$SOURCE_DISK bs=4M status=progress | gzip &gt; $TARGET_FILE
 # 检查备份是否成功
 if [ $? -eq 0 ]; then
   echo &quot;备份并压缩成功: $TARGET_FILE&quot;
+
+  # 使用rclone将备份文件移动到远程存储
+  echo &quot;开始将备份文件移动到远程存储...&quot;
+  rclone move $TARGET_FILE backup:/backup -P --no-check-certificate
+
+  # 检查rclone是否成功
+  if [ $? -eq 0 ]; then
+    echo &quot;备份文件移动成功&quot;
+  else
+    echo &quot;备份文件移动失败&quot;
+    exit 1
+  fi
 else
   echo &quot;备份并压缩失败&quot;
   exit 1
