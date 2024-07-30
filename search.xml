@@ -604,6 +604,63 @@ if __name__ == &#39;__main__&#39;:
       </tags>
   </entry>
   <entry>
+    <title>stable-diffusion-webui的食用方法</title>
+    <url>/2022/10/08/stable-diffusion-webui%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252157828.png" alt=""></p>
+<h2 id="0x01-Anaconda安装"><a href="#0x01-Anaconda安装" class="headerlink" title="0x01 Anaconda安装"></a>0x01 Anaconda安装</h2><p>这个没啥好说的，主要是要记住你的安装路径</p>
+<h2 id="0x02-安装CUDA"><a href="#0x02-安装CUDA" class="headerlink" title="0x02 安装CUDA"></a>0x02 安装CUDA</h2><p>到官网：</p>
+<pre><code>https://developer.nvidia.com/cuda-downloads?target_os=Windows&amp;target_arch=x86_64&amp;target_version=10&amp;target_type=exe_local
+</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158948.png" alt=""></p>
+<h2 id="0x03-安装stable-diffusion-webui"><a href="#0x03-安装stable-diffusion-webui" class="headerlink" title="0x03 安装stable-diffusion-webui"></a>0x03 安装stable-diffusion-webui</h2><h3 id="1-sd-webui"><a href="#1-sd-webui" class="headerlink" title="1.sd-webui"></a>1.sd-webui</h3><pre><code>git clone https://github.com/sd-webui/stable-diffusion-webui.git
+</code></pre><p>安装后按他所说的在根目录建立<strong>custom-conda-path.txt</strong>，并写上自己的Anaconda根目录</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158626.png" alt=""></p>
+<p>下载模型文件，放在<strong>\stable-diffusion-webui\models\ldm\stable-diffusion-v1</strong>下</p>
+<p>其实也可以mklink，不过我没试过，因为我的novelaileak文件在下载盘里，下载盘是个远古机械，速度不是很快</p>
+<h3 id="2-另一个更好的web-ui"><a href="#2-另一个更好的web-ui" class="headerlink" title="2.另一个更好的web-ui"></a>2.另一个更好的web-ui</h3><p>这个更好，可以过滤一些negative prompt</p>
+<pre><code>git clone  https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
+</code></pre><p>安装过程过于缓慢，建议先pip安装他的requirements.txt</p>
+<h3 id="3-泄露模型"><a href="#3-泄露模型" class="headerlink" title="3.泄露模型"></a>3.泄露模型</h3><p>我这里用的是novelaileak的，你也可以用其他的</p>
+<pre><code>magnet:?xt=urn:btih:5bde442da86265b670a3e5ea3163afad2c6f8ecc&amp;dn=novelaileak&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2F9.rarbg.com%3A2810%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A6969%2Fannounce&amp;tr=http%3A%2F%2Ftracker.openbittorrent.com%3A80%2Fannounce&amp;tr=udp%3A%2F%2Fopentracker.i2p.rocks%3A6969%2Fannounce
+</code></pre><p>第二版（125G）</p>
+<pre><code>magnet:?xt=urn:btih:a20087e7807f28476dd7b0b2e0174981709d89cd&amp;dn=novelaileakpt2&amp;tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&amp;tr=http%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&amp;tr=https%3a%2f%2ftracker.nanoha.org%3a443%2fannounce
+</code></pre><p>今天流出的新版本，效果更好但是空间占用更大</p>
+<h2 id="0x04-食用"><a href="#0x04-食用" class="headerlink" title="0x04 食用"></a>0x04 食用</h2><p>到根目录，运行一下webui的cmd，会自动安装环境</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
+<p>我的GTX1060 6G生成速度不是很快，我这有块Tesla p4，不知道加上去会不会加快点速度</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
+<p>更多关键词请见：</p>
+<p><a href="https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords">https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords</a></p>
+<p><a href="https://gelbooru.com/index.php?page=tags&amp;s=list">https://gelbooru.com/index.php?page=tags&amp;s=list</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>shell备份脚本</title>
+    <url>/2023/01/13/shell%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301132338163.png" alt=""></p>
+<p>写了个shell的备份脚本，自带删除过早存档的功能。</p>
+<p>本意是为饥荒服务器写的，虽然饥荒自带回档，但是人物数据、token以及mod配置没被备份。</p>
+<pre><code class="lang-shell">#! /bin/bash
+today=`date +%Y%m%d%H%M`
+tar -czvf /mnt/WDC/dst_backup/$today.tar.gz /home/picpo/.klei/DoNotStarveTogether/Cluster_1
+find /mnt/WDC/dst_backup/ -type f -mtime +1 -exec rm -f &#123;&#125; \; #自动删除+1是两天之前的存档
+echo &quot;backup!$today&quot;
+</code></pre>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>shell</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Nekobot开发心得：Silk4j食用笔记</title>
     <url>/2021/10/11/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97%EF%BC%9Asilk4j%E9%A3%9F%E7%94%A8%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252204000.png" alt=""></p>
@@ -688,24 +745,48 @@ getNetImg(mp3str).use &#123;
       </tags>
   </entry>
   <entry>
-    <title>shell备份脚本</title>
-    <url>/2023/01/13/shell%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202301132338163.png" alt=""></p>
-<p>写了个shell的备份脚本，自带删除过早存档的功能。</p>
-<p>本意是为饥荒服务器写的，虽然饥荒自带回档，但是人物数据、token以及mod配置没被备份。</p>
-<pre><code class="lang-shell">#! /bin/bash
-today=`date +%Y%m%d%H%M`
-tar -czvf /mnt/WDC/dst_backup/$today.tar.gz /home/picpo/.klei/DoNotStarveTogether/Cluster_1
-find /mnt/WDC/dst_backup/ -type f -mtime +1 -exec rm -f &#123;&#125; \; #自动删除+1是两天之前的存档
-echo &quot;backup!$today&quot;
-</code></pre>
+    <title>Web网页小项目——天气预报Web页面的踩坑笔记</title>
+    <url>/2021/01/23/web%E7%BD%91%E9%A1%B5%E5%B0%8F%E9%A1%B9%E7%9B%AE%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5web%E9%A1%B5%E9%9D%A2/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252141067.jpg" alt=""></p>
+<p>寒假是个学习和提升技能的好时机，今年寒假我就参加了SAST2020前端组的WOC（Winter Of Code）项目，来借此好时机来锻炼自己的开发能力。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252142254.png" alt=""></p>
+<p>目前第一阶段我是写了一个天气预报Web页面，本以为，不就用ajax调用个api吗，在处理一下数据，调一个好看的式样，不就大功告成了吗？确实，理论上是这么简单，但是实际花了我三天时间，才写出了这么个小小的demo。很多东西根本不是我想象的那么简单的，我是踩一个坑学一些新东西，才做好一个模块的（悲）。</p>
+<h2 id="一、json跨域问题"><a href="#一、json跨域问题" class="headerlink" title="一、json跨域问题"></a>一、json跨域问题</h2><p>第一天就是和这个api斗智斗勇的一天，本来我在网上找到了百度定位api，进展颇为顺利，就是百度api配上谷歌内核的浏览器（比如chrome，qq浏览器），它的具体定位就很不准，而且比较慢，但是定位到城市还是没有问题的。后来要找个天气预报的api，这里选择了心知天气api，选了十五天试用套餐，一共可接入10000次。嘛，我就写个小demo，问题不大，又不是长期用。</p>
+<p>一开始我一直使用的是json调用方式，结果浏览器可以直接访问，但是用到我写的项目里，用jQuery的getJSON（“xxx”）发现获取不到数据。我一直以为自己的js代码哪里出了问题，知道晚上我才发现：json跨域的话，现在的浏览器会自动拦截。</p>
+<h3 id="（一）何为跨域？"><a href="#（一）何为跨域？" class="headerlink" title="（一）何为跨域？"></a>（一）何为跨域？</h3><p><strong>只要协议，端口，域名有一个不同，即为跨域！</strong></p>
+<p>首先，先了解浏览器有一个很重要安全性限制，即为同源策略：不同域的客户端脚本在无明确授权的情况下不能读些对方资源。</p>
+<p>然而，当进行一些api接口调用时，那肯定不可避免地需要进行跨域操作，这时候“同源策略”就显得过于苛刻。</p>
+<h3 id="（二）怎样解决"><a href="#（二）怎样解决" class="headerlink" title="（二）怎样解决"></a>（二）怎样解决</h3><p>我又花了一晚上的时间去百度这个方法那个方法，发现纯前端的话，json是根本行不通的，但我仍不死心，去请教了一下前段组的大仙贝：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143365.jpg" alt=""></p>
+<p>好，这波我死心了，老老实实用jsonp吧（悲）</p>
+<p>好在心知天气本身就有jsonp的调用方式，也有官方的demo。就是比较麻烦，这其中涉及密钥+公钥生成签名验证的机制，我硬着头皮的学习了一下，试着自己搞了一下，最后竟然成功了。好耶耶耶耶耶耶耶耶耶耶！</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143816.jpg" alt=""></p>
+<h2 id="二、Echarts绘制与适配问题"><a href="#二、Echarts绘制与适配问题" class="headerlink" title="二、Echarts绘制与适配问题"></a>二、Echarts绘制与适配问题</h2><p>Echarts是一个使用 JavaScript 实现的开源可视化库，涵盖各行业图表，非常的不错。但是这里还是踩到了两个坑：</p>
+<h3 id="（一）Echarts无法绘制图标"><a href="#（一）Echarts无法绘制图标" class="headerlink" title="（一）Echarts无法绘制图标"></a>（一）Echarts无法绘制图标</h3><p>当我打开网页调试时，控制台传入了如下错误：【Echarts】Uncaught TypeError: Cannot read property ‘getAttribute’ of null</p>
+<p>一开始我还以为是Echarts cdn解析出了错，后来才得知，Echarts是没有找到所要绘制的div，不是说我没有在HTML里写到它，而是js在body生成前就调用了，所以才会出现获取不到属性。解决方法就是把js扔到页脚：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144259.png" alt=""></p>
+<h3 id="（二）Echarts适配问题"><a href="#（二）Echarts适配问题" class="headerlink" title="（二）Echarts适配问题"></a>（二）Echarts适配问题</h3><p>这个就有点麻烦了，当你设置div的width为100%时，愚蠢的Echarts会自动识别为100px，其效果极其鬼畜：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144298.png" alt=""></p>
+<p>那咋办？网上给的方案都是echarts初始化之前再用js获取当前屏幕的大小，然后再给他设置宽度就可以了。而我只接给他设了个90vw的具体长度，问题也能解决（</p>
+<p>总的来说踩了不少的坑，当然也学了不少东西，比如ajax+jquery，bootstrap4的响应式界面搭建，当然啊，调css的过程也是坠痛苦的。</p>
+<p>项目地址：<a href="https://github.com/picpo/weather-demo">https://github.com/picpo/weather-demo</a></p>
+<p>大家可以将里面的key换成自己的玩玩，因为我的次数也估计只剩下6000多次了。</p>
+<ul>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145373.png" alt=""></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145325.png" alt=""></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252146972.png" alt=""></p>
+</li>
+</ul>
 ]]></content>
       <categories>
-        <category>野生技术协会</category>
+        <category>前端</category>
       </categories>
       <tags>
-        <tag>linux</tag>
-        <tag>shell</tag>
+        <tag>ajax</tag>
+        <tag>bootstrap</tag>
+        <tag>jQuery</tag>
       </tags>
   </entry>
   <entry>
@@ -776,87 +857,6 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </categories>
       <tags>
         <tag>PWN</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Web网页小项目——天气预报Web页面的踩坑笔记</title>
-    <url>/2021/01/23/web%E7%BD%91%E9%A1%B5%E5%B0%8F%E9%A1%B9%E7%9B%AE%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5web%E9%A1%B5%E9%9D%A2/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252141067.jpg" alt=""></p>
-<p>寒假是个学习和提升技能的好时机，今年寒假我就参加了SAST2020前端组的WOC（Winter Of Code）项目，来借此好时机来锻炼自己的开发能力。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252142254.png" alt=""></p>
-<p>目前第一阶段我是写了一个天气预报Web页面，本以为，不就用ajax调用个api吗，在处理一下数据，调一个好看的式样，不就大功告成了吗？确实，理论上是这么简单，但是实际花了我三天时间，才写出了这么个小小的demo。很多东西根本不是我想象的那么简单的，我是踩一个坑学一些新东西，才做好一个模块的（悲）。</p>
-<h2 id="一、json跨域问题"><a href="#一、json跨域问题" class="headerlink" title="一、json跨域问题"></a>一、json跨域问题</h2><p>第一天就是和这个api斗智斗勇的一天，本来我在网上找到了百度定位api，进展颇为顺利，就是百度api配上谷歌内核的浏览器（比如chrome，qq浏览器），它的具体定位就很不准，而且比较慢，但是定位到城市还是没有问题的。后来要找个天气预报的api，这里选择了心知天气api，选了十五天试用套餐，一共可接入10000次。嘛，我就写个小demo，问题不大，又不是长期用。</p>
-<p>一开始我一直使用的是json调用方式，结果浏览器可以直接访问，但是用到我写的项目里，用jQuery的getJSON（“xxx”）发现获取不到数据。我一直以为自己的js代码哪里出了问题，知道晚上我才发现：json跨域的话，现在的浏览器会自动拦截。</p>
-<h3 id="（一）何为跨域？"><a href="#（一）何为跨域？" class="headerlink" title="（一）何为跨域？"></a>（一）何为跨域？</h3><p><strong>只要协议，端口，域名有一个不同，即为跨域！</strong></p>
-<p>首先，先了解浏览器有一个很重要安全性限制，即为同源策略：不同域的客户端脚本在无明确授权的情况下不能读些对方资源。</p>
-<p>然而，当进行一些api接口调用时，那肯定不可避免地需要进行跨域操作，这时候“同源策略”就显得过于苛刻。</p>
-<h3 id="（二）怎样解决"><a href="#（二）怎样解决" class="headerlink" title="（二）怎样解决"></a>（二）怎样解决</h3><p>我又花了一晚上的时间去百度这个方法那个方法，发现纯前端的话，json是根本行不通的，但我仍不死心，去请教了一下前段组的大仙贝：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143365.jpg" alt=""></p>
-<p>好，这波我死心了，老老实实用jsonp吧（悲）</p>
-<p>好在心知天气本身就有jsonp的调用方式，也有官方的demo。就是比较麻烦，这其中涉及密钥+公钥生成签名验证的机制，我硬着头皮的学习了一下，试着自己搞了一下，最后竟然成功了。好耶耶耶耶耶耶耶耶耶耶！</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143816.jpg" alt=""></p>
-<h2 id="二、Echarts绘制与适配问题"><a href="#二、Echarts绘制与适配问题" class="headerlink" title="二、Echarts绘制与适配问题"></a>二、Echarts绘制与适配问题</h2><p>Echarts是一个使用 JavaScript 实现的开源可视化库，涵盖各行业图表，非常的不错。但是这里还是踩到了两个坑：</p>
-<h3 id="（一）Echarts无法绘制图标"><a href="#（一）Echarts无法绘制图标" class="headerlink" title="（一）Echarts无法绘制图标"></a>（一）Echarts无法绘制图标</h3><p>当我打开网页调试时，控制台传入了如下错误：【Echarts】Uncaught TypeError: Cannot read property ‘getAttribute’ of null</p>
-<p>一开始我还以为是Echarts cdn解析出了错，后来才得知，Echarts是没有找到所要绘制的div，不是说我没有在HTML里写到它，而是js在body生成前就调用了，所以才会出现获取不到属性。解决方法就是把js扔到页脚：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144259.png" alt=""></p>
-<h3 id="（二）Echarts适配问题"><a href="#（二）Echarts适配问题" class="headerlink" title="（二）Echarts适配问题"></a>（二）Echarts适配问题</h3><p>这个就有点麻烦了，当你设置div的width为100%时，愚蠢的Echarts会自动识别为100px，其效果极其鬼畜：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144298.png" alt=""></p>
-<p>那咋办？网上给的方案都是echarts初始化之前再用js获取当前屏幕的大小，然后再给他设置宽度就可以了。而我只接给他设了个90vw的具体长度，问题也能解决（</p>
-<p>总的来说踩了不少的坑，当然也学了不少东西，比如ajax+jquery，bootstrap4的响应式界面搭建，当然啊，调css的过程也是坠痛苦的。</p>
-<p>项目地址：<a href="https://github.com/picpo/weather-demo">https://github.com/picpo/weather-demo</a></p>
-<p>大家可以将里面的key换成自己的玩玩，因为我的次数也估计只剩下6000多次了。</p>
-<ul>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145373.png" alt=""></p>
-</li>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145325.png" alt=""></p>
-</li>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252146972.png" alt=""></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>ajax</tag>
-        <tag>bootstrap</tag>
-        <tag>jQuery</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>stable-diffusion-webui的食用方法</title>
-    <url>/2022/10/08/stable-diffusion-webui%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252157828.png" alt=""></p>
-<h2 id="0x01-Anaconda安装"><a href="#0x01-Anaconda安装" class="headerlink" title="0x01 Anaconda安装"></a>0x01 Anaconda安装</h2><p>这个没啥好说的，主要是要记住你的安装路径</p>
-<h2 id="0x02-安装CUDA"><a href="#0x02-安装CUDA" class="headerlink" title="0x02 安装CUDA"></a>0x02 安装CUDA</h2><p>到官网：</p>
-<pre><code>https://developer.nvidia.com/cuda-downloads?target_os=Windows&amp;target_arch=x86_64&amp;target_version=10&amp;target_type=exe_local
-</code></pre><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158948.png" alt=""></p>
-<h2 id="0x03-安装stable-diffusion-webui"><a href="#0x03-安装stable-diffusion-webui" class="headerlink" title="0x03 安装stable-diffusion-webui"></a>0x03 安装stable-diffusion-webui</h2><h3 id="1-sd-webui"><a href="#1-sd-webui" class="headerlink" title="1.sd-webui"></a>1.sd-webui</h3><pre><code>git clone https://github.com/sd-webui/stable-diffusion-webui.git
-</code></pre><p>安装后按他所说的在根目录建立<strong>custom-conda-path.txt</strong>，并写上自己的Anaconda根目录</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158626.png" alt=""></p>
-<p>下载模型文件，放在<strong>\stable-diffusion-webui\models\ldm\stable-diffusion-v1</strong>下</p>
-<p>其实也可以mklink，不过我没试过，因为我的novelaileak文件在下载盘里，下载盘是个远古机械，速度不是很快</p>
-<h3 id="2-另一个更好的web-ui"><a href="#2-另一个更好的web-ui" class="headerlink" title="2.另一个更好的web-ui"></a>2.另一个更好的web-ui</h3><p>这个更好，可以过滤一些negative prompt</p>
-<pre><code>git clone  https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
-</code></pre><p>安装过程过于缓慢，建议先pip安装他的requirements.txt</p>
-<h3 id="3-泄露模型"><a href="#3-泄露模型" class="headerlink" title="3.泄露模型"></a>3.泄露模型</h3><p>我这里用的是novelaileak的，你也可以用其他的</p>
-<pre><code>magnet:?xt=urn:btih:5bde442da86265b670a3e5ea3163afad2c6f8ecc&amp;dn=novelaileak&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2F9.rarbg.com%3A2810%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A6969%2Fannounce&amp;tr=http%3A%2F%2Ftracker.openbittorrent.com%3A80%2Fannounce&amp;tr=udp%3A%2F%2Fopentracker.i2p.rocks%3A6969%2Fannounce
-</code></pre><p>第二版（125G）</p>
-<pre><code>magnet:?xt=urn:btih:a20087e7807f28476dd7b0b2e0174981709d89cd&amp;dn=novelaileakpt2&amp;tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&amp;tr=http%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&amp;tr=https%3a%2f%2ftracker.nanoha.org%3a443%2fannounce
-</code></pre><p>今天流出的新版本，效果更好但是空间占用更大</p>
-<h2 id="0x04-食用"><a href="#0x04-食用" class="headerlink" title="0x04 食用"></a>0x04 食用</h2><p>到根目录，运行一下webui的cmd，会自动安装环境</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
-<p>我的GTX1060 6G生成速度不是很快，我这有块Tesla p4，不知道加上去会不会加快点速度</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png" alt=""></p>
-<p>更多关键词请见：</p>
-<p><a href="https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords">https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords</a></p>
-<p><a href="https://gelbooru.com/index.php?page=tags&amp;s=list">https://gelbooru.com/index.php?page=tags&amp;s=list</a></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>AI</tag>
       </tags>
   </entry>
   <entry>
@@ -1342,6 +1342,57 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </tags>
   </entry>
   <entry>
+    <title>右键菜单，用VSCode打开文件和文件夹</title>
+    <url>/2021/06/18/%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%EF%BC%8C%E7%94%A8vscode%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252139401.jpg" alt=""></p>
+<p>由于之前在安装VSCODE的时候，没注意详细阅读提示，而且第一次安装比较随意，只是带着想试一下VSCODE才安装的，所以安装的时候漏了勾选open with code这个非常好用的功能！</p>
+<p>那么我们应该怎么解决这个问题呢？？？<br>看了看网上的方法，分为两种：</p>
+<ul>
+<li>重装VSCODE，重装大法好啊有没有？(不，重装了好多插件要重新装很麻烦的)</li>
+<li>修改注册表(一点都不难，但是要仔细一点)</li>
+</ul>
+<p>重装我就不讲了，谁都会的了吧?</p>
+<p>那么我来讲一下修改注册表</p>
+<p>首先新建一个文本文件。在文本文件中输入以下代码修改注册表，这里要注意一下，<strong>里面的路径要修改为自己电脑里VSCODE的绝对路径，而且注意路径的书写，因为在字符串中，所以注意 \ 的转义</strong></p>
+<pre><code>Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\*\shell\VSCode]
+@=&quot;Open with Code&quot;
+&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
+
+[HKEY_CLASSES_ROOT\*\shell\VSCode\command]
+@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%1\&quot;&quot;
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\shell\VSCode]
+@=&quot;Open with Code&quot;
+&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
+
+[HKEY_CLASSES_ROOT\Directory\shell\VSCode\command]
+@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode]
+@=&quot;Open with Code&quot;
+&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode\command]
+@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
+</code></pre><p>保存文件，随便放在哪里都可以，然后命名为： vsCodeOpenFolder.reg，这里你命名为什么都没关系，但是后缀必须要为 <strong>.reg</strong>最后，双击点开该文件，注册完成！</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252140939.png" alt=""></p>
+<hr>
+<p>参考文章：VSCODE添加open with code功能，实现右键打开文件夹 <a href="https://blog.csdn.net/qq_37810453/article/details/88101745">https://blog.csdn.net/qq_37810453/article/details/88101745</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>VSCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>《信息安全数学基础》求生指南</title>
     <url>/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png" alt=""></p>
@@ -1473,57 +1524,6 @@ payload2=b&#39;a&#39;*(0x50+8)+p64(ret_addr)*2+p64(pop_rdi)+p64(bin_sh_addr)+p64
       </tags>
   </entry>
   <entry>
-    <title>右键菜单，用VSCode打开文件和文件夹</title>
-    <url>/2021/06/18/%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%EF%BC%8C%E7%94%A8vscode%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252139401.jpg" alt=""></p>
-<p>由于之前在安装VSCODE的时候，没注意详细阅读提示，而且第一次安装比较随意，只是带着想试一下VSCODE才安装的，所以安装的时候漏了勾选open with code这个非常好用的功能！</p>
-<p>那么我们应该怎么解决这个问题呢？？？<br>看了看网上的方法，分为两种：</p>
-<ul>
-<li>重装VSCODE，重装大法好啊有没有？(不，重装了好多插件要重新装很麻烦的)</li>
-<li>修改注册表(一点都不难，但是要仔细一点)</li>
-</ul>
-<p>重装我就不讲了，谁都会的了吧?</p>
-<p>那么我来讲一下修改注册表</p>
-<p>首先新建一个文本文件。在文本文件中输入以下代码修改注册表，这里要注意一下，<strong>里面的路径要修改为自己电脑里VSCODE的绝对路径，而且注意路径的书写，因为在字符串中，所以注意 \ 的转义</strong></p>
-<pre><code>Windows Registry Editor Version 5.00
-
-[HKEY_CLASSES_ROOT\*\shell\VSCode]
-@=&quot;Open with Code&quot;
-&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
-
-[HKEY_CLASSES_ROOT\*\shell\VSCode\command]
-@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%1\&quot;&quot;
-
-Windows Registry Editor Version 5.00
-
-[HKEY_CLASSES_ROOT\Directory\shell\VSCode]
-@=&quot;Open with Code&quot;
-&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
-
-[HKEY_CLASSES_ROOT\Directory\shell\VSCode\command]
-@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
-
-Windows Registry Editor Version 5.00
-
-[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode]
-@=&quot;Open with Code&quot;
-&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;
-
-[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode\command]
-@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;
-</code></pre><p>保存文件，随便放在哪里都可以，然后命名为： vsCodeOpenFolder.reg，这里你命名为什么都没关系，但是后缀必须要为 <strong>.reg</strong>最后，双击点开该文件，注册完成！</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252140939.png" alt=""></p>
-<hr>
-<p>参考文章：VSCODE添加open with code功能，实现右键打开文件夹 <a href="https://blog.csdn.net/qq_37810453/article/details/88101745">https://blog.csdn.net/qq_37810453/article/details/88101745</a></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>VSCode</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>在linux平台上搭建求生之路服务器</title>
     <url>/2022/01/18/%E5%9C%A8linux%E5%B9%B3%E5%8F%B0%E4%B8%8A%E6%90%AD%E5%BB%BA%E6%B1%82%E7%94%9F%E4%B9%8B%E8%B7%AF%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242326346.png" alt=""></p>
@@ -1551,20 +1551,22 @@ tar -zxvf steamcmd_linux.tar.gz //解压
 //模式选择
 //sm_cvar mp_gamemode &quot;coop&quot;
 //隐藏服务器
-sv_tags &quot;hidden&quot;
-ads_delay 45
-sv_allow_lobby_connect_only 0
+//sv_tags &quot;hidden&quot;
+//ads_delay 45
+
 //mod一致性检查
 sv_consistency 0
 //正版服务器匹配参数限制
 sv_region 4
 sv_steamgroup &quot;&quot; //第一个组编号数字改成自己的组，其他为热门求生组
-sv_steamgroup_exclusive 1
+sv_steamgroup_exclusive 1//允许什么玩家匹配？(0-公共游戏，1-组内成员，2-仅限好友)
 //人数设置
 sm_cvar sv_maxplayers 8
 sm_cvar sv_visiblemaxplayers 8
 sm_cvar sv_removehumanlimit 1
-sm_cvar sv_force_unreserved 1
+//sm_cvar sv_force_unreserved 1
+//sv_allow_lobby_connect_only 0
+//正版大厅匹配
 sm_cvar fps_max 300
 sm_cvar allow_all_bot_survivor_team 1
 </code></pre><p>对抗模式</p>
@@ -2009,7 +2011,8 @@ screen -S coop
 <p><a href="https://forums.alliedmods.net/showthread.php?t=132408">https://forums.alliedmods.net/showthread.php?t=132408</a></p>
 <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329006.png" alt=""></p>
 <p>好耶！（所以说应该能用了）</p>
-<h2 id="添加管理员"><a href="#添加管理员" class="headerlink" title="添加管理员"></a>添加管理员</h2><p>/addons/sourcemod/configs里找admins_simple.ini</p>
+<h2 id="添加管理员"><a href="#添加管理员" class="headerlink" title="添加管理员"></a>添加管理员</h2><p>在l4d2控制台输入status会出现 “STEAM_1:1:xxxxxxxxx”这一串就是你的Steam UniqueID，复制一下</p>
+<p>/addons/sourcemod/configs里找admins_simple.ini</p>
 <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242329116.png" alt=""></p>
 <h2 id="插件推荐"><a href="#插件推荐" class="headerlink" title="插件推荐"></a>插件推荐</h2><h3 id="sourcemod的官方论坛"><a href="#sourcemod的官方论坛" class="headerlink" title="sourcemod的官方论坛"></a>sourcemod的官方论坛</h3><p><a href="http://alliedmods.net">alliedmods.net</a></p>
 <h3 id="电击器修复"><a href="#电击器修复" class="headerlink" title="电击器修复"></a>电击器修复</h3><p>这个是电击器修复，5人及以上的时候不会电起来错误的人</p>
@@ -2017,7 +2020,6 @@ screen -S coop
 <h3 id="witch惊扰修复"><a href="#witch惊扰修复" class="headerlink" title="witch惊扰修复"></a>witch惊扰修复</h3><p>防止惊扰的witch只会找tab列表里能看到的人等等</p>
 <p><a href="https://forums.alliedmods.net/showthread.php?p=2647014">https://forums.alliedmods.net/showthread.php?p=2647014</a></p>
 <h3 id="榴弹M60正常化"><a href="#榴弹M60正常化" class="headerlink" title="榴弹M60正常化"></a>榴弹M60正常化</h3><p><a href="https://forums.alliedmods.net/showthread.php?p=2694504">https://forums.alliedmods.net/showthread.php?p=2694504</a></p>
-<h3 id="特感血量显示"><a href="#特感血量显示" class="headerlink" title="特感血量显示"></a>特感血量显示</h3><p><a href="https://forums.alliedmods.net/showthread.php?p=2694504">https://forums.alliedmods.net/showthread.php?p=2694504</a></p>
 ]]></content>
       <categories>
         <category>野生技术协会</category>
@@ -3976,25 +3978,6 @@ void MergeSort(List *list)
       </tags>
   </entry>
   <entry>
-    <title>解决Gravatar头像被墙的问题</title>
-    <url>/2021/03/09/%E8%A7%A3%E5%86%B3gravatar%E5%A4%B4%E5%83%8F%E8%A2%AB%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242337275.png" alt=""></p>
-<p>2月27日凌晨，我像往常一样打开了自己的博客，来到了留言板，却发现头像无法加载出来。</p>
-<p>原先我以为只是我的网络问题，可没想到gravatar官网都打不开了，这时我意识到不太对劲了，于是打开测速网：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242338698.png" alt=""></p>
-<p>我能说什么呢？反正当时我人麻了😅</p>
-<p>当时也是事发突然，本来也没几个玩wp的朋友，所以当时没有解决的方法。今天尝试百度了一下gravatar，时间限定这一个月，查到了这篇博客，<a href="https://kzyblog.com/5247.html/comment-page-1#comment-3542">完美解决Gravatar头像被墙</a></p>
-<p>抱着尝试的心态试了一下最后一个方法，下载了个WP-China-Yes插件，安装。</p>
-<p>我○，头像又出现了！！！！！！！！！！</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>wordpress</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>树莓派搭建Mirai QQ机器人</title>
     <url>/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png" alt=""></p>
@@ -4036,6 +4019,42 @@ mcl-installer-72b890d-linux-arm
       <tags>
         <tag>Mirai</tag>
         <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
+    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg" alt=""></p>
+<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
+<pre><code class="lang-shell">apt install open-vm-tools
+apt install open-vm-tools-desktop
+</code></pre>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>Vmware</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决Gravatar头像被墙的问题</title>
+    <url>/2021/03/09/%E8%A7%A3%E5%86%B3gravatar%E5%A4%B4%E5%83%8F%E8%A2%AB%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242337275.png" alt=""></p>
+<p>2月27日凌晨，我像往常一样打开了自己的博客，来到了留言板，却发现头像无法加载出来。</p>
+<p>原先我以为只是我的网络问题，可没想到gravatar官网都打不开了，这时我意识到不太对劲了，于是打开测速网：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242338698.png" alt=""></p>
+<p>我能说什么呢？反正当时我人麻了😅</p>
+<p>当时也是事发突然，本来也没几个玩wp的朋友，所以当时没有解决的方法。今天尝试百度了一下gravatar，时间限定这一个月，查到了这篇博客，<a href="https://kzyblog.com/5247.html/comment-page-1#comment-3542">完美解决Gravatar头像被墙</a></p>
+<p>抱着尝试的心态试了一下最后一个方法，下载了个WP-China-Yes插件，安装。</p>
+<p>我○，头像又出现了！！！！！！！！！！</p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>wordpress</tag>
       </tags>
   </entry>
   <entry>
@@ -4151,23 +4170,6 @@ if __name__ == &#39;__main__&#39;:
       </tags>
   </entry>
   <entry>
-    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
-    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg" alt=""></p>
-<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
-<pre><code class="lang-shell">apt install open-vm-tools
-apt install open-vm-tools-desktop
-</code></pre>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>Vmware</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>记一次文件上传类型渗透</title>
     <url>/2022/05/07/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%B1%BB%E5%9E%8B%E6%B8%97%E9%80%8F/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252151241.jpg" alt=""></p>
@@ -4222,28 +4224,6 @@ apt install open-vm-tools-desktop
       </tags>
   </entry>
   <entry>
-    <title>青年大学习（江苏）的HTTP请求分析</title>
-    <url>/2022/04/05/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0%EF%BC%88%E6%B1%9F%E8%8B%8F%EF%BC%89%E7%9A%84http%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242318378.png" alt=""></p>
-<h2 id="0x01抓包"><a href="#0x01抓包" class="headerlink" title="0x01抓包"></a>0x01抓包</h2><p>江苏省青年大学习的接口：<a href="https://service.jiangsugqt.org/youth/lesson">https://service.jiangsugqt.org/youth/lesson</a></p>
-<p><strong>确认课程</strong>的接口：<a href="https://service.jiangsugqt.org/youth/lesson/confirm">https://service.jiangsugqt.org/youth/lesson/confirm</a></p>
-<p>微信打开xweb调试界面，打开就行：<a href="http://debugxweb.qq.com/?inspector=true">http://debugxweb.qq.com/?inspector=true</a></p>
-<h2 id="0x02获取cookie"><a href="#0x02获取cookie" class="headerlink" title="0x02获取cookie"></a>0x02获取cookie</h2><p>青年大学习是通过cookie中的laravel_session来获取用户信息的，现在微信早就不支持vconsole了（要是支持我还这么抓包干嘛？），需要手机usb连接电脑，用Google chrome（建议edge浏览器，Google的有些资源加载不出来，或者很慢）的chrome://inspect/#devices里面进行调试</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242319220.png" alt=""></p>
-<h2 id="0x03发送请求"><a href="#0x03发送请求" class="headerlink" title="0x03发送请求"></a>0x03发送请求</h2><p>我们只要发送两个请求，一个是江苏省青年大学习的接口，还有一个是<strong>确认课程</strong>的接口。</p>
-<p>江苏省青年大学习的接口是用于获取课程信息的，里面能解析到下一个接口所需的_token和lesson_id字段</p>
-<p>然后就是发post请求啦</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242320313.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>HTTP</tag>
-        <tag>青年大学习</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>远程桌面（RDP）的迷思</title>
     <url>/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340599.jpg" alt=""></p>
@@ -4284,6 +4264,94 @@ apt install open-vm-tools-desktop
       </categories>
       <tags>
         <tag>RDP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>青年大学习（江苏）的HTTP请求分析</title>
+    <url>/2022/04/05/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0%EF%BC%88%E6%B1%9F%E8%8B%8F%EF%BC%89%E7%9A%84http%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242318378.png" alt=""></p>
+<h2 id="0x01抓包"><a href="#0x01抓包" class="headerlink" title="0x01抓包"></a>0x01抓包</h2><p>江苏省青年大学习的接口：<a href="https://service.jiangsugqt.org/youth/lesson">https://service.jiangsugqt.org/youth/lesson</a></p>
+<p><strong>确认课程</strong>的接口：<a href="https://service.jiangsugqt.org/youth/lesson/confirm">https://service.jiangsugqt.org/youth/lesson/confirm</a></p>
+<p>微信打开xweb调试界面，打开就行：<a href="http://debugxweb.qq.com/?inspector=true">http://debugxweb.qq.com/?inspector=true</a></p>
+<h2 id="0x02获取cookie"><a href="#0x02获取cookie" class="headerlink" title="0x02获取cookie"></a>0x02获取cookie</h2><p>青年大学习是通过cookie中的laravel_session来获取用户信息的，现在微信早就不支持vconsole了（要是支持我还这么抓包干嘛？），需要手机usb连接电脑，用Google chrome（建议edge浏览器，Google的有些资源加载不出来，或者很慢）的chrome://inspect/#devices里面进行调试</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242319220.png" alt=""></p>
+<h2 id="0x03发送请求"><a href="#0x03发送请求" class="headerlink" title="0x03发送请求"></a>0x03发送请求</h2><p>我们只要发送两个请求，一个是江苏省青年大学习的接口，还有一个是<strong>确认课程</strong>的接口。</p>
+<p>江苏省青年大学习的接口是用于获取课程信息的，里面能解析到下一个接口所需的_token和lesson_id字段</p>
+<p>然后就是发post请求啦</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242320313.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>HTTP</tag>
+        <tag>青年大学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux全盘备份指南</title>
+    <url>/2024/07/30/Linux%E5%85%A8%E7%9B%98%E5%A4%87%E4%BB%BD%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202407301307619.png" alt=""></p>
+<p>难绷之灵车服务器的系统盘炸了，损失极其惨重，这几天重新装了个Debian系统，想着有必要搞一个全盘备份系统的功能（数据备份真的很重要QAQ）。</p>
+<p>目前用的是dd+alist+rclone，原理就是dd全盘备份+压缩+alist挂载各种云盘+rclone上传到alist的webdav上：</p>
+<pre><code class="lang-shell">#!/bin/bash
+
+# 备份并压缩脚本
+
+# 检查是否具有root权限
+if [ &quot;$EUID&quot; -ne 0 ]; then
+  echo &quot;请使用root权限运行此脚本&quot;
+  exit 1
+fi
+
+# 检查是否传入了源磁盘和目标目录
+if [ $# -ne 2 ]; then
+  echo &quot;使用方法: $0 &lt;源磁盘&gt; &lt;目标目录&gt;&quot;
+  echo &quot;例如: $0 /dev/sda /path/to/backup_directory&quot;
+  exit 1
+fi
+
+SOURCE_DISK=$1
+TARGET_DIR=$2
+
+# 确认源磁盘存在
+if [ ! -b &quot;$SOURCE_DISK&quot; ]; then
+  echo &quot;源磁盘不存在: $SOURCE_DISK&quot;
+  exit 1
+fi
+
+# 确认目标目录存在
+if [ ! -d &quot;$TARGET_DIR&quot; ]; then
+  echo &quot;目标目录不存在: $TARGET_DIR&quot;
+  exit 1
+fi
+
+# 生成目标文件名，使用下划线分割年月日时间
+TIMESTAMP=$(date +&quot;%Y_%m_%d_%H_%M_%S&quot;)
+TARGET_FILE=&quot;$TARGET_DIR/backup_$TIMESTAMP.img.gz&quot;
+
+# 备份磁盘并压缩到目标文件
+echo &quot;开始备份并压缩 $SOURCE_DISK 到 $TARGET_FILE ...&quot;
+dd if=$SOURCE_DISK bs=4M status=progress | gzip &gt; $TARGET_FILE
+
+# 检查备份是否成功
+if [ $? -eq 0 ]; then
+  echo &quot;备份并压缩成功: $TARGET_FILE&quot;
+else
+  echo &quot;备份并压缩失败&quot;
+  exit 1
+fi
+</code></pre>
+<p>保存这个脚本到一个文件中，比如<code>backup_and_compress_with_timestamp.sh</code>，然后给它可执行权限：</p>
+<pre><code>chmod +x backup_and_compress_with_timestamp.sh
+sudo ./backup_and_compress_with_timestamp.sh /dev/sda /path/to/backup_directory
+</code></pre>]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>Debian</tag>
       </tags>
   </entry>
 </search>
