@@ -35,10 +35,10 @@ https://picpo.top/2022/11/14/%E3%80%8A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8
 https://picpo.top/2022/11/06/%E3%80%8A%E6%AF%9B%E6%B3%BD%E4%B8%9C%E6%80%9D%E6%83%B3%E5%92%8C%E4%B8%AD%E5%9B%BD%E7%89%B9%E8%89%B2%E7%A4%BE%E4%BC%9A%E4%B8%BB%E4%B9%89%E7%90%86%E8%AE%BA%E4%BD%93%E7%B3%BB%E6%A6%82%E8%AE%BA%E3%80%8B/
 https://picpo.top/
 https://picpo.top/tags/linux/
-https://picpo.top/tags/Debian/
 https://picpo.top/tags/AFP/
 https://picpo.top/tags/ubuntu/
 https://picpo.top/tags/Time-Machine/
+https://picpo.top/tags/Debian/
 https://picpo.top/tags/Docker/
 https://picpo.top/tags/Flask/
 https://picpo.top/tags/Fastjson/
@@ -49,9 +49,9 @@ https://picpo.top/tags/git/
 https://picpo.top/tags/github/
 https://picpo.top/tags/Java/
 https://picpo.top/tags/Mirai/
-https://picpo.top/tags/shell/
 https://picpo.top/tags/Selenium/
 https://picpo.top/tags/%E7%88%AC%E8%99%AB/
+https://picpo.top/tags/shell/
 https://picpo.top/tags/AI/
 https://picpo.top/tags/PWN/
 https://picpo.top/tags/ajax/
@@ -63,10 +63,10 @@ https://picpo.top/tags/VSCode/
 https://picpo.top/tags/%E6%B1%82%E7%94%9F%E4%B9%8B%E8%B7%AF/
 https://picpo.top/tags/NAS/
 https://picpo.top/tags/%E9%80%9F%E9%80%9A%E6%8C%87%E5%8D%97/
-https://picpo.top/tags/wordpress/
 https://picpo.top/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/
-https://picpo.top/tags/Python/
+https://picpo.top/tags/wordpress/
 https://picpo.top/tags/Vmware/
+https://picpo.top/tags/Python/
 https://picpo.top/tags/PHP/
 https://picpo.top/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/
 https://picpo.top/tags/RDP/
