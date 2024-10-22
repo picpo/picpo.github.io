@@ -4,11 +4,67 @@
   
     
     <entry>
+      <title>服务器更新指南</title>
+      <link href="/2024/10/22/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%8C%87%E5%8D%97/"/>
+      <url>/2024/10/22/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%8C%87%E5%8D%97/</url>
+      
+        <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222307533.png"></p><h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>之前的nas太菜了，MC服务器带不动，功耗也高，正好之前断头+碎显示屏的yoga14c2021已经在家里吃灰一年多了，说实话1135G7就算再菜他也是比4160强，功耗还低，并且多了个电池做内部UPS（</p><h2 id="0x01去头"><a href="#0x01去头" class="headerlink" title="0x01去头"></a>0x01去头</h2><p>屏幕碎了，其原因是转轴寄了（再次奉劝任何想买联想机器的朋友，你即使不怕计划报废买了后也记得延保），必须得把这玩意整下来才方便我后续操作。</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222312531.jpeg"></p><p>我是很想把下图的在机身的转轴铰链搞下来的，但问题是他被主板压着，而主板又是被散热器+模块+电池压着，所以总的来说施工风险很高，也很麻烦，我就直接把屏幕从铰链上拆下来了，所以最后还会留着两边两个小铰链，不过无伤大雅。</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222314862.heic"></p><p>排线也拔了，最后效果还不错，已经是我想要的状态了</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222318762.jpeg"></p><h2 id="0x02系统迁移"><a href="#0x02系统迁移" class="headerlink" title="0x02系统迁移"></a>0x02系统迁移</h2><p>这个本来没啥好说的，主要是被联想bios坑了。我无论是在liveCD里用GParted快速迁移还是dd缓慢迁移，他的BIOS都不认我的盘，查了半天也确实是GPT引导完全没有问题。</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222323308.jpeg"></p><p>搞半天试了一下修复分区就好了，我服了。</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222324164.jpeg"></p><p>新机器的效能还是很不错的，发一下前后对比：</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222329215.png"></p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222330804.png"></p><h2 id="0x03服务恢复"><a href="#0x03服务恢复" class="headerlink" title="0x03服务恢复"></a>0x03服务恢复</h2><p>记录一下恢复服务时踩的坑吧：</p><p>第一个就是桌面的锅了，一开始测试时进的就是桌面，结果MC服务器测试15分钟时断开链接了，一拍脑袋才发现忘记关了15分钟休眠的选项。</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222334301.png"></p><p>第二天早上起来发现service19个failed，问了一下群友这sddm不disable不行。重启之后就没报过错了；而且之前有个核心偶尔会占用100%，内存占用也是一口气吃了8G，我怀疑都是桌面导致的，现在cpu内存占用都很低了。</p><p>第二个坑就是迁移nextcloud和navidrome时发生的了，这两个服务的数据文件都在我的raid1阵列上，但是我现在只有一个硬盘盒，易驱线明天才到。</p><p>我一开始打算在Windows上读取单个盘，但是花了很多时间还失败了（在此之前我尝试连到Mac上，但是无法识别，这也是导致我步入windows上歧途的原因）。随后直接挂载服务器上得了，没想到一下子就读取到了</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222338850.png"></p><p>后面迁移nextcloud服务时出现了读写问题，原因是文件夹owner是www-data，而我sudo cp下直接导致变成了root，解决方法也简单，加个-p就能保留源文件的权限、所有者和时间戳信息。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 野生技术协会 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 服务器 </tag>
+            
+            <tag> Linux </tag>
+            
+            <tag> 运维 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>ARM64（M1版）架构下macOS运行ALAS脚本</title>
       <link href="/2024/10/15/ARM64%EF%BC%88M1%E7%89%88%EF%BC%89%E6%9E%B6%E6%9E%84%E4%B8%8BmacOS%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/"/>
       <url>/2024/10/15/ARM64%EF%BC%88M1%E7%89%88%EF%BC%89%E6%9E%B6%E6%9E%84%E4%B8%8BmacOS%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/</url>
       
         <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152008286.png"></p><h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>首先感谢Github上面MAA以及AzurLaneAutoScript的开发组，让我们有工具可用。再感谢@吕明珠LmeSzinc 、@binss以及chenhuan20123 大佬，他们的教程让我受益良多。</p><h2 id="0x01模拟器"><a href="#0x01模拟器" class="headerlink" title="0x01模拟器"></a>0x01模拟器</h2><p>安卓官方的模拟器能用，安装吧，我也想运行原生游戏安装包，但是alas似乎只能用adb进行一些操作</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/google/android-emulator-m1-preview/releases/download/0.3/android-emulator-m1-preview.dmg</span><br></pre></td></tr></table></figure><p>这个不用下载android studio，非常好（</p><p>安装后不能直接打开，需要提前进入 <code>Android Emulator.app/Contents/MacOS/api30-gphone-arm64-v8a/config.ini</code>这里面进行一些修改（非常抽象的是，如果你运行后再试图进行修改无论如何也是失效的，只能重新安装），以下是一些需要更改的字段</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">硬盘空间：<span class="attr">disk.dataPartition.size</span>=<span class="number">20480</span>M   //我直接加了个<span class="number">0</span>，因为游戏下载所有资源后也差不多这么大</span><br><span class="line">运行内存：<span class="attr">hw.ramSize</span>=<span class="number">4096</span> //我觉得<span class="number">4</span>G够了</span><br><span class="line">DPI：<span class="attr">hw.lcd.density</span>=<span class="number">420</span> //这个不变</span><br><span class="line">显示高度：<span class="attr">hw.lcd.height</span>=<span class="number">720</span></span><br><span class="line">显示宽度：<span class="attr">hw.lcd.width</span>=<span class="number">1280</span></span><br></pre></td></tr></table></figure><p>运行后可能无法直接将游戏安装包拖动到窗口进行安装，说明你缺少adb，可以使用以下命令在macOS安装这些组件</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew install android-platform-tools</span><br><span class="line">//安装成功后可以输入以下命令获取位置</span><br><span class="line">adb version</span><br></pre></td></tr></table></figure><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152022899.png"></p><p>记得到这个界面给模拟器加上adb路径</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152024442.png"></p><h2 id="0x02脚本安装"><a href="#0x02脚本安装" class="headerlink" title="0x02脚本安装"></a>0x02脚本安装</h2><p>先去项目原地址把代码全部git clone下来到某个位置，保留用。</p><p>其次去拉取binss大佬做的镜像<code>binss/azurlaneautoscript:arm64</code>（本质是为了mxnet1.9.0这个东西，你愿意的话也可以自己编译），然后你就可以运行一下容器了：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -e TZ=Asia/Shanghai --volume=你自己放alas的文件夹:/app/AzurLaneAutoScript:rw -p 22267:22267 --name azurlaneautoscript binss/azurlaneautoscript:arm64</span><br></pre></td></tr></table></figure><p>第一次运行时可以运行试试，这个镜像是半年前的，所以里面有些东西确实很正常，你可以在docker桌面端的程序里pip，也可以直接docker exec -it。我看了一下大概缺少了<code>onepush==1.3.0</code>、<code>pydantic==1.10.2</code>、<code>uiautomator2cache==0.3.0.1</code>等这几个。版本号不要照抄，对着requrements.txt文件查；也别一上来就直接安装整个requrements.txt，这会把<a href="https://binsitepublic-10018028.file.myqcloud.com/mxnet-1.9.1-py3-none-any.whl">mxnet-1.9.1</a>顶掉为1.6.0，相当于镜像白装了。</p><h2 id="0x03使用"><a href="#0x03使用" class="headerlink" title="0x03使用"></a>0x03使用</h2><p>经过几次重启容器，这次大概率可以正常使用了：serial设置为<code>host.docker.internal:5555</code>，截图方案和点击方案我都是ADB。打开webUI后可以测试一下，看看有没有问题。</p><p>有人推荐点击方案是Hermit，但我这偶尔出问题后会自动转为另一个根本不可用的方案，我无语了，目前切换为ADB一点问题都没，后面出了状况再说吧。</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152051428.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 野生技术协会 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> macOS </tag>
+            
+            <tag> 碧蓝航线 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ARM64（M1版）架构下macOS运行ALAS脚本</title>
+      <link href="/2024/10/15/MacOS%E4%B8%8B%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/"/>
+      <url>/2024/10/15/MacOS%E4%B8%8B%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/</url>
+      
+        <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152008286.png"></p><h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>首先感谢Github上面MAA以及AzurLaneAutoScript的开发组，让我们有工具可用。再感谢@吕明珠LmeSzinc 、@binss以及chenhuan20123 大佬，他们的教程让我受益良多。</p>]]></content>
       
       
       <categories>
