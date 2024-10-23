@@ -2513,6 +2513,9 @@
 <p>我一开始打算在Windows上读取单个盘，但是花了很多时间还失败了（在此之前我尝试连到Mac上，但是无法识别，这也是导致我步入windows上歧途的原因）。随后直接挂载服务器上得了，没想到一下子就读取到了</p>
 <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222338850.png"></p>
 <p>后面迁移nextcloud服务时出现了读写问题，原因是文件夹owner是www-data，而我sudo cp下直接导致变成了root，解决方法也简单，加个-p就能保留源文件的权限、所有者和时间戳信息。</p>
+<h2 id="0x04硬件堆放"><a href="#0x04硬件堆放" class="headerlink" title="0x04硬件堆放"></a>0x04硬件堆放</h2><p>硬盘这块，买的是亚克力板子+泡沫海绵垫，用的是易驱线+12V3A圆口电源。</p>
+<p><strong><u>注意！这并不是一个很好的方案，可能会导致硬盘升天数据丢失，请勿模仿。</u></strong></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410231203826.jpeg"></p>
 ]]></content>
       <categories>
         <category>野生技术协会</category>
