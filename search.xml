@@ -2474,20 +2474,6 @@
       </tags>
   </entry>
   <entry>
-    <title>ARM64（M1版）架构下macOS运行ALAS脚本</title>
-    <url>/2024/10/15/MacOS%E4%B8%8B%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152008286.png"></p>
-<h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>首先感谢Github上面MAA以及AzurLaneAutoScript的开发组，让我们有工具可用。再感谢@吕明珠LmeSzinc 、@binss以及chenhuan20123 大佬，他们的教程让我受益良多。</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>macOS</tag>
-        <tag>碧蓝航线</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>服务器更新指南</title>
     <url>/2024/10/22/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%8C%87%E5%8D%97/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222307533.png"></p>
@@ -2516,6 +2502,10 @@
 <h2 id="0x04硬件堆放"><a href="#0x04硬件堆放" class="headerlink" title="0x04硬件堆放"></a>0x04硬件堆放</h2><p>硬盘这块，买的是亚克力板子+泡沫海绵垫，用的是易驱线+12V3A圆口电源。</p>
 <p><strong><u>注意！这并不是一个很好的方案，可能会导致硬盘升天数据丢失，请勿模仿。</u></strong></p>
 <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410231203826.jpeg"></p>
+<p>另外一开始买的是USB2.0，收货后发现的问题是USB2.0只能驱动2TB以下的硬盘，很神奇。USB2.0很便宜一根几块钱，但是3.0就很贵了得25元。</p>
+<p>装的过程中还遇到了电源大小问题，如图所见这个玩意插上去后会导致相邻的插座无法插任何东西，好在旁边还有个拖线板，可以把电脑的电源插到那块儿去。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410251830644.png"></p>
+<p>好了之后测试了一下，发现速度不敢恭维，只有30-50MB&#x2F;s，不如以前插在SATA线块。但是这也没办法，另外同样有群友也有类似的问题，也是在Linux下限速但是Windows就正常了。不过这些都是小问题，总之我觉得这一套下来功耗和性能都有加强，只是灵车程度也比之前灵车多了，或许过段时间我会整篇新文章来说说翻车后抢救过程（bushi</p>
 ]]></content>
       <categories>
         <category>野生技术协会</category>
