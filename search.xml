@@ -2506,6 +2506,11 @@
 <p>装的过程中还遇到了电源大小问题，如图所见这个玩意插上去后会导致相邻的插座无法插任何东西，好在旁边还有个拖线板，可以把电脑的电源插到那块儿去。</p>
 <p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410251830644.png"></p>
 <p>好了之后测试了一下，发现速度不敢恭维，只有30-50MB&#x2F;s，不如以前插在SATA线快。但是这也没办法，另外同样有群友也有类似的问题，也是在Linux下限速但是Windows就正常了。不过这些都是小问题，总之我觉得这一套下来功耗和性能都有加强，只是灵车程度也比之前灵车多了，或许过段时间我会整篇新文章来说说翻车后抢救过程（bushi</p>
+<h2 id="0x05-已老实"><a href="#0x05-已老实" class="headerlink" title="0x05 已老实"></a>0x05 已老实</h2><p>昨天的我：先相信</p>
+<p>今天的我：已投降</p>
+<p>先说原因：第一点是易驱线质量很差，4T的盘没问题，8T的盘隔一会儿就会掉盘；其次是Linux下使用外接HDD速度奇慢，我和身边的朋友以及网络上都有同样的案例，同样的外接硬盘在Windows上能跑满速度，但是接在Linux上只有30MB&#x2F;s，跑不到lsusb里5Gbps的USB3.0协议（当然这个问题出现的人很多，也有朋友没有这个问题，这个我就不得而知了）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271504160.png"></p>
+<p>现在换成sata了，速度正常了，那么老机器就用来刷pt了。</p>
 ]]></content>
       <categories>
         <category>野生技术协会</category>
