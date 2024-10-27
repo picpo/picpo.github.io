@@ -6,7 +6,7 @@
   <link href="https://picpo.top/atom.xml" rel="self"/>
   
   <link href="https://picpo.top/"/>
-  <updated>2024-10-27T07:11:01.498Z</updated>
+  <updated>2024-10-27T09:06:26.344Z</updated>
   <id>https://picpo.top/</id>
   
   <author>
@@ -15,6 +15,48 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux下的crazydiskinfo</title>
+    <link href="https://picpo.top/2024/10/27/linux%E4%B8%8B%E7%9A%84crazydiskinfo/"/>
+    <id>https://picpo.top/2024/10/27/linux%E4%B8%8B%E7%9A%84crazydiskinfo/</id>
+    <published>2024-10-27T09:00:23.000Z</published>
+    <updated>2024-10-27T09:06:26.344Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271701465.jpg"></p><p>CrazyDiskInfo是一款用于Unix类系统的交互式TUI S.M.A.R.T查看器，可以查看硬盘健康情况，是否有坏扇区等。</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271705139.png"></p><p>然而国内的教程太垃圾了，多少年前的还在互相抄，抄来抄去的还只有自己编译这条路。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/otakuto/crazydiskinfo</span><br></pre></td></tr></table></figure><p>本文并不反对你去源码编译，只作为存档记录一下获取安装包的方法。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ftp.debian.org/debian/pool/main/c/crazydiskinfo/</span><br></pre></td></tr></table></figure><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271705493.png"></p>]]></content>
+    
+    
+    <summary type="html">CrazyDiskInfo是一款用于Unix类系统的交互式TUI S.M.A.R.T查看器，可以查看硬盘健康情况，是否有坏扇区等。
+
+
+
+然而国内的教程太垃圾了，多少年前的还在互相抄，抄来抄去的还只有自己编译这条路。
+
+1
+
+
+https://github.com/otakuto/crazydiskinfo
+
+
+本文并不反对你去源码编译，只作为存档记录一下获取安装包的方法。
+
+1
+
+
+https://ftp.debian.org/debian/pool/main/c/crazydiskinfo/</summary>
+    
+    
+    
+    <category term="野生技术协会" scheme="https://picpo.top/categories/%E9%87%8E%E7%94%9F%E6%8A%80%E6%9C%AF%E5%8D%8F%E4%BC%9A/"/>
+    
+    
+    <category term="服务器" scheme="https://picpo.top/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+    <category term="Linux" scheme="https://picpo.top/tags/Linux/"/>
+    
+    <category term="运维" scheme="https://picpo.top/tags/%E8%BF%90%E7%BB%B4/"/>
+    
+  </entry>
   
   <entry>
     <title>服务器更新指南</title>
@@ -801,44 +843,6 @@ t</summary>
 意义
 
 </summary>
-    
-    
-    
-    <category term="我爱学习" scheme="https://picpo.top/categories/%E6%88%91%E7%88%B1%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-    <category term="求生指南" scheme="https://picpo.top/tags/%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《信息安全数学基础》求生指南</title>
-    <link href="https://picpo.top/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/"/>
-    <id>https://picpo.top/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</id>
-    <published>2022-01-01T11:48:18.000Z</published>
-    <updated>2022-12-28T12:08:20.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png"></p><h2 id="感受"><a href="#感受" class="headerlink" title="感受"></a>感受</h2><p>先说感受，还就是那个崭新出厂，所以考试前三天才开始学非常痛苦，因为这书真的看不下去</p><p>数论部分概念比较简单，但是涉及的计算很多，学到原根解方程那块才知道很多难的点考试是不会考的</p><p>抽代部分看书已经看不懂了，建议配合哈工大的网课食用基础概念，考试会考多项式环那块的简单证明和简单计算，其他就是证明了</p><p>那那么多证明我哪知道考哪些？会有透题的，或许是自己老师，或许是别的老师，总之保持消息畅通</p><p>最后综测80，3.0，算是很满意的成绩了，虽然考试期间有两道计算题我铸币了，算错了好几次最后还是放弃了。</p><h2 id="第一章-整数的可除性"><a href="#第一章-整数的可除性" class="headerlink" title="第一章 整数的可除性"></a>第一章 整数的可除性</h2><p>欧几里得除法</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-1c5b8f5bc3f4f9b7.png"></p><h3 id="最大公因数"><a href="#最大公因数" class="headerlink" title="最大公因数"></a>最大公因数</h3><p>所有公因数中最大的那个整数，记作 ( a1，…，an )</p><h3 id="最小公倍数"><a href="#最小公倍数" class="headerlink" title="最小公倍数"></a>最小公倍数</h3><p>所有公倍数中最小的那个正整数，记作 [ a1，…，an ]</p><h3 id="整除的进一步性质"><a href="#整除的进一步性质" class="headerlink" title="整除的进一步性质"></a>整除的进一步性质</h3><p>① 若 c ab、(a，c) &#x3D; 1，则 c b<br>② 若 p 是素数，p ab，则 p a 或 p b<br>③ 若 a₁，a₂，…，an 是 D 的公倍数，则 D [ a1，…，an ]</p><h3 id="真因数"><a href="#真因数" class="headerlink" title="真因数"></a>真因数</h3><p>不包括这个数本身的所有因数，例如 6 的真因数是 1、2、3</p><h3 id="整数分解定理"><a href="#整数分解定理" class="headerlink" title="整数分解定理"></a>整数分解定理</h3><p>若 n a² - b²，n 不整除 a+b、a-b</p><p>则 (n，a+b)、(n，a-b) 是 n 的真因数</p><h3 id="π-x"><a href="#π-x" class="headerlink" title="π (x)"></a>π (x)</h3><p>表示不超过 x 的素数个数，例如 π (2) &#x3D; 1，π (10) &#x3D; 4</p><p>素数定理</p><p>lim(x-&gt;∞) π(x) &#x2F; x &#x2F; lnx &#x3D; 1</p><h2 id="第二章-同余"><a href="#第二章-同余" class="headerlink" title="第二章 同余"></a>第二章 同余</h2><h3 id="同余"><a href="#同余" class="headerlink" title="同余"></a>同余</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-4b4af8c1d3aec647.png"></p><h3 id="剩余类"><a href="#剩余类" class="headerlink" title="剩余类"></a>剩余类</h3><p>Ca &#x3D; { c c∈Z，c ≡ a (mod m) }</p><p>Ca 叫做模 m 的剩余类，c 叫做该类的剩余</p><h3 id="完全剩余系"><a href="#完全剩余系" class="headerlink" title="完全剩余系"></a>完全剩余系</h3><p>r0，r1，… ，rm-1 是模 m 的完全剩余系充要条件：r 的模 m 两两不同余</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-1.png"></p><h3 id="两个模的完全剩余系"><a href="#两个模的完全剩余系" class="headerlink" title="两个模的完全剩余系"></a>两个模的完全剩余系</h3><p>(m1, m2) &#x3D; 1，若 k1、k2 遍历模 m1、m2 的完全剩余系</p><p>则 k1·m2 + k2·m1 也遍历模 m1、m2 的完全剩余系</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-1.png"></p><h3 id="多个模的完全剩余系"><a href="#多个模的完全剩余系" class="headerlink" title="多个模的完全剩余系"></a>多个模的完全剩余系</h3><p>(m1, … , mx) &#x3D; 1，若 ki 遍历模 mi 的完全剩余系</p><p>则 k1(m2m3…mx) + k2(m1m3…mx) + … + kx(m1m2…mx-1) 也遍历模 mi 的完全剩余系</p><h3 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h3><p>整数 1, 2, … , m-1 中与 m 互素的个数叫做欧拉函数，记作：φ(m)</p><p>例如：m &#x3D; 10，则 1, 3, 7, 9 与 10 互素，φ(m) &#x3D; 4</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-3.png"></p><h3 id="欧拉函数性质"><a href="#欧拉函数性质" class="headerlink" title="欧拉函数性质"></a>欧拉函数性质</h3><p>φ(mn) &#x3D; φ(m) φ(n)</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-4.png"></p><p>若 p、q 是素数，则 φ(pq) &#x3D; pq - p - q + 1</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-5.png"></p><p>若 m &#x3D; p1^α1 … pk^αk</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-6.png"></p><p>也就是</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-7.png"></p><h3 id="简化剩余系"><a href="#简化剩余系" class="headerlink" title="简化剩余系"></a>简化剩余系</h3><p>和剩余系概念差不多，但是得<strong>和m互素</strong>，也就是 φ (x)的具体值</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-8.png"></p><h3 id="两个模的简化剩余系"><a href="#两个模的简化剩余系" class="headerlink" title="两个模的简化剩余系"></a>两个模的简化剩余系</h3><p>(m1, m2) &#x3D; 1，若 k1、k2 遍历模 m1、m2 的简化剩余系</p><p>则 k1·m2 + k2·m1 也遍历模 m1、m2 的简化剩余系</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-9.png"></p><h3 id="欧拉定理，费马小定理，Wilson-定理"><a href="#欧拉定理，费马小定理，Wilson-定理" class="headerlink" title="欧拉定理，费马小定理，Wilson 定理"></a>欧拉定理，费马小定理，Wilson 定理</h3><p>欧拉定理</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-10.png"></p><p>费马小定理</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-11.png"></p><p>也就是说 a^(p-1)≡1(mod p)</p><p>Wilson 定理</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-12.png"></p><h3 id="模模重复平方计算法"><a href="#模模重复平方计算法" class="headerlink" title="模模重复平方计算法"></a>模模重复平方计算法</h3><p>先拆解指数，a&#x3D;1</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-13.png"></p><p>b不停的平方运算，a根据01进行相乘</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-14.png"></p><h2 id="第三章-同余式"><a href="#第三章-同余式" class="headerlink" title="第三章 同余式"></a>第三章 同余式</h2><h3 id="一次同余式求解"><a href="#一次同余式求解" class="headerlink" title="一次同余式求解"></a>一次同余式求解</h3><p>例题</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-16.png"></p><p>解的个数k</p><h3 id="中国剩余定理"><a href="#中国剩余定理" class="headerlink" title="中国剩余定理"></a>中国剩余定理</h3><p>通式</p><p>对方程组</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-17.png"></p><p>求M</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-18.png"></p><p>根据MM‘ ≡1(mod m) 求M’</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-19.png"></p><p>例题</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-42dcdb0faf2b942e.png"></p><h3 id="中国剩余定理的应用"><a href="#中国剩余定理的应用" class="headerlink" title="中国剩余定理的应用"></a>中国剩余定理的应用</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-fd544bdbcc16e431.png"></p><h3 id="高次同余式的解数和解法"><a href="#高次同余式的解数和解法" class="headerlink" title="高次同余式的解数和解法"></a>高次同余式的解数和解法</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-20.png"></p><p>至于解法，特几把烦人，我也没上过课所以不知道课上有没有讲，但好像考纲不考</p><p>高次同余式的提升属于是学了就会会了又忘，逆天😭😭😭</p><h3 id="素数模的同余式"><a href="#素数模的同余式" class="headerlink" title="素数模的同余式"></a>素数模的同余式</h3><p>素数模同余式的简化</p><p>先化简</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-21.png"></p><p>然后直接验算就行</p><p>例题</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-22.png"></p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-23.png"></p><p>同余式的解数不超过他的次数</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-24.png"></p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-25.png"></p><p>需要将多项式变成首1</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-26.png"></p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-27.png"></p><h2 id="第四章-二次同余式，平方剩余"><a href="#第四章-二次同余式，平方剩余" class="headerlink" title="第四章 二次同余式，平方剩余"></a>第四章 二次同余式，平方剩余</h2><h3 id="一般二次同余式"><a href="#一般二次同余式" class="headerlink" title="一般二次同余式"></a>一般二次同余式</h3><p>x ² ≡ a (mod m) ，(a , m) &#x3D; 1</p><p>若同余式有解，则 a 叫做模 m 的平方剩余，否则 a 叫做模 m 的平方非剩余</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-28.png"></p><h3 id="模为奇素数"><a href="#模为奇素数" class="headerlink" title="模为奇素数"></a>模为奇素数</h3><p>x ² ≡ a (mod p) ，(a , p) &#x3D; 1 ，p 是奇素数</p><p>判别条件</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-29.png"></p><p>并且</p><p>(a1 , p) &#x3D; 1 ，(a2 , p) &#x3D; 1 ，p 是奇素数<br>① 若 a1 是模 p 的平方剩余、a2 是模 p 的平方剩余，则 a1 · a2 是模 p 的平方剩余<br>② 若 a1 是模 p 的平方剩余、a2 是模 p 的平方非剩余，则 a1 · a2 是模 p 的平方非剩余<br>③ 若 a1 是模 p 的平方非剩余、a2 是模 p 的平方非剩余，则 a1 · a2 是模 p 的平方剩余</p><h3 id="勒让德符号"><a href="#勒让德符号" class="headerlink" title="勒让德符号"></a>勒让德符号</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-31.png"></p><p>p为奇素数时</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-32.png"></p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-33.png"></p><p>对于a&#x3D;&#x3D;2</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-34.png"></p><p>对于a!&#x3D;2，可以用二次互反律和周期性</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-35.png"></p><p>例题</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-36.png"></p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-37.png"></p><h3 id="雅可比符号"><a href="#雅可比符号" class="headerlink" title="雅可比符号"></a>雅可比符号</h3><p>当m为合数时</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-38.png"></p><p>引理</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-39.png"></p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-40.png"></p><h3 id="模平方根"><a href="#模平方根" class="headerlink" title="模平方根"></a>模平方根</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-41.png"></p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-42.png"></p><p>剩下的白兰咯~</p><h2 id="第五章-原根，指标"><a href="#第五章-原根，指标" class="headerlink" title="第五章 原根，指标"></a>第五章 原根，指标</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-43.png"></p><p>若 (a,m) &#x3D; 1，e 是满足 a^e ≡ 1 (mod m) 的最小正整数<br>则 e 叫 a 对模 m 的指数，记作 ordm (a)<br>若 ordm (a) &#x3D; φ(m)，则 a 叫模 m 的原根</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-44.png"></p><h3 id="指数性质"><a href="#指数性质" class="headerlink" title="指数性质"></a>指数性质</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-44.png"></p><h3 id="指数构造"><a href="#指数构造" class="headerlink" title="指数构造"></a>指数构造</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-a533c22c7fe0b427.png"></p><h3 id="原根"><a href="#原根" class="headerlink" title="原根"></a>原根</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-de5a4e15e741a962.png"></p><h3 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h3><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-29e78ea361a2f365.png"></p><p>例题</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-45.png"></p><h2 id="第八章-群"><a href="#第八章-群" class="headerlink" title="第八章 群"></a>第八章 群</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/21107801-35ca3a779c250841.png"></p>]]></content>
-    
-    
-    <summary type="html">感受
-先说感受，还就是那个崭新出厂，所以考试前三天才开始学非常痛苦，因为这书真的看不下去
-
-数论部分概念比较简单，但是涉及的计算很多，学到原根解方程那块才知道很多难的点考试是不会考的
-
-抽代部分看书已经看不懂了，建议配合哈工大的网课食用基础概念，考试会考多项式环那块的简单证明和简单计算，其他就是证明了
-
-那那么多证明我哪知道考哪些？会有透题的，或许是自己老师，或许是别的老师，总之保持消息畅通
-
-最后综测80，3.0，算是很满意的成绩了，虽然考试期间有两道计算题我铸币了，算错了好几次最后还是放弃了。
-
-第一章 整数的可除性
-欧几里得除法
-
-
-
-最大公因数
-所有公因数中最大的那个整数，记作 ( a</summary>
     
     
     
