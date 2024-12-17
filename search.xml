@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Linux全盘备份指南</title>
-    <url>/2024/07/30/Linux%E5%85%A8%E7%9B%98%E5%A4%87%E4%BB%BD%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202407301307619.png"></p>
-<p>难绷之灵车服务器的系统盘炸了，损失极其惨重，这几天重新装了个Debian系统，想着有必要搞一个全盘备份系统的功能（数据备份真的很重要QAQ）。</p>
-<p>目前用的是dd+alist+rclone，原理就是dd全盘备份+压缩+alist挂载各种云盘+rclone上传到alist的webdav上：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">备份并压缩脚本</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查是否具有root权限</span></span><br><span class="line">if [ &quot;$EUID&quot; -ne 0 ]; then</span><br><span class="line">  echo &quot;请使用root权限运行此脚本&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查是否传入了源磁盘和目标目录</span></span><br><span class="line">if [ $# -ne 2 ]; then</span><br><span class="line">  echo &quot;使用方法: $0 &lt;源磁盘&gt; &lt;目标目录&gt;&quot;</span><br><span class="line">  echo &quot;例如: $0 /dev/sda /path/to/backup_directory&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">SOURCE_DISK=$1</span><br><span class="line">TARGET_DIR=$2</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">确认源磁盘存在</span></span><br><span class="line">if [ ! -b &quot;$SOURCE_DISK&quot; ]; then</span><br><span class="line">  echo &quot;源磁盘不存在: $SOURCE_DISK&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">确认目标目录存在</span></span><br><span class="line">if [ ! -d &quot;$TARGET_DIR&quot; ]; then</span><br><span class="line">  echo &quot;目标目录不存在: $TARGET_DIR&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">生成目标文件名，使用下划线分割年月日时间</span></span><br><span class="line">TIMESTAMP=$(date +&quot;%Y_%m_%d_%H_%M_%S&quot;)</span><br><span class="line">TARGET_FILE=&quot;$TARGET_DIR/backup_$TIMESTAMP.img.gz&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">备份磁盘并压缩到目标文件</span></span><br><span class="line">echo &quot;开始备份并压缩 $SOURCE_DISK 到 $TARGET_FILE ...&quot;</span><br><span class="line">dd if=$SOURCE_DISK bs=4M status=progress | gzip &gt; $TARGET_FILE</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查备份是否成功</span></span><br><span class="line">if [ $? -eq 0 ]; then</span><br><span class="line">  echo &quot;备份并压缩成功: $TARGET_FILE&quot;</span><br><span class="line">  </span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">使用rclone将备份文件移动到远程存储</span></span><br><span class="line">  echo &quot;开始将备份文件移动到远程存储...&quot;</span><br><span class="line">  rclone move $TARGET_FILE backup:/backup -P --no-check-certificate</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">检查rclone是否成功</span></span><br><span class="line">  if [ $? -eq 0 ]; then</span><br><span class="line">    echo &quot;备份文件移动成功&quot;</span><br><span class="line">  else</span><br><span class="line">    echo &quot;备份文件移动失败&quot;</span><br><span class="line">    exit 1</span><br><span class="line">  fi</span><br><span class="line">else</span><br><span class="line">  echo &quot;备份并压缩失败&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>保存这个脚本到一个文件中，比如<code>backup_and_compress_with_timestamp.sh</code>，然后给它可执行权限：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chmod +x backup_and_compress_with_timestamp.sh</span><br><span class="line">sudo ./backup_and_compress_with_timestamp.sh /dev/sda /path/to/backup_directory</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202407301332892.png"></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>Debian</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>AFP与Time Machine</title>
     <url>/2023/05/01/AFP%E4%B8%8ETime%20Machine/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/20230501204251.png"></p>
@@ -46,6 +25,64 @@
         <tag>AFP</tag>
         <tag>ubuntu</tag>
         <tag>Time Machine</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ARM64（M1版）架构下macOS运行ALAS脚本</title>
+    <url>/2024/10/15/ARM64%EF%BC%88M1%E7%89%88%EF%BC%89%E6%9E%B6%E6%9E%84%E4%B8%8BmacOS%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152008286.png"></p>
+<h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>首先感谢Github上面MAA以及AzurLaneAutoScript的开发组，让我们有工具可用。再感谢@吕明珠LmeSzinc 、@binss以及chenhuan20123 大佬，他们的教程让我受益良多。</p>
+<h2 id="0x01模拟器"><a href="#0x01模拟器" class="headerlink" title="0x01模拟器"></a>0x01模拟器</h2><p>安卓官方的模拟器能用，安装吧，我也想运行原生游戏安装包，但是alas似乎只能用adb进行一些操作</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://github.com/google/android-emulator-m1-preview/releases/download/0.3/android-emulator-m1-preview.dmg</span><br></pre></td></tr></table></figure>
+
+<p>这个不用下载android studio，非常好（</p>
+<p>安装后不能直接打开，需要提前进入 <code>Android Emulator.app/Contents/MacOS/api30-gphone-arm64-v8a/config.ini</code>这里面进行一些修改（非常抽象的是，如果你运行后再试图进行修改无论如何也是失效的，只能重新安装），以下是一些需要更改的字段</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line">硬盘空间：<span class="attr">disk.dataPartition.size</span>=<span class="number">20480</span>M   //我直接加了个<span class="number">0</span>，因为游戏下载所有资源后也差不多这么大</span><br><span class="line">运行内存：<span class="attr">hw.ramSize</span>=<span class="number">4096</span> //我觉得<span class="number">4</span>G够了</span><br><span class="line">DPI：<span class="attr">hw.lcd.density</span>=<span class="number">420</span> //这个不变</span><br><span class="line">显示高度：<span class="attr">hw.lcd.height</span>=<span class="number">720</span></span><br><span class="line">显示宽度：<span class="attr">hw.lcd.width</span>=<span class="number">1280</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>运行后可能无法直接将游戏安装包拖动到窗口进行安装，说明你缺少adb，可以使用以下命令在macOS安装这些组件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">brew install android-platform-tools</span><br><span class="line">//安装成功后可以输入以下命令获取位置</span><br><span class="line">adb version</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152022899.png"></p>
+<p>记得到这个界面给模拟器加上adb路径</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152024442.png"></p>
+<h2 id="0x02脚本安装"><a href="#0x02脚本安装" class="headerlink" title="0x02脚本安装"></a>0x02脚本安装</h2><p>先去项目原地址把代码全部git clone下来到某个位置，保留用。</p>
+<p>其次去拉取binss大佬做的镜像<code>binss/azurlaneautoscript:arm64</code>（本质是为了mxnet1.9.0这个东西，你愿意的话也可以自己编译），然后你就可以运行一下容器了：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it -e TZ=Asia/Shanghai --volume=你自己放alas的文件夹:/app/AzurLaneAutoScript:rw -p 22267:22267 --name azurlaneautoscript binss/azurlaneautoscript:arm64</span><br></pre></td></tr></table></figure>
+
+<p>第一次运行时可以运行试试，这个镜像是半年前的，所以里面有些东西确实很正常，你可以在docker桌面端的程序里pip，也可以直接docker exec -it。我看了一下大概缺少了<code>onepush==1.3.0</code>、<code>pydantic==1.10.2</code>、<code>uiautomator2cache==0.3.0.1</code>等这几个。版本号不要照抄，对着requrements.txt文件查；也别一上来就直接安装整个requrements.txt，这会把<a href="https://binsitepublic-10018028.file.myqcloud.com/mxnet-1.9.1-py3-none-any.whl">mxnet-1.9.1</a>顶掉为1.6.0，相当于镜像白装了。</p>
+<h2 id="0x03使用"><a href="#0x03使用" class="headerlink" title="0x03使用"></a>0x03使用</h2><p>经过几次重启容器，这次大概率可以正常使用了：serial设置为<code>host.docker.internal:5555</code>，截图方案和点击方案我都是ADB。打开webUI后可以测试一下，看看有没有问题。</p>
+<p>有人推荐点击方案是Hermit，但我这偶尔出问题后会自动转为另一个根本不可用的方案，我无语了，目前切换为ADB一点问题都没，后面出了状况再说吧。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152051428.png"></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>macOS</tag>
+        <tag>碧蓝航线</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux全盘备份指南</title>
+    <url>/2024/07/30/Linux%E5%85%A8%E7%9B%98%E5%A4%87%E4%BB%BD%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202407301307619.png"></p>
+<p>难绷之灵车服务器的系统盘炸了，损失极其惨重，这几天重新装了个Debian系统，想着有必要搞一个全盘备份系统的功能（数据备份真的很重要QAQ）。</p>
+<p>目前用的是dd+alist+rclone，原理就是dd全盘备份+压缩+alist挂载各种云盘+rclone上传到alist的webdav上：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">备份并压缩脚本</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查是否具有root权限</span></span><br><span class="line">if [ &quot;$EUID&quot; -ne 0 ]; then</span><br><span class="line">  echo &quot;请使用root权限运行此脚本&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查是否传入了源磁盘和目标目录</span></span><br><span class="line">if [ $# -ne 2 ]; then</span><br><span class="line">  echo &quot;使用方法: $0 &lt;源磁盘&gt; &lt;目标目录&gt;&quot;</span><br><span class="line">  echo &quot;例如: $0 /dev/sda /path/to/backup_directory&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">SOURCE_DISK=$1</span><br><span class="line">TARGET_DIR=$2</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">确认源磁盘存在</span></span><br><span class="line">if [ ! -b &quot;$SOURCE_DISK&quot; ]; then</span><br><span class="line">  echo &quot;源磁盘不存在: $SOURCE_DISK&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">确认目标目录存在</span></span><br><span class="line">if [ ! -d &quot;$TARGET_DIR&quot; ]; then</span><br><span class="line">  echo &quot;目标目录不存在: $TARGET_DIR&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">生成目标文件名，使用下划线分割年月日时间</span></span><br><span class="line">TIMESTAMP=$(date +&quot;%Y_%m_%d_%H_%M_%S&quot;)</span><br><span class="line">TARGET_FILE=&quot;$TARGET_DIR/backup_$TIMESTAMP.img.gz&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">备份磁盘并压缩到目标文件</span></span><br><span class="line">echo &quot;开始备份并压缩 $SOURCE_DISK 到 $TARGET_FILE ...&quot;</span><br><span class="line">dd if=$SOURCE_DISK bs=4M status=progress | gzip &gt; $TARGET_FILE</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查备份是否成功</span></span><br><span class="line">if [ $? -eq 0 ]; then</span><br><span class="line">  echo &quot;备份并压缩成功: $TARGET_FILE&quot;</span><br><span class="line">  </span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">使用rclone将备份文件移动到远程存储</span></span><br><span class="line">  echo &quot;开始将备份文件移动到远程存储...&quot;</span><br><span class="line">  rclone move $TARGET_FILE backup:/backup -P --no-check-certificate</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">  # </span><span class="language-bash">检查rclone是否成功</span></span><br><span class="line">  if [ $? -eq 0 ]; then</span><br><span class="line">    echo &quot;备份文件移动成功&quot;</span><br><span class="line">  else</span><br><span class="line">    echo &quot;备份文件移动失败&quot;</span><br><span class="line">    exit 1</span><br><span class="line">  fi</span><br><span class="line">else</span><br><span class="line">  echo &quot;备份并压缩失败&quot;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>保存这个脚本到一个文件中，比如<code>backup_and_compress_with_timestamp.sh</code>，然后给它可执行权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chmod +x backup_and_compress_with_timestamp.sh</span><br><span class="line">sudo ./backup_and_compress_with_timestamp.sh /dev/sda /path/to/backup_directory</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202407301332892.png"></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>Debian</tag>
       </tags>
   </entry>
   <entry>
@@ -116,6 +153,65 @@
       </tags>
   </entry>
   <entry>
+    <title>Fastjson对JSON字符串、对象及数组进行转换</title>
+    <url>/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252126633.png"></p>
+<h2 id="fastjson依赖包添加"><a href="#fastjson依赖包添加" class="headerlink" title="fastjson依赖包添加"></a><strong>fastjson依赖</strong>包添加</h2><p>网上找到了个不错的api，格式是json，我只会js语言的json处理，赶紧学了一下fastjson</p>
+<p>到<a href="https://mvnrepository.com/">https://mvnrepository.com/</a>里，搜索Fastjson</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252130395.png"></p>
+<p>选择版本，我用的是1.2.78的kotlin Gradle</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252130885.png"></p>
+<h2 id="FastJson主要类"><a href="#FastJson主要类" class="headerlink" title="FastJson主要类"></a>FastJson主要类</h2><p>fastjson对于json格式字符串的解析主要用到了一下三个类</p>
+<ul>
+<li>（1）JSON：fastJson的解析器，用于JSON格式字符串与JSON对象及javaBean之间的转换。</li>
+<li>（2）jsonobject：fastJson提供的json对象。</li>
+<li>（3）jsonarray：fastJson提供json数组对象。</li>
+</ul>
+<h2 id="JSON转换"><a href="#JSON转换" class="headerlink" title="JSON转换"></a>JSON转换</h2><h3 id="JAVA对象转JSON字符串"><a href="#JAVA对象转JSON字符串" class="headerlink" title="JAVA对象转JSON字符串"></a>JAVA对象转JSON字符串</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//java对象转json字符串</span><br><span class="line">    public static void beanTojson() &#123;</span><br><span class="line">        Data data = new Data();</span><br><span class="line">        data.setAction(&quot;add&quot;);</span><br><span class="line">        data.setId(&quot;1&quot;);</span><br><span class="line">        data.setOrdinal(8L);</span><br><span class="line">        data.setOrganUnitFullName(&quot;testJSON&quot;);</span><br><span class="line">        data.setParent(&quot;0&quot;);</span><br><span class="line">        data.setSuborderNo(&quot;58961&quot;);</span><br><span class="line"></span><br><span class="line">        String s = JSON.toJSONString(data);</span><br><span class="line">        System.out.println(&quot;toJsonString()方法：s=&quot; + s);</span><br><span class="line">        //输出结果&#123;&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;ordinal&quot;:8,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;parent&quot;:&quot;0&quot;,&quot;suborderNo&quot;:&quot;58961&quot;&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="JSON字符串转JSON对象"><a href="#JSON字符串转JSON对象" class="headerlink" title="JSON字符串转JSON对象"></a>JSON字符串转JSON对象</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//json字符串转json对象</span><br><span class="line">    public static void jsonToJsonBean() &#123;</span><br><span class="line">        String s =&quot;&#123;\&quot;action\&quot;:\&quot;add\&quot;,\&quot;id\&quot;:\&quot;1\&quot;,\&quot;ordinal\&quot;:8,\&quot;organUnitFullName\&quot;:\&quot;testJSON\&quot;,\&quot;parent\&quot;:\&quot;0\&quot;,\&quot;suborderNo\&quot;:\&quot;58961\&quot;&#125;&quot;;</span><br><span class="line"></span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(s);</span><br><span class="line">        String action = jsonObject.getString(&quot;action&quot;);</span><br><span class="line">        String id = jsonObject.getString(&quot;id&quot;);</span><br><span class="line">        System.out.println(&quot;action =&quot;+action);//add</span><br><span class="line">        System.out.println(&quot;id =&quot;+id);//1</span><br><span class="line">        System.out.println(&quot;jsonObject =&quot;+jsonObject);</span><br><span class="line">        //action =add</span><br><span class="line">        //id =1</span><br><span class="line">        //jsonObject =&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂JSON格式字符串与JSONObject之间的转换"><a href="#复杂JSON格式字符串与JSONObject之间的转换" class="headerlink" title="复杂JSON格式字符串与JSONObject之间的转换"></a>复杂JSON格式字符串与JSONObject之间的转换</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static void jsonToBean() &#123;</span><br><span class="line">        String str =&quot;&#123;\&quot;meta\&quot;:&#123;\&quot;code\&quot;:\&quot;0\&quot;,\&quot;message\&quot;:\&quot;同步成功!\&quot;&#125;,\&quot;data\&quot;:&#123;\&quot;orderno\&quot;:\&quot;U_2018062790915774\&quot;,\&quot;suborderno\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;type\&quot;:\&quot;organunit\&quot;,\&quot;result\&quot;:&#123;\&quot;organunit\&quot;:&#123;\&quot;totalCount\&quot;:2,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:2,\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;,\&quot;role\&quot;:&#123;\&quot;totalCount\&quot;:0,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:0,\&quot;errors\&quot;:[]&#125;,\&quot;user\&quot;:&#123;\&quot;totalCount\&quot;:0,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:0,\&quot;errors\&quot;:[]&#125;&#125;&#125;&#125;&quot;;</span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(str);</span><br><span class="line">        JSONObject data = jsonObject.getJSONObject(&quot;data&quot;);</span><br><span class="line">        JSONObject result = data.getJSONObject(&quot;result&quot;);</span><br><span class="line"></span><br><span class="line">        String organunit1 = result.getString(&quot;organunit&quot;);</span><br><span class="line">        System.out.println(organunit1);</span><br><span class="line">        JSONObject organunit = result.getJSONObject(&quot;organunit&quot;);</span><br><span class="line"></span><br><span class="line">        JSONArray errors2 = organunit.getJSONArray(&quot;errors&quot;);</span><br><span class="line"></span><br><span class="line">        List&lt;Error&gt; error = JSON.parseObject(errors2.toJSONString(), new TypeReference&lt;List&lt;Error&gt;&gt;() &#123;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="JSON字符串转JAVA简单对象"><a href="#JSON字符串转JAVA简单对象" class="headerlink" title="JSON字符串转JAVA简单对象"></a>JSON字符串转JAVA简单对象</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//json字符串转java简单对象</span><br><span class="line">   public static void jsonStrToJavaBean() &#123;</span><br><span class="line">       String s =&quot;&#123;\&quot;action\&quot;:\&quot;add\&quot;,\&quot;id\&quot;:\&quot;1\&quot;,\&quot;ordinal\&quot;:8,\&quot;organUnitFullName\&quot;:\&quot;testJSON\&quot;,\&quot;parent\&quot;:\&quot;0\&quot;,\&quot;suborderNo\&quot;:\&quot;58961\&quot;&#125;&quot;;</span><br><span class="line">       Data data = JSON.parseObject(s, Data.class);</span><br><span class="line">       System.out.println(&quot;data对象&quot;+data.toString());</span><br><span class="line">       System.out.println(&quot;action=&quot;+data.getAction()+&quot;---id=&quot;+data.getId());</span><br><span class="line">       //data对象Data&#123;id=&#x27;1&#x27;, suborderNo=&#x27;58961&#x27;, organUnitType=&#x27;null&#x27;, action=&#x27;add&#x27;, parent=&#x27;0&#x27;, organUnitFullName=&#x27;testJSON&#x27;, ordinal=8&#125;</span><br><span class="line">       //action=add---id=1</span><br><span class="line"></span><br><span class="line">       /**</span><br><span class="line">        * 另一种方式转对象</span><br><span class="line">        */</span><br><span class="line">       Data dd = JSON.parseObject(s, new TypeReference&lt;Data&gt;() &#123;&#125;);</span><br><span class="line">       System.out.println(&quot;另一种方式获取data对象&quot;+dd.toString());</span><br><span class="line">       System.out.println(&quot;另一种方式获取=&quot;+dd.getAction()+&quot;---id=&quot;+dd.getId());</span><br><span class="line">       //另一种方式获取data对象Data&#123;id=&#x27;1&#x27;, suborderNo=&#x27;58961&#x27;, organUnitType=&#x27;null&#x27;, action=&#x27;add&#x27;, parent=&#x27;0&#x27;, organUnitFullName=&#x27;testJSON&#x27;, ordinal=8&#125;</span><br><span class="line">       //另一种方式获取=add---id=1</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="JSON字符串-数组类型与JAVA对象的转换"><a href="#JSON字符串-数组类型与JAVA对象的转换" class="headerlink" title="JSON字符串 数组类型与JAVA对象的转换"></a>JSON字符串 数组类型与JAVA对象的转换</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;errors&quot;:[&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;254&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;,&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;255&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;]&#125;</span><br><span class="line"></span><br><span class="line">//json字符串--数组型与JSONArray对象之间的转换</span><br><span class="line">    public static void jsonStrToJSONArray() &#123;</span><br><span class="line">        String str = &quot;&#123;\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;&quot;;</span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(str);</span><br><span class="line">        JSONArray error = jsonObject.getJSONArray(&quot;errors&quot;);</span><br><span class="line">        List&lt;Error&gt; errors = JSON.parseObject(error.toJSONString(), new TypeReference&lt;List&lt;Error&gt;&gt;() &#123;</span><br><span class="line">        &#125;);</span><br><span class="line">        for (Error e: errors) &#123;</span><br><span class="line">            //Error的属性</span><br><span class="line">            System.out.println(&quot;Error属性=&quot;+e.getSuccess());</span><br><span class="line">            System.out.println(&quot;Error属性=&quot;+e.getCode());</span><br><span class="line">            System.out.println(&quot;Error属性=&quot;+e.getMessage());</span><br><span class="line">            //Error集合属性</span><br><span class="line">            List&lt;Data&gt; datas = e.getData();</span><br><span class="line">            for (Data d: datas) &#123;</span><br><span class="line">                System.out.println(&quot;data对象属性=&quot;+d.getId());</span><br><span class="line">                System.out.println(&quot;data对象属性=&quot;+d.getAction());</span><br><span class="line">                System.out.println(&quot;data对象属性=&quot;+d.getSuborderNo());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //Error属性=false</span><br><span class="line">        //Error属性=UUM70004</span><br><span class="line">        //Error属性=组织单元名称不能为空</span><br><span class="line">        //data对象属性=254</span><br><span class="line">        //data对象属性=add</span><br><span class="line">        //data对象属性=SUB_2018062797348039</span><br><span class="line"></span><br><span class="line">        //Error属性=false</span><br><span class="line">        //Error属性=UUM70004</span><br><span class="line">        //Error属性=组织单元名称不能为空</span><br><span class="line">        //data对象属性=255</span><br><span class="line">        //data对象属性=add</span><br><span class="line">        //data对象属性=SUB_2018062797348039</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="JSON字符串-第二种方法–-数组类型与JAVA对象的转换"><a href="#JSON字符串-第二种方法–-数组类型与JAVA对象的转换" class="headerlink" title="JSON字符串 第二种方法–&gt;数组类型与JAVA对象的转换"></a>JSON字符串 第二种方法–&gt;数组类型与JAVA对象的转换</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//第二种方法：json字符串--数组型与JSONArray对象之间的转换</span><br><span class="line">    @Test</span><br><span class="line">    public void jsonStrToJSONArray2() &#123;</span><br><span class="line">        String str = &quot;&#123;\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;&quot;;</span><br><span class="line">        //获取jsonobject对象</span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(str);</span><br><span class="line">        //把对象转换成jsonArray数组</span><br><span class="line">        JSONArray error = jsonObject.getJSONArray(&quot;errors&quot;);</span><br><span class="line">        //error==&gt;[&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;254&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;,&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;255&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;]</span><br><span class="line">        //将数组转换成字符串</span><br><span class="line">        String jsonString = JSONObject.toJSONString(error);//将array数组转换成字符串</span><br><span class="line">        //将字符串转成list集合</span><br><span class="line">        List&lt;Error&gt;  errors = JSONObject.parseArray(jsonString, Error.class);//把字符串转换成集合</span><br><span class="line">        for (Error e: errors) &#123;</span><br><span class="line">            //Error的属性</span><br><span class="line">            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getSuccess());</span><br><span class="line">            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getCode());</span><br><span class="line">            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getMessage());</span><br><span class="line">            //Error集合属性</span><br><span class="line">            List&lt;Data&gt; datas = e.getData();</span><br><span class="line">            for (Data d: datas) &#123;</span><br><span class="line">                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getId());</span><br><span class="line">                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getAction());</span><br><span class="line">                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getSuborderNo());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //另一种数组转换Error属性=false</span><br><span class="line">        //另一种数组转换Error属性=UUM70004</span><br><span class="line">        //另一种数组转换Error属性=组织单元名称不能为空</span><br><span class="line">        //另一种数组转换data对象属性=254</span><br><span class="line">        //另一种数组转换data对象属性=add</span><br><span class="line">        //另一种数组转换data对象属性=SUB_2018062797348039</span><br><span class="line"></span><br><span class="line">        //另一种数组转换Error属性=false</span><br><span class="line">        //另一种数组转换Error属性=UUM70004</span><br><span class="line">        //另一种数组转换Error属性=组织单元名称不能为空</span><br><span class="line">        //另一种数组转换data对象属性=255</span><br><span class="line">        //另一种数组转换data对象属性=add</span><br><span class="line">        //另一种数组转换data对象属性=SUB_2018062797348039</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="JAVA对象转JSON对象"><a href="#JAVA对象转JSON对象" class="headerlink" title="JAVA对象转JSON对象"></a>JAVA对象转JSON对象</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//javabean转json对象</span><br><span class="line">    public static void jsonBenToJsonObject() &#123;</span><br><span class="line">        Data data = new Data();</span><br><span class="line">        data.setAction(&quot;add&quot;);</span><br><span class="line">        data.setId(&quot;1&quot;);</span><br><span class="line">        data.setOrdinal(8L);</span><br><span class="line">        data.setOrganUnitFullName(&quot;testJSON&quot;);</span><br><span class="line">        data.setParent(&quot;0&quot;);</span><br><span class="line">        data.setSuborderNo(&quot;58961&quot;);</span><br><span class="line">        JSONObject jsonObj = (JSONObject) JSON.toJSON(data);</span><br><span class="line">        JSON json = (JSON) JSON.toJSON(data);</span><br><span class="line">        System.out.println(&quot;jsonObj&quot;+jsonObj);</span><br><span class="line">        System.out.println(&quot;json对象&quot;+json);</span><br><span class="line">        //jsonObj&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;</span><br><span class="line">        //json对象&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Fastjson</tag>
+        <tag>Kotlin</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux下的crazydiskinfo</title>
+    <url>/2024/10/27/linux%E4%B8%8B%E7%9A%84crazydiskinfo/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271701465.jpg"></p>
+<p>CrazyDiskInfo是一款用于Unix类系统的交互式TUI S.M.A.R.T查看器，可以查看硬盘健康情况，是否有坏扇区等。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271705139.png"></p>
+<p>然而国内的教程太垃圾了，多少年前的还在互相抄，抄来抄去的还只有自己编译这条路。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://github.com/otakuto/crazydiskinfo</span><br></pre></td></tr></table></figure>
+
+<p>本文并不反对你去源码编译，只作为存档记录一下获取安装包的方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://ftp.debian.org/debian/pool/main/c/crazydiskinfo/</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271705493.png"></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>服务器</tag>
+        <tag>Linux</tag>
+        <tag>运维</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Flask的食用方法</title>
     <url>/2021/11/04/flask%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252214256.png"></p>
@@ -138,6 +234,73 @@
       <tags>
         <tag>Flask</tag>
         <tag>PyCharm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Nekobot开发心得</title>
+    <url>/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png"></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>开一个帖，记录一下Nekobot的开发心得吧（主要是自己认为比较重要的某些功能的代码实现方法，写给自己，以免忘记）</p>
+<p>不过，如果笔记里的这些内容对你有所帮助，那就更好了2333.</p>
+<h2 id="0x01通过Get方式请求来获取网页源码"><a href="#0x01通过Get方式请求来获取网页源码" class="headerlink" title="0x01通过Get方式请求来获取网页源码"></a>0x01通过Get方式请求来获取网页源码</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">fun httpget(url: String): String? &#123;</span><br><span class="line">        val client = OkHttpClient()</span><br><span class="line">        val request = Request.Builder().get()</span><br><span class="line">            .url(url)</span><br><span class="line">            .build()</span><br><span class="line">        val call = client.newCall(request)</span><br><span class="line">        val response = call.execute()</span><br><span class="line">        val HTML = response.body?.string()</span><br><span class="line">        return HTML</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>肯定要有的，不然网页api以及爬虫都做不了了</p>
+<h2 id="0x02读取本地文件夹的文件名"><a href="#0x02读取本地文件夹的文件名" class="headerlink" title="0x02读取本地文件夹的文件名"></a>0x02读取本地文件夹的文件名</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">fun getImgList(path: String): MutableList&lt;String&gt; &#123;</span><br><span class="line">            val files: MutableList&lt;String&gt; = mutableListOf()</span><br><span class="line">            val fileTree: FileTreeWalk = File(path).walk()</span><br><span class="line">            fileTree.maxDepth(1)</span><br><span class="line">                .filter &#123; it.isFile &#125;</span><br><span class="line">                .forEach &#123; files.add(it.name) &#125;</span><br><span class="line">            return files</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例是读取本地文件夹的图片，通过类似的思路做了个黑名单读取</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">fun getList(path: String): MutableList&lt;Long&gt; &#123;</span><br><span class="line">            val files: MutableList&lt;Long&gt; = mutableListOf()</span><br><span class="line">            val fileTree: FileTreeWalk = File(path).walk()</span><br><span class="line">            fileTree.maxDepth(1)</span><br><span class="line">                .filter &#123; it.isFile &#125;</span><br><span class="line">                .forEach &#123; files.add(it.name.toLong()) &#125;</span><br><span class="line">            return files</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>读取时转换为id（类型为Long），一般来说这个添加方式比修改服务器上的黑名单列表文件内容方便多了，我只要新建个文件，文件名为屏蔽的id就是了；想要移除，删掉就是了。</p>
+<p>为什么不在QQ上直接指示机器人屏蔽某个QQid？对不起，我对本人的编程水平极不自信，虽然源文件泄露导致发现漏洞然后攻击的可能性极微。但是给mirai以root权限对服务器的文件进行创建删除写入，我不太敢这样做。</p>
+<p>顺便一提.filter是选择器而.forEach是循环，类似与if和for，不过咱只有在这块使用了这个kotlin推荐（？）使用的选择语句和循环语句，其他地方一般就是if和for，有的时候还是when（选择语句），语法相当混乱（捂脸）</p>
+<h2 id="0x03获取网络资源并转换为流"><a href="#0x03获取网络资源并转换为流" class="headerlink" title="0x03获取网络资源并转换为流"></a>0x03获取网络资源并转换为流</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//获取网络图片</span><br><span class="line">fun getNetImg(urlstr: String): InputStream? &#123;</span><br><span class="line">        val url = URL(urlstr)</span><br><span class="line">//        return try &#123;  实有异常了再说</span><br><span class="line">        return url.openConnection().getInputStream()</span><br><span class="line">//        &#125;catch(err:java.io.IOException)&#123;</span><br><span class="line">//            null</span><br><span class="line">//        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>学会这个的契机是想发送网络上的图片来着的</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203015.png"></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203912.png"></p>
+<p><a href="https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97">https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97</a></p>
+<p>就是这个思路，另外提一下mirai的具体食用方法吧</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getNetImg(imgurl).use &#123;</span><br><span class="line">                        if (it != null) &#123;</span><br><span class="line">//方法一，最原始的发送图片的方法，就是先uploadImage 然后sendMessage</span><br><span class="line">                            val img = it.toExternalResource()</span><br><span class="line">                            group.sendMessage(group.uploadImage(img))</span><br><span class="line">//方法二，sendImage相当于先进行uploadImage然后再sendMessage</span><br><span class="line">                            group.sendImage(img)</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x05发送语音"><a href="#0x05发送语音" class="headerlink" title="0x05发送语音"></a>0x05发送语音</h2><p>其实也没啥，不过注意，<strong>只支持 <code>amr</code> 和 <code>silk</code> 格式</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">group.sendMessage(File(&quot;$&#123;voiceDir&#125;Av845256252.silk&quot;).toExternalResource().uploadAsVoice(group))</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>Kotlin</tag>
+        <tag>Java</tag>
+        <tag>Mirai</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Selenium爬虫入门</title>
+    <url>/2021/11/19/selenium%E7%88%AC%E8%99%AB%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252135855.jpg"></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>曾经我以为爬虫只要学会get和post就行了</p>
+<p>直到遇上了某些不分离的js原生网页</p>
+<p>最后，是Selenium拯救了我</p>
+<h2 id="0x01环境搭建"><a href="#0x01环境搭建" class="headerlink" title="0x01环境搭建"></a>0x01环境搭建</h2><h3 id="安装selenium模块"><a href="#安装selenium模块" class="headerlink" title="安装selenium模块"></a><strong>安装selenium模块</strong></h3><p>这里是使用python里的selenium模块；java的话，也有selenium的jar包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install -U selenium</span><br></pre></td></tr></table></figure>
+
+<p>我用的是PyCharm，可以直接在里面的包管理工具添加这个包</p>
+<h3 id="安装浏览器"><a href="#安装浏览器" class="headerlink" title="安装浏览器"></a>安装浏览器</h3><p>安装一款浏览器（谷歌，火狐，IE），selenium是基于浏览器运作的，想要selenium能驱动浏览器，必须要安装浏览器驱动，将驱动放到python的安装根目录下即可</p>
+<p>此处以谷歌浏览器为例：谷歌驱动（chromedriver）下载地址：<a href="http://npm.taobao.org/mirrors/chromedriver">http://npm.taobao.org/mirrors/chromedriver</a></p>
+<p><img src="http://101.35.52.235/wp-content/uploads/2021/11/%E5%9B%BE%E7%89%87-14.png"></p>
+<h2 id="0x02使用"><a href="#0x02使用" class="headerlink" title="0x02使用"></a>0x02使用</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from selenium import webdriver       #引用selenium</span><br><span class="line">driver=webdriver.Chrome() #启动谷歌浏览器</span><br><span class="line">driver.get(&quot;http://www.baidu.com&quot;) #访问一个网页 </span><br><span class="line">driver.quit() #退出浏览器</span><br><span class="line">driver.get(&quot;http://www.baidu.com&quot;)  #访问浏览器</span><br><span class="line">driver.back()       #回到上一页</span><br><span class="line">driver.forward()    #回到下一页</span><br><span class="line">driver.refresh()        #刷新</span><br><span class="line">print(driver.title)        #获取标题</span><br><span class="line">print(driver.current_url)        #获取网址</span><br><span class="line">print(driver.current_window_handle)        #获取到句柄</span><br><span class="line">print(driver.get_window_size())       #获取浏览器尺寸</span><br><span class="line">print(driver.get_screenshot_as_file(&#x27;&#x27;))       #获取截图</span><br><span class="line">driver.maximize_window()              #窗口最大化</span><br><span class="line">driver.minimize_window()              #窗口最小化</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x03示例"><a href="#0x03示例" class="headerlink" title="0x03示例"></a>0x03示例</h2><p>这次参加了学校里的一场比赛，其中有一道题就是爬取各个购物平台的商品数据</p>
+<p>我第一个选择了某宝，这里放出示例代码</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from selenium import webdriver</span><br><span class="line">from selenium.common.exceptions import TimeoutException</span><br><span class="line">from selenium.webdriver.common.by import By</span><br><span class="line">from selenium.webdriver.support import expected_conditions as EC</span><br><span class="line">from selenium.webdriver.support.wait import WebDriverWait</span><br><span class="line">from selenium.webdriver.common.keys import Keys</span><br><span class="line">from urllib.parse import quote</span><br><span class="line">from pyquery import PyQuery as pq</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">browser = webdriver.Chrome()</span><br><span class="line"># 需要手动扫码登陆淘宝！</span><br><span class="line">wait = WebDriverWait(browser, 20)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def taobao_index_page(page, text):</span><br><span class="line">    print(&#x27;正在爬取第&#x27;, page, &#x27;页&#x27;)</span><br><span class="line">    try:</span><br><span class="line">        # 网址url</span><br><span class="line">        url = &#x27;https://s.taobao.com/search?q=&#x27; + quote(text)</span><br><span class="line">        browser.get(url)</span><br><span class="line">        time.sleep(1.5)</span><br><span class="line">        if page &gt; 1</span><br><span class="line">            input = wait.until(</span><br><span class="line">                EC.presence_of_element_located((By.CSS_SELECTOR, &#x27;#mainsrp-pager div.form &gt; input&#x27;))</span><br><span class="line">            )</span><br><span class="line">            submit = wait.until(</span><br><span class="line">                EC.element_to_be_clickable((By.CSS_SELECTOR, &#x27;#mainsrp-pager div.form &gt; span.btn.J_Submit&#x27;))</span><br><span class="line">            )</span><br><span class="line">            input.clear()</span><br><span class="line">            input.send_keys(page)</span><br><span class="line">            # 模拟点击确认</span><br><span class="line">            submit.click()</span><br><span class="line">        # 找到每页数据的标签</span><br><span class="line">        wait.until(</span><br><span class="line">            EC.text_to_be_present_in_element((By.CSS_SELECTOR, &#x27;#mainsrp-pager li.item.active &gt; span&#x27;), str(page))</span><br><span class="line">        )</span><br><span class="line">        wait.until(</span><br><span class="line">            EC.presence_of_element_located((By.CSS_SELECTOR, &#x27;.m-itemlist .items .item&#x27;))</span><br><span class="line">        )</span><br><span class="line">        # 调用函数，获取数据</span><br><span class="line">        taobao_get_products()</span><br><span class="line">    except TimeoutException:</span><br><span class="line">        taobao_index_page(page, text)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def taobao_get_products():</span><br><span class="line">    # page_source获取网页源代码</span><br><span class="line">    html = browser.page_source</span><br><span class="line">    doc = pq(html)</span><br><span class="line">    items = doc(&#x27;#mainsrp-itemlist .items .item&#x27;).items()</span><br><span class="line">    for item in items:</span><br><span class="line">        # 数据存入字典</span><br><span class="line">        product = &#123;</span><br><span class="line">            &#x27;title&#x27;: item.find(&#x27;.title&#x27;).text(),</span><br><span class="line">            &#x27;price&#x27;: item.find(&#x27;.price&#x27;).text(),</span><br><span class="line">            &#x27;image&#x27;: item.find(&#x27;.pic .img&#x27;).attr(&#x27;data-src&#x27;),</span><br><span class="line">        &#125;</span><br><span class="line">        print(product)</span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    for i in range(1, 10):#爬取1-9页</span><br><span class="line">        taobao_index_page(i, &quot;iphone13&quot;)</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p>另外，对于某些页面的懒加载问题，可以自己想想看如何解决（</p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>Selenium</tag>
+        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -189,114 +352,6 @@
       <tags>
         <tag>Angular</tag>
         <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Nekobot开发心得：Silk4j食用笔记</title>
-    <url>/2021/10/11/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97%EF%BC%9Asilk4j%E9%A3%9F%E7%94%A8%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252204000.png"></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>在进行mirai机器人Nekobot的开发过程中，在论坛中发现了大佬写的silk4j–JVM的语音编码组件，觉得用起来挺不错的，于是去对应的仓库进行了一个习的学，感觉收获挺大的</p>
-<p>仓库链接奉上：<a href="https://github.com/mzdluo123/silk4j">https://github.com/mzdluo123/silk4j</a></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252205994.png"></p>
-<h2 id="0x01导入依赖"><a href="#0x01导入依赖" class="headerlink" title="0x01导入依赖"></a>0x01导入依赖</h2><p>我是kotlin编译的，需要在你的build.gradle.kts里面加上一些东西</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 要使用maven仓库导入，需要先为你的账号生成一个访问token才能正常拉取</span><br><span class="line">repositories &#123;</span><br><span class="line">   maven &#123; </span><br><span class="line">     url &#x27;https://maven.pkg.github.com/mzdluo123/silk4j&#x27;</span><br><span class="line">     credentials &#123;</span><br><span class="line">            username = &#x27;你的用户名&#x27;</span><br><span class="line">            password = &#x27;你的token&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">dependencies &#123;</span><br><span class="line">    implementation(&quot;io.github.mzdluo123:silk4j:版本号&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>token的获取方式是在github的<a href="https://github.com/settings/profile">Settings</a> &#x2F; <a href="https://github.com/settings/tokens">Developer settings</a> ，里面的话，会有一个Personal access tokens，点进去，自己取个标识，然后注意一下期限，我是选择永不过期，最后范围我是全勾上了。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252205155.png"></p>
-<p>好，最后会生成一个token，把它复制粘贴到相应位置（切勿泄露！！！）</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252205415.png"></p>
-<h2 id="0x02食用"><a href="#0x02食用" class="headerlink" title="0x02食用"></a>0x02食用</h2><p>其实官方说明已经讲的很清楚了</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 请使用这个类完成编码</span><br><span class="line">// 所有的编码默认都只使用左声道</span><br><span class="line">public class AudioUtils &#123;</span><br><span class="line">//使用之前需要初始化</span><br><span class="line">public static void init() throws IOException &#123;</span><br><span class="line">&#125;</span><br><span class="line">// 初始化时可选指定缓存目录，未指定则使用系统目录</span><br><span class="line">public static void init(File tmpDir) throws IOException &#123;</span><br><span class="line">&#125;</span><br><span class="line">// 以下为编码函数，只可以同时进行一个编码任务，如需pcm文件请看源代码</span><br><span class="line">// 返回的文件在缓存目录内，使用完毕请删除</span><br><span class="line">public static File mp3ToSilk(File mp3File) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">public static File mp3ToSilk(InputStream mp3FileStream) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static File silkToMp3(File silkFile) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static File silkToMp3(InputStream silkFileStream) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其实本地很好处理。那就以我最近使用的文字转语音api为例，返回的一条mp3文件的下载链接。与之前返回图片类似，将网络的资源转化为InputStream流，再使用silk4j组件的方法</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//获取网络图片</span><br><span class="line">    fun getNetImg(urlstr: String): InputStream? &#123;</span><br><span class="line">        val url = URL(urlstr)</span><br><span class="line">//        return try &#123;  实有异常了再说</span><br><span class="line">        return url.openConnection().getInputStream()</span><br><span class="line">//        &#125;catch(err:java.io.IOException)&#123;</span><br><span class="line">//            null</span><br><span class="line">//        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">getNetImg(mp3str).use &#123;</span><br><span class="line">                        if (it != null) &#123;//暂时使用img方法获取流</span><br><span class="line">                            AudioUtils.init()</span><br><span class="line">                            val silk: File = AudioUtils.mp3ToSilk(it)</span><br><span class="line">                            group.sendMessage(silk.toExternalResource().uploadAsVoice(group))</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Kotlin</tag>
-        <tag>Mirai</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Fastjson对JSON字符串、对象及数组进行转换</title>
-    <url>/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252126633.png"></p>
-<h2 id="fastjson依赖包添加"><a href="#fastjson依赖包添加" class="headerlink" title="fastjson依赖包添加"></a><strong>fastjson依赖</strong>包添加</h2><p>网上找到了个不错的api，格式是json，我只会js语言的json处理，赶紧学了一下fastjson</p>
-<p>到<a href="https://mvnrepository.com/">https://mvnrepository.com/</a>里，搜索Fastjson</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252130395.png"></p>
-<p>选择版本，我用的是1.2.78的kotlin Gradle</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252130885.png"></p>
-<h2 id="FastJson主要类"><a href="#FastJson主要类" class="headerlink" title="FastJson主要类"></a>FastJson主要类</h2><p>fastjson对于json格式字符串的解析主要用到了一下三个类</p>
-<ul>
-<li>（1）JSON：fastJson的解析器，用于JSON格式字符串与JSON对象及javaBean之间的转换。</li>
-<li>（2）jsonobject：fastJson提供的json对象。</li>
-<li>（3）jsonarray：fastJson提供json数组对象。</li>
-</ul>
-<h2 id="JSON转换"><a href="#JSON转换" class="headerlink" title="JSON转换"></a>JSON转换</h2><h3 id="JAVA对象转JSON字符串"><a href="#JAVA对象转JSON字符串" class="headerlink" title="JAVA对象转JSON字符串"></a>JAVA对象转JSON字符串</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//java对象转json字符串</span><br><span class="line">    public static void beanTojson() &#123;</span><br><span class="line">        Data data = new Data();</span><br><span class="line">        data.setAction(&quot;add&quot;);</span><br><span class="line">        data.setId(&quot;1&quot;);</span><br><span class="line">        data.setOrdinal(8L);</span><br><span class="line">        data.setOrganUnitFullName(&quot;testJSON&quot;);</span><br><span class="line">        data.setParent(&quot;0&quot;);</span><br><span class="line">        data.setSuborderNo(&quot;58961&quot;);</span><br><span class="line"></span><br><span class="line">        String s = JSON.toJSONString(data);</span><br><span class="line">        System.out.println(&quot;toJsonString()方法：s=&quot; + s);</span><br><span class="line">        //输出结果&#123;&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;ordinal&quot;:8,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;parent&quot;:&quot;0&quot;,&quot;suborderNo&quot;:&quot;58961&quot;&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="JSON字符串转JSON对象"><a href="#JSON字符串转JSON对象" class="headerlink" title="JSON字符串转JSON对象"></a>JSON字符串转JSON对象</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//json字符串转json对象</span><br><span class="line">    public static void jsonToJsonBean() &#123;</span><br><span class="line">        String s =&quot;&#123;\&quot;action\&quot;:\&quot;add\&quot;,\&quot;id\&quot;:\&quot;1\&quot;,\&quot;ordinal\&quot;:8,\&quot;organUnitFullName\&quot;:\&quot;testJSON\&quot;,\&quot;parent\&quot;:\&quot;0\&quot;,\&quot;suborderNo\&quot;:\&quot;58961\&quot;&#125;&quot;;</span><br><span class="line"></span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(s);</span><br><span class="line">        String action = jsonObject.getString(&quot;action&quot;);</span><br><span class="line">        String id = jsonObject.getString(&quot;id&quot;);</span><br><span class="line">        System.out.println(&quot;action =&quot;+action);//add</span><br><span class="line">        System.out.println(&quot;id =&quot;+id);//1</span><br><span class="line">        System.out.println(&quot;jsonObject =&quot;+jsonObject);</span><br><span class="line">        //action =add</span><br><span class="line">        //id =1</span><br><span class="line">        //jsonObject =&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="复杂JSON格式字符串与JSONObject之间的转换"><a href="#复杂JSON格式字符串与JSONObject之间的转换" class="headerlink" title="复杂JSON格式字符串与JSONObject之间的转换"></a>复杂JSON格式字符串与JSONObject之间的转换</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static void jsonToBean() &#123;</span><br><span class="line">        String str =&quot;&#123;\&quot;meta\&quot;:&#123;\&quot;code\&quot;:\&quot;0\&quot;,\&quot;message\&quot;:\&quot;同步成功!\&quot;&#125;,\&quot;data\&quot;:&#123;\&quot;orderno\&quot;:\&quot;U_2018062790915774\&quot;,\&quot;suborderno\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;type\&quot;:\&quot;organunit\&quot;,\&quot;result\&quot;:&#123;\&quot;organunit\&quot;:&#123;\&quot;totalCount\&quot;:2,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:2,\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;,\&quot;role\&quot;:&#123;\&quot;totalCount\&quot;:0,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:0,\&quot;errors\&quot;:[]&#125;,\&quot;user\&quot;:&#123;\&quot;totalCount\&quot;:0,\&quot;successCount\&quot;:0,\&quot;failCount\&quot;:0,\&quot;errors\&quot;:[]&#125;&#125;&#125;&#125;&quot;;</span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(str);</span><br><span class="line">        JSONObject data = jsonObject.getJSONObject(&quot;data&quot;);</span><br><span class="line">        JSONObject result = data.getJSONObject(&quot;result&quot;);</span><br><span class="line"></span><br><span class="line">        String organunit1 = result.getString(&quot;organunit&quot;);</span><br><span class="line">        System.out.println(organunit1);</span><br><span class="line">        JSONObject organunit = result.getJSONObject(&quot;organunit&quot;);</span><br><span class="line"></span><br><span class="line">        JSONArray errors2 = organunit.getJSONArray(&quot;errors&quot;);</span><br><span class="line"></span><br><span class="line">        List&lt;Error&gt; error = JSON.parseObject(errors2.toJSONString(), new TypeReference&lt;List&lt;Error&gt;&gt;() &#123;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="JSON字符串转JAVA简单对象"><a href="#JSON字符串转JAVA简单对象" class="headerlink" title="JSON字符串转JAVA简单对象"></a>JSON字符串转JAVA简单对象</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//json字符串转java简单对象</span><br><span class="line">   public static void jsonStrToJavaBean() &#123;</span><br><span class="line">       String s =&quot;&#123;\&quot;action\&quot;:\&quot;add\&quot;,\&quot;id\&quot;:\&quot;1\&quot;,\&quot;ordinal\&quot;:8,\&quot;organUnitFullName\&quot;:\&quot;testJSON\&quot;,\&quot;parent\&quot;:\&quot;0\&quot;,\&quot;suborderNo\&quot;:\&quot;58961\&quot;&#125;&quot;;</span><br><span class="line">       Data data = JSON.parseObject(s, Data.class);</span><br><span class="line">       System.out.println(&quot;data对象&quot;+data.toString());</span><br><span class="line">       System.out.println(&quot;action=&quot;+data.getAction()+&quot;---id=&quot;+data.getId());</span><br><span class="line">       //data对象Data&#123;id=&#x27;1&#x27;, suborderNo=&#x27;58961&#x27;, organUnitType=&#x27;null&#x27;, action=&#x27;add&#x27;, parent=&#x27;0&#x27;, organUnitFullName=&#x27;testJSON&#x27;, ordinal=8&#125;</span><br><span class="line">       //action=add---id=1</span><br><span class="line"></span><br><span class="line">       /**</span><br><span class="line">        * 另一种方式转对象</span><br><span class="line">        */</span><br><span class="line">       Data dd = JSON.parseObject(s, new TypeReference&lt;Data&gt;() &#123;&#125;);</span><br><span class="line">       System.out.println(&quot;另一种方式获取data对象&quot;+dd.toString());</span><br><span class="line">       System.out.println(&quot;另一种方式获取=&quot;+dd.getAction()+&quot;---id=&quot;+dd.getId());</span><br><span class="line">       //另一种方式获取data对象Data&#123;id=&#x27;1&#x27;, suborderNo=&#x27;58961&#x27;, organUnitType=&#x27;null&#x27;, action=&#x27;add&#x27;, parent=&#x27;0&#x27;, organUnitFullName=&#x27;testJSON&#x27;, ordinal=8&#125;</span><br><span class="line">       //另一种方式获取=add---id=1</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="JSON字符串-数组类型与JAVA对象的转换"><a href="#JSON字符串-数组类型与JAVA对象的转换" class="headerlink" title="JSON字符串 数组类型与JAVA对象的转换"></a>JSON字符串 数组类型与JAVA对象的转换</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&quot;errors&quot;:[&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;254&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;,&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;255&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;]&#125;</span><br><span class="line"></span><br><span class="line">//json字符串--数组型与JSONArray对象之间的转换</span><br><span class="line">    public static void jsonStrToJSONArray() &#123;</span><br><span class="line">        String str = &quot;&#123;\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;&quot;;</span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(str);</span><br><span class="line">        JSONArray error = jsonObject.getJSONArray(&quot;errors&quot;);</span><br><span class="line">        List&lt;Error&gt; errors = JSON.parseObject(error.toJSONString(), new TypeReference&lt;List&lt;Error&gt;&gt;() &#123;</span><br><span class="line">        &#125;);</span><br><span class="line">        for (Error e: errors) &#123;</span><br><span class="line">            //Error的属性</span><br><span class="line">            System.out.println(&quot;Error属性=&quot;+e.getSuccess());</span><br><span class="line">            System.out.println(&quot;Error属性=&quot;+e.getCode());</span><br><span class="line">            System.out.println(&quot;Error属性=&quot;+e.getMessage());</span><br><span class="line">            //Error集合属性</span><br><span class="line">            List&lt;Data&gt; datas = e.getData();</span><br><span class="line">            for (Data d: datas) &#123;</span><br><span class="line">                System.out.println(&quot;data对象属性=&quot;+d.getId());</span><br><span class="line">                System.out.println(&quot;data对象属性=&quot;+d.getAction());</span><br><span class="line">                System.out.println(&quot;data对象属性=&quot;+d.getSuborderNo());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //Error属性=false</span><br><span class="line">        //Error属性=UUM70004</span><br><span class="line">        //Error属性=组织单元名称不能为空</span><br><span class="line">        //data对象属性=254</span><br><span class="line">        //data对象属性=add</span><br><span class="line">        //data对象属性=SUB_2018062797348039</span><br><span class="line"></span><br><span class="line">        //Error属性=false</span><br><span class="line">        //Error属性=UUM70004</span><br><span class="line">        //Error属性=组织单元名称不能为空</span><br><span class="line">        //data对象属性=255</span><br><span class="line">        //data对象属性=add</span><br><span class="line">        //data对象属性=SUB_2018062797348039</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="JSON字符串-第二种方法–-数组类型与JAVA对象的转换"><a href="#JSON字符串-第二种方法–-数组类型与JAVA对象的转换" class="headerlink" title="JSON字符串 第二种方法–&gt;数组类型与JAVA对象的转换"></a>JSON字符串 第二种方法–&gt;数组类型与JAVA对象的转换</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//第二种方法：json字符串--数组型与JSONArray对象之间的转换</span><br><span class="line">    @Test</span><br><span class="line">    public void jsonStrToJSONArray2() &#123;</span><br><span class="line">        String str = &quot;&#123;\&quot;errors\&quot;:[&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;254\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;,&#123;\&quot;code\&quot;:\&quot;UUM70004\&quot;,\&quot;message\&quot;:\&quot;组织单元名称不能为空\&quot;,\&quot;data\&quot;:&#123;\&quot;id\&quot;:\&quot;255\&quot;,\&quot;suborderNo\&quot;:\&quot;SUB_2018062797348039\&quot;,\&quot;organUnitType\&quot;:\&quot;部门\&quot;,\&quot;action\&quot;:\&quot;add\&quot;,\&quot;parent\&quot;:\&quot;10000\&quot;,\&quot;ordinal\&quot;:0,\&quot;organUnitFullName\&quot;:\&quot;组织单元全称\&quot;&#125;,\&quot;success\&quot;:false&#125;]&#125;&quot;;</span><br><span class="line">        //获取jsonobject对象</span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(str);</span><br><span class="line">        //把对象转换成jsonArray数组</span><br><span class="line">        JSONArray error = jsonObject.getJSONArray(&quot;errors&quot;);</span><br><span class="line">        //error==&gt;[&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;254&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;,&#123;&quot;code&quot;:&quot;UUM70004&quot;,&quot;message&quot;:&quot;组织单元名称不能为空&quot;,&quot;data&quot;:&#123;&quot;id&quot;:&quot;255&quot;,&quot;suborderNo&quot;:&quot;SUB_2018062797348039&quot;,&quot;organUnitType&quot;:&quot;部门&quot;,&quot;action&quot;:&quot;add&quot;,&quot;parent&quot;:&quot;10000&quot;,&quot;ordinal&quot;:0,&quot;organUnitFullName&quot;:&quot;组织单元全称&quot;&#125;,&quot;success&quot;:false&#125;]</span><br><span class="line">        //将数组转换成字符串</span><br><span class="line">        String jsonString = JSONObject.toJSONString(error);//将array数组转换成字符串</span><br><span class="line">        //将字符串转成list集合</span><br><span class="line">        List&lt;Error&gt;  errors = JSONObject.parseArray(jsonString, Error.class);//把字符串转换成集合</span><br><span class="line">        for (Error e: errors) &#123;</span><br><span class="line">            //Error的属性</span><br><span class="line">            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getSuccess());</span><br><span class="line">            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getCode());</span><br><span class="line">            System.out.println(&quot;另一种数组转换Error属性=&quot;+e.getMessage());</span><br><span class="line">            //Error集合属性</span><br><span class="line">            List&lt;Data&gt; datas = e.getData();</span><br><span class="line">            for (Data d: datas) &#123;</span><br><span class="line">                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getId());</span><br><span class="line">                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getAction());</span><br><span class="line">                System.out.println(&quot;另一种数组转换data对象属性=&quot;+d.getSuborderNo());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //另一种数组转换Error属性=false</span><br><span class="line">        //另一种数组转换Error属性=UUM70004</span><br><span class="line">        //另一种数组转换Error属性=组织单元名称不能为空</span><br><span class="line">        //另一种数组转换data对象属性=254</span><br><span class="line">        //另一种数组转换data对象属性=add</span><br><span class="line">        //另一种数组转换data对象属性=SUB_2018062797348039</span><br><span class="line"></span><br><span class="line">        //另一种数组转换Error属性=false</span><br><span class="line">        //另一种数组转换Error属性=UUM70004</span><br><span class="line">        //另一种数组转换Error属性=组织单元名称不能为空</span><br><span class="line">        //另一种数组转换data对象属性=255</span><br><span class="line">        //另一种数组转换data对象属性=add</span><br><span class="line">        //另一种数组转换data对象属性=SUB_2018062797348039</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="JAVA对象转JSON对象"><a href="#JAVA对象转JSON对象" class="headerlink" title="JAVA对象转JSON对象"></a>JAVA对象转JSON对象</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//javabean转json对象</span><br><span class="line">    public static void jsonBenToJsonObject() &#123;</span><br><span class="line">        Data data = new Data();</span><br><span class="line">        data.setAction(&quot;add&quot;);</span><br><span class="line">        data.setId(&quot;1&quot;);</span><br><span class="line">        data.setOrdinal(8L);</span><br><span class="line">        data.setOrganUnitFullName(&quot;testJSON&quot;);</span><br><span class="line">        data.setParent(&quot;0&quot;);</span><br><span class="line">        data.setSuborderNo(&quot;58961&quot;);</span><br><span class="line">        JSONObject jsonObj = (JSONObject) JSON.toJSON(data);</span><br><span class="line">        JSON json = (JSON) JSON.toJSON(data);</span><br><span class="line">        System.out.println(&quot;jsonObj&quot;+jsonObj);</span><br><span class="line">        System.out.println(&quot;json对象&quot;+json);</span><br><span class="line">        //jsonObj&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;</span><br><span class="line">        //json对象&#123;&quot;parent&quot;:&quot;0&quot;,&quot;organUnitFullName&quot;:&quot;testJSON&quot;,&quot;action&quot;:&quot;add&quot;,&quot;id&quot;:&quot;1&quot;,&quot;suborderNo&quot;:&quot;58961&quot;,&quot;ordinal&quot;:8&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>Kotlin</tag>
-        <tag>Fastjson</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Github代理</title>
-    <url>/2022/10/08/github%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252133062.jpg"></p>
-<p>clash别忘了开LAN</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git config --global http.proxy protocol://127.0.0.1:7890</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>git</tag>
-        <tag>github</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Selenium爬虫入门</title>
-    <url>/2021/11/19/selenium%E7%88%AC%E8%99%AB%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252135855.jpg"></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>曾经我以为爬虫只要学会get和post就行了</p>
-<p>直到遇上了某些不分离的js原生网页</p>
-<p>最后，是Selenium拯救了我</p>
-<h2 id="0x01环境搭建"><a href="#0x01环境搭建" class="headerlink" title="0x01环境搭建"></a>0x01环境搭建</h2><h3 id="安装selenium模块"><a href="#安装selenium模块" class="headerlink" title="安装selenium模块"></a><strong>安装selenium模块</strong></h3><p>这里是使用python里的selenium模块；java的话，也有selenium的jar包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install -U selenium</span><br></pre></td></tr></table></figure>
-
-<p>我用的是PyCharm，可以直接在里面的包管理工具添加这个包</p>
-<h3 id="安装浏览器"><a href="#安装浏览器" class="headerlink" title="安装浏览器"></a>安装浏览器</h3><p>安装一款浏览器（谷歌，火狐，IE），selenium是基于浏览器运作的，想要selenium能驱动浏览器，必须要安装浏览器驱动，将驱动放到python的安装根目录下即可</p>
-<p>此处以谷歌浏览器为例：谷歌驱动（chromedriver）下载地址：<a href="http://npm.taobao.org/mirrors/chromedriver">http://npm.taobao.org/mirrors/chromedriver</a></p>
-<p><img src="http://101.35.52.235/wp-content/uploads/2021/11/%E5%9B%BE%E7%89%87-14.png"></p>
-<h2 id="0x02使用"><a href="#0x02使用" class="headerlink" title="0x02使用"></a>0x02使用</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from selenium import webdriver       #引用selenium</span><br><span class="line">driver=webdriver.Chrome() #启动谷歌浏览器</span><br><span class="line">driver.get(&quot;http://www.baidu.com&quot;) #访问一个网页 </span><br><span class="line">driver.quit() #退出浏览器</span><br><span class="line">driver.get(&quot;http://www.baidu.com&quot;)  #访问浏览器</span><br><span class="line">driver.back()       #回到上一页</span><br><span class="line">driver.forward()    #回到下一页</span><br><span class="line">driver.refresh()        #刷新</span><br><span class="line">print(driver.title)        #获取标题</span><br><span class="line">print(driver.current_url)        #获取网址</span><br><span class="line">print(driver.current_window_handle)        #获取到句柄</span><br><span class="line">print(driver.get_window_size())       #获取浏览器尺寸</span><br><span class="line">print(driver.get_screenshot_as_file(&#x27;&#x27;))       #获取截图</span><br><span class="line">driver.maximize_window()              #窗口最大化</span><br><span class="line">driver.minimize_window()              #窗口最小化</span><br></pre></td></tr></table></figure>
-
-<h2 id="0x03示例"><a href="#0x03示例" class="headerlink" title="0x03示例"></a>0x03示例</h2><p>这次参加了学校里的一场比赛，其中有一道题就是爬取各个购物平台的商品数据</p>
-<p>我第一个选择了某宝，这里放出示例代码</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from selenium import webdriver</span><br><span class="line">from selenium.common.exceptions import TimeoutException</span><br><span class="line">from selenium.webdriver.common.by import By</span><br><span class="line">from selenium.webdriver.support import expected_conditions as EC</span><br><span class="line">from selenium.webdriver.support.wait import WebDriverWait</span><br><span class="line">from selenium.webdriver.common.keys import Keys</span><br><span class="line">from urllib.parse import quote</span><br><span class="line">from pyquery import PyQuery as pq</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">browser = webdriver.Chrome()</span><br><span class="line"># 需要手动扫码登陆淘宝！</span><br><span class="line">wait = WebDriverWait(browser, 20)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def taobao_index_page(page, text):</span><br><span class="line">    print(&#x27;正在爬取第&#x27;, page, &#x27;页&#x27;)</span><br><span class="line">    try:</span><br><span class="line">        # 网址url</span><br><span class="line">        url = &#x27;https://s.taobao.com/search?q=&#x27; + quote(text)</span><br><span class="line">        browser.get(url)</span><br><span class="line">        time.sleep(1.5)</span><br><span class="line">        if page &gt; 1</span><br><span class="line">            input = wait.until(</span><br><span class="line">                EC.presence_of_element_located((By.CSS_SELECTOR, &#x27;#mainsrp-pager div.form &gt; input&#x27;))</span><br><span class="line">            )</span><br><span class="line">            submit = wait.until(</span><br><span class="line">                EC.element_to_be_clickable((By.CSS_SELECTOR, &#x27;#mainsrp-pager div.form &gt; span.btn.J_Submit&#x27;))</span><br><span class="line">            )</span><br><span class="line">            input.clear()</span><br><span class="line">            input.send_keys(page)</span><br><span class="line">            # 模拟点击确认</span><br><span class="line">            submit.click()</span><br><span class="line">        # 找到每页数据的标签</span><br><span class="line">        wait.until(</span><br><span class="line">            EC.text_to_be_present_in_element((By.CSS_SELECTOR, &#x27;#mainsrp-pager li.item.active &gt; span&#x27;), str(page))</span><br><span class="line">        )</span><br><span class="line">        wait.until(</span><br><span class="line">            EC.presence_of_element_located((By.CSS_SELECTOR, &#x27;.m-itemlist .items .item&#x27;))</span><br><span class="line">        )</span><br><span class="line">        # 调用函数，获取数据</span><br><span class="line">        taobao_get_products()</span><br><span class="line">    except TimeoutException:</span><br><span class="line">        taobao_index_page(page, text)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def taobao_get_products():</span><br><span class="line">    # page_source获取网页源代码</span><br><span class="line">    html = browser.page_source</span><br><span class="line">    doc = pq(html)</span><br><span class="line">    items = doc(&#x27;#mainsrp-itemlist .items .item&#x27;).items()</span><br><span class="line">    for item in items:</span><br><span class="line">        # 数据存入字典</span><br><span class="line">        product = &#123;</span><br><span class="line">            &#x27;title&#x27;: item.find(&#x27;.title&#x27;).text(),</span><br><span class="line">            &#x27;price&#x27;: item.find(&#x27;.price&#x27;).text(),</span><br><span class="line">            &#x27;image&#x27;: item.find(&#x27;.pic .img&#x27;).attr(&#x27;data-src&#x27;),</span><br><span class="line">        &#125;</span><br><span class="line">        print(product)</span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    for i in range(1, 10):#爬取1-9页</span><br><span class="line">        taobao_index_page(i, &quot;iphone13&quot;)</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
-
-<p>另外，对于某些页面的懒加载问题，可以自己想想看如何解决（</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>Selenium</tag>
-        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -365,40 +420,62 @@
       </tags>
   </entry>
   <entry>
-    <title>Nekobot开发心得</title>
-    <url>/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png"></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>开一个帖，记录一下Nekobot的开发心得吧（主要是自己认为比较重要的某些功能的代码实现方法，写给自己，以免忘记）</p>
-<p>不过，如果笔记里的这些内容对你有所帮助，那就更好了2333.</p>
-<h2 id="0x01通过Get方式请求来获取网页源码"><a href="#0x01通过Get方式请求来获取网页源码" class="headerlink" title="0x01通过Get方式请求来获取网页源码"></a>0x01通过Get方式请求来获取网页源码</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">fun httpget(url: String): String? &#123;</span><br><span class="line">        val client = OkHttpClient()</span><br><span class="line">        val request = Request.Builder().get()</span><br><span class="line">            .url(url)</span><br><span class="line">            .build()</span><br><span class="line">        val call = client.newCall(request)</span><br><span class="line">        val response = call.execute()</span><br><span class="line">        val HTML = response.body?.string()</span><br><span class="line">        return HTML</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>肯定要有的，不然网页api以及爬虫都做不了了</p>
-<h2 id="0x02读取本地文件夹的文件名"><a href="#0x02读取本地文件夹的文件名" class="headerlink" title="0x02读取本地文件夹的文件名"></a>0x02读取本地文件夹的文件名</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">fun getImgList(path: String): MutableList&lt;String&gt; &#123;</span><br><span class="line">            val files: MutableList&lt;String&gt; = mutableListOf()</span><br><span class="line">            val fileTree: FileTreeWalk = File(path).walk()</span><br><span class="line">            fileTree.maxDepth(1)</span><br><span class="line">                .filter &#123; it.isFile &#125;</span><br><span class="line">                .forEach &#123; files.add(it.name) &#125;</span><br><span class="line">            return files</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-<p>示例是读取本地文件夹的图片，通过类似的思路做了个黑名单读取</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">fun getList(path: String): MutableList&lt;Long&gt; &#123;</span><br><span class="line">            val files: MutableList&lt;Long&gt; = mutableListOf()</span><br><span class="line">            val fileTree: FileTreeWalk = File(path).walk()</span><br><span class="line">            fileTree.maxDepth(1)</span><br><span class="line">                .filter &#123; it.isFile &#125;</span><br><span class="line">                .forEach &#123; files.add(it.name.toLong()) &#125;</span><br><span class="line">            return files</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-<p>读取时转换为id（类型为Long），一般来说这个添加方式比修改服务器上的黑名单列表文件内容方便多了，我只要新建个文件，文件名为屏蔽的id就是了；想要移除，删掉就是了。</p>
-<p>为什么不在QQ上直接指示机器人屏蔽某个QQid？对不起，我对本人的编程水平极不自信，虽然源文件泄露导致发现漏洞然后攻击的可能性极微。但是给mirai以root权限对服务器的文件进行创建删除写入，我不太敢这样做。</p>
-<p>顺便一提.filter是选择器而.forEach是循环，类似与if和for，不过咱只有在这块使用了这个kotlin推荐（？）使用的选择语句和循环语句，其他地方一般就是if和for，有的时候还是when（选择语句），语法相当混乱（捂脸）</p>
-<h2 id="0x03获取网络资源并转换为流"><a href="#0x03获取网络资源并转换为流" class="headerlink" title="0x03获取网络资源并转换为流"></a>0x03获取网络资源并转换为流</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//获取网络图片</span><br><span class="line">fun getNetImg(urlstr: String): InputStream? &#123;</span><br><span class="line">        val url = URL(urlstr)</span><br><span class="line">//        return try &#123;  实有异常了再说</span><br><span class="line">        return url.openConnection().getInputStream()</span><br><span class="line">//        &#125;catch(err:java.io.IOException)&#123;</span><br><span class="line">//            null</span><br><span class="line">//        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>学会这个的契机是想发送网络上的图片来着的</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203015.png"></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203912.png"></p>
-<p><a href="https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97">https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97</a></p>
-<p>就是这个思路，另外提一下mirai的具体食用方法吧</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getNetImg(imgurl).use &#123;</span><br><span class="line">                        if (it != null) &#123;</span><br><span class="line">//方法一，最原始的发送图片的方法，就是先uploadImage 然后sendMessage</span><br><span class="line">                            val img = it.toExternalResource()</span><br><span class="line">                            group.sendMessage(group.uploadImage(img))</span><br><span class="line">//方法二，sendImage相当于先进行uploadImage然后再sendMessage</span><br><span class="line">                            group.sendImage(img)</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="0x05发送语音"><a href="#0x05发送语音" class="headerlink" title="0x05发送语音"></a>0x05发送语音</h2><p>其实也没啥，不过注意，<strong>只支持 <code>amr</code> 和 <code>silk</code> 格式</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">group.sendMessage(File(&quot;$&#123;voiceDir&#125;Av845256252.silk&quot;).toExternalResource().uploadAsVoice(group))</span><br></pre></td></tr></table></figure>]]></content>
+    <title>Web网页小项目——天气预报Web页面的踩坑笔记</title>
+    <url>/2021/01/23/web%E7%BD%91%E9%A1%B5%E5%B0%8F%E9%A1%B9%E7%9B%AE%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5web%E9%A1%B5%E9%9D%A2/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252141067.jpg"></p>
+<p>寒假是个学习和提升技能的好时机，今年寒假我就参加了SAST2020前端组的WOC（Winter Of Code）项目，来借此好时机来锻炼自己的开发能力。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252142254.png"></p>
+<p>目前第一阶段我是写了一个天气预报Web页面，本以为，不就用ajax调用个api吗，在处理一下数据，调一个好看的式样，不就大功告成了吗？确实，理论上是这么简单，但是实际花了我三天时间，才写出了这么个小小的demo。很多东西根本不是我想象的那么简单的，我是踩一个坑学一些新东西，才做好一个模块的（悲）。</p>
+<h2 id="一、json跨域问题"><a href="#一、json跨域问题" class="headerlink" title="一、json跨域问题"></a>一、json跨域问题</h2><p>第一天就是和这个api斗智斗勇的一天，本来我在网上找到了百度定位api，进展颇为顺利，就是百度api配上谷歌内核的浏览器（比如chrome，qq浏览器），它的具体定位就很不准，而且比较慢，但是定位到城市还是没有问题的。后来要找个天气预报的api，这里选择了心知天气api，选了十五天试用套餐，一共可接入10000次。嘛，我就写个小demo，问题不大，又不是长期用。</p>
+<p>一开始我一直使用的是json调用方式，结果浏览器可以直接访问，但是用到我写的项目里，用jQuery的getJSON（“xxx”）发现获取不到数据。我一直以为自己的js代码哪里出了问题，知道晚上我才发现：json跨域的话，现在的浏览器会自动拦截。</p>
+<h3 id="（一）何为跨域？"><a href="#（一）何为跨域？" class="headerlink" title="（一）何为跨域？"></a>（一）何为跨域？</h3><p><strong>只要协议，端口，域名有一个不同，即为跨域！</strong></p>
+<p>首先，先了解浏览器有一个很重要安全性限制，即为同源策略：不同域的客户端脚本在无明确授权的情况下不能读些对方资源。</p>
+<p>然而，当进行一些api接口调用时，那肯定不可避免地需要进行跨域操作，这时候“同源策略”就显得过于苛刻。</p>
+<h3 id="（二）怎样解决"><a href="#（二）怎样解决" class="headerlink" title="（二）怎样解决"></a>（二）怎样解决</h3><p>我又花了一晚上的时间去百度这个方法那个方法，发现纯前端的话，json是根本行不通的，但我仍不死心，去请教了一下前段组的大仙贝：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143365.jpg"></p>
+<p>好，这波我死心了，老老实实用jsonp吧（悲）</p>
+<p>好在心知天气本身就有jsonp的调用方式，也有官方的demo。就是比较麻烦，这其中涉及密钥+公钥生成签名验证的机制，我硬着头皮的学习了一下，试着自己搞了一下，最后竟然成功了。好耶耶耶耶耶耶耶耶耶耶！</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143816.jpg"></p>
+<h2 id="二、Echarts绘制与适配问题"><a href="#二、Echarts绘制与适配问题" class="headerlink" title="二、Echarts绘制与适配问题"></a>二、Echarts绘制与适配问题</h2><p>Echarts是一个使用 JavaScript 实现的开源可视化库，涵盖各行业图表，非常的不错。但是这里还是踩到了两个坑：</p>
+<h3 id="（一）Echarts无法绘制图标"><a href="#（一）Echarts无法绘制图标" class="headerlink" title="（一）Echarts无法绘制图标"></a>（一）Echarts无法绘制图标</h3><p>当我打开网页调试时，控制台传入了如下错误：【Echarts】Uncaught TypeError: Cannot read property ‘getAttribute’ of null</p>
+<p>一开始我还以为是Echarts cdn解析出了错，后来才得知，Echarts是没有找到所要绘制的div，不是说我没有在HTML里写到它，而是js在body生成前就调用了，所以才会出现获取不到属性。解决方法就是把js扔到页脚：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144259.png"></p>
+<h3 id="（二）Echarts适配问题"><a href="#（二）Echarts适配问题" class="headerlink" title="（二）Echarts适配问题"></a>（二）Echarts适配问题</h3><p>这个就有点麻烦了，当你设置div的width为100%时，愚蠢的Echarts会自动识别为100px，其效果极其鬼畜：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144298.png"></p>
+<p>那咋办？网上给的方案都是echarts初始化之前再用js获取当前屏幕的大小，然后再给他设置宽度就可以了。而我只接给他设了个90vw的具体长度，问题也能解决（</p>
+<p>总的来说踩了不少的坑，当然也学了不少东西，比如ajax+jquery，bootstrap4的响应式界面搭建，当然啊，调css的过程也是坠痛苦的。</p>
+<p>项目地址：<a href="https://github.com/picpo/weather-demo">https://github.com/picpo/weather-demo</a></p>
+<p>大家可以将里面的key换成自己的玩玩，因为我的次数也估计只剩下6000多次了。</p>
+<ul>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145373.png"></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145325.png"></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252146972.png"></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>ajax</tag>
+        <tag>bootstrap</tag>
+        <tag>jQuery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Github代理</title>
+    <url>/2022/10/08/github%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252133062.jpg"></p>
+<p>clash别忘了开LAN</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git config --global http.proxy protocol://127.0.0.1:7890</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>野生技术协会</category>
       </categories>
       <tags>
-        <tag>Java</tag>
-        <tag>Kotlin</tag>
-        <tag>Mirai</tag>
+        <tag>git</tag>
+        <tag>github</tag>
       </tags>
   </entry>
   <entry>
@@ -520,6 +597,51 @@
 </ol>
 <p>实质：</p>
 <p>解放思想、实事求是、与时俱进、求真务实</p>
+]]></content>
+      <categories>
+        <category>我爱学习</category>
+      </categories>
+      <tags>
+        <tag>求生指南</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>《汇编语言程序设计》求生指南</title>
+    <url>/2022/11/14/%E3%80%8A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png"></p>
+<h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><ol>
+<li>BCD码转换<br>1010—1111是非法BCD码</li>
+<li>真值数和补码数之间的转换<br>正数的补码等于本身，负数的补码等于反码+1</li>
+<li>n位字长的有符号数、无符号数的数值范围<br>设机器数字长&#x3D;n, 则n位补码数<br>其真值范围为 －2n-1 ～ +2n-1－1<br>无符号数其数值范围为 0 ～ 2n－1</li>
+<li>常用ASCII码范围：<br>0:48<br>A:65<br>a:97<br>(space):32<br>(回车):13</li>
+<li>C标表示进位，O标表示溢出</li>
+<li>冯诺依曼架构：<strong>运算器、控制器、存储器、输入、输出</strong><br>CPU：运算器和控制器</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image.png"></p>
+<h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><ol>
+<li>基本结构寄存器的名称、位长和作用<br>通用寄存器: AX, BX, CX, DX, SI（源变址）, DI（目的变址）, BP（基址指针）<br>段寄存器: CS, SS, DS, ES, FS, GS<br>指针寄存器: IP（指令指针）, SP（堆栈指针）<br>标志寄存器: FLAGS<br>15位标志分为两类: 状态标志和控制标志<br>6种状态标志：CF（进位） OF（溢出） ZF（全零） PF（最后一字节1为偶数为1） AF（辅助进位标志） SF（记录最高位的位值）</li>
+<li>80486的工作模式：实地址模式和保护虚拟地址模式<br>80486的三个存贮地址空间：逻辑空间、线性空间和物理空间<br>逻辑地址：即逻辑上的地址，实模式下由“段基地址+段内偏移”组成;保护模式下由“段选择符+段内偏移”组成。<br>线性地址：逻辑地址经分段机制后就成线性地址，它是平坦的;如果不启用分页，那么此线性地址即物理地址。<br>物理地址：线性地址经分页转换后就成了物理地址。<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-1.png"></li>
+<li>实地址模式下，物理地址的形成<br><strong>物理地址&#x3D;段基址*16+偏移地址</strong><br><strong>内存容量&#x3D;末地址-首地址+1</strong><br><strong>末地址&#x3D;首地址+（字数-1）*2 末地址</strong></li>
+</ol>
+<h2 id="第三章"><a href="#第三章" class="headerlink" title="第三章"></a>第三章</h2><ol>
+<li><p>源程序中的语句类型<br>一个完整的源程序应包含2类语句:<br>指令性语句（符号指令）、指示性语句(伪指令)</p>
+</li>
+<li><p>80486的寻址方式486有3类7种寻址方式<br>立即寻址方式：获得立即数<br>寄存器寻址方式：获得寄存器操作数<br>存储器操作数寻址方式：获得存储器操作数（内存操作数）</p>
+</li>
+<li><p>内存寻址方式 16位寻址规定可使用的寄存器<br>直接寻址<br>寄存器间接寻址 [BX],[BP],[SI],[DI]。段寄存器：[间址寄存器]，某单元的物理地址&#x3D;段寄存器内容×16+间址寄存器<br>基址寻址 [BX+位移量],[BP＋位移量]。段寄存器:[基址寄存器+位移量]。物理地址&#x3D;段寄存器内容×16+基址寄存器+位移量<br>变址寻址 [SI+位移量],[DI+位移量]。<br>基址+变址寻址 [BX+SI],[BX+DI],[BP+SI]，[BP+DI]</p>
+</li>
+<li><p>常用伪指令<br>数据字义伪指令 DB DW DD（一字节二字节四字节）<br>等值伪指令 EQU &#x3D;</p>
+</li>
+<li><p>常用运算符<br>$运算符：当前汇编计数器的值。通常$-地址，可以求长度<br>SEG运算符：获取段的基地址，SEG DATA<br>OFFSET运算符：相对于段首的基地址<br>PTR运算符：修改属性<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-2.png"></p>
+</li>
+<li><p>目标程序的生成<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425716_POWERPNT_1065x313.png"></p>
+</li>
+<li><p>16进制数加法及标志位的影响<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425885_POWERPNT_1101x202.png">80486基本指令集<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426216_POWERPNT_1132x505.png">  </p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426445_POWERPNT_1002x554.png">  </p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426487_POWERPNT_1014x818.png"></p>
+</li>
+</ol>
+<h2 id="第四章"><a href="#第四章" class="headerlink" title="第四章"></a>第四章</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-3-1024x461.png"></p>
 ]]></content>
       <categories>
         <category>我爱学习</category>
@@ -830,92 +952,6 @@
       </tags>
   </entry>
   <entry>
-    <title>stable-diffusion-webui的食用方法</title>
-    <url>/2022/10/08/stable-diffusion-webui%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252157828.png"></p>
-<h2 id="0x01-Anaconda安装"><a href="#0x01-Anaconda安装" class="headerlink" title="0x01 Anaconda安装"></a>0x01 Anaconda安装</h2><p>这个没啥好说的，主要是要记住你的安装路径</p>
-<h2 id="0x02-安装CUDA"><a href="#0x02-安装CUDA" class="headerlink" title="0x02 安装CUDA"></a>0x02 安装CUDA</h2><p>到官网：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://developer.nvidia.com/cuda-downloads?target_os=Windows&amp;target_arch=x86_64&amp;target_version=10&amp;target_type=exe_local</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158948.png"></p>
-<h2 id="0x03-安装stable-diffusion-webui"><a href="#0x03-安装stable-diffusion-webui" class="headerlink" title="0x03 安装stable-diffusion-webui"></a>0x03 安装stable-diffusion-webui</h2><h3 id="1-sd-webui"><a href="#1-sd-webui" class="headerlink" title="1.sd-webui"></a>1.sd-webui</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/sd-webui/stable-diffusion-webui.git</span><br></pre></td></tr></table></figure>
-
-<p>安装后按他所说的在根目录建立<strong>custom-conda-path.txt</strong>，并写上自己的Anaconda根目录</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158626.png"></p>
-<p>下载模型文件，放在<strong>\stable-diffusion-webui\models\ldm\stable-diffusion-v1</strong>下</p>
-<p>其实也可以mklink，不过我没试过，因为我的novelaileak文件在下载盘里，下载盘是个远古机械，速度不是很快</p>
-<h3 id="2-另一个更好的web-ui"><a href="#2-另一个更好的web-ui" class="headerlink" title="2.另一个更好的web-ui"></a>2.另一个更好的web-ui</h3><p>这个更好，可以过滤一些negative prompt</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone  https://github.com/AUTOMATIC1111/stable-diffusion-webui.git</span><br></pre></td></tr></table></figure>
-
-<p>安装过程过于缓慢，建议先pip安装他的requirements.txt</p>
-<h3 id="3-泄露模型"><a href="#3-泄露模型" class="headerlink" title="3.泄露模型"></a>3.泄露模型</h3><p>我这里用的是novelaileak的，你也可以用其他的</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">magnet:?xt=urn:btih:5bde442da86265b670a3e5ea3163afad2c6f8ecc&amp;dn=novelaileak&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2F9.rarbg.com%3A2810%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A6969%2Fannounce&amp;tr=http%3A%2F%2Ftracker.openbittorrent.com%3A80%2Fannounce&amp;tr=udp%3A%2F%2Fopentracker.i2p.rocks%3A6969%2Fannounce</span><br></pre></td></tr></table></figure>
-
-<p>第二版（125G）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">magnet:?xt=urn:btih:a20087e7807f28476dd7b0b2e0174981709d89cd&amp;dn=novelaileakpt2&amp;tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&amp;tr=http%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&amp;tr=https%3a%2f%2ftracker.nanoha.org%3a443%2fannounce</span><br></pre></td></tr></table></figure>
-
-<p>今天流出的新版本，效果更好但是空间占用更大</p>
-<h2 id="0x04-食用"><a href="#0x04-食用" class="headerlink" title="0x04 食用"></a>0x04 食用</h2><p>到根目录，运行一下webui的cmd，会自动安装环境</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png"></p>
-<p>我的GTX1060 6G生成速度不是很快，我这有块Tesla p4，不知道加上去会不会加快点速度</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png"></p>
-<p>更多关键词请见：</p>
-<p><a href="https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords">https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords</a></p>
-<p><a href="https://gelbooru.com/index.php?page=tags&s=list">https://gelbooru.com/index.php?page=tags&s=list</a></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>《汇编语言程序设计》求生指南</title>
-    <url>/2022/11/14/%E3%80%8A%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png"></p>
-<h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><ol>
-<li>BCD码转换<br>1010—1111是非法BCD码</li>
-<li>真值数和补码数之间的转换<br>正数的补码等于本身，负数的补码等于反码+1</li>
-<li>n位字长的有符号数、无符号数的数值范围<br>设机器数字长&#x3D;n, 则n位补码数<br>其真值范围为 －2n-1 ～ +2n-1－1<br>无符号数其数值范围为 0 ～ 2n－1</li>
-<li>常用ASCII码范围：<br>0:48<br>A:65<br>a:97<br>(space):32<br>(回车):13</li>
-<li>C标表示进位，O标表示溢出</li>
-<li>冯诺依曼架构：<strong>运算器、控制器、存储器、输入、输出</strong><br>CPU：运算器和控制器</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image.png"></p>
-<h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><ol>
-<li>基本结构寄存器的名称、位长和作用<br>通用寄存器: AX, BX, CX, DX, SI（源变址）, DI（目的变址）, BP（基址指针）<br>段寄存器: CS, SS, DS, ES, FS, GS<br>指针寄存器: IP（指令指针）, SP（堆栈指针）<br>标志寄存器: FLAGS<br>15位标志分为两类: 状态标志和控制标志<br>6种状态标志：CF（进位） OF（溢出） ZF（全零） PF（最后一字节1为偶数为1） AF（辅助进位标志） SF（记录最高位的位值）</li>
-<li>80486的工作模式：实地址模式和保护虚拟地址模式<br>80486的三个存贮地址空间：逻辑空间、线性空间和物理空间<br>逻辑地址：即逻辑上的地址，实模式下由“段基地址+段内偏移”组成;保护模式下由“段选择符+段内偏移”组成。<br>线性地址：逻辑地址经分段机制后就成线性地址，它是平坦的;如果不启用分页，那么此线性地址即物理地址。<br>物理地址：线性地址经分页转换后就成了物理地址。<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-1.png"></li>
-<li>实地址模式下，物理地址的形成<br><strong>物理地址&#x3D;段基址*16+偏移地址</strong><br><strong>内存容量&#x3D;末地址-首地址+1</strong><br><strong>末地址&#x3D;首地址+（字数-1）*2 末地址</strong></li>
-</ol>
-<h2 id="第三章"><a href="#第三章" class="headerlink" title="第三章"></a>第三章</h2><ol>
-<li><p>源程序中的语句类型<br>一个完整的源程序应包含2类语句:<br>指令性语句（符号指令）、指示性语句(伪指令)</p>
-</li>
-<li><p>80486的寻址方式486有3类7种寻址方式<br>立即寻址方式：获得立即数<br>寄存器寻址方式：获得寄存器操作数<br>存储器操作数寻址方式：获得存储器操作数（内存操作数）</p>
-</li>
-<li><p>内存寻址方式 16位寻址规定可使用的寄存器<br>直接寻址<br>寄存器间接寻址 [BX],[BP],[SI],[DI]。段寄存器：[间址寄存器]，某单元的物理地址&#x3D;段寄存器内容×16+间址寄存器<br>基址寻址 [BX+位移量],[BP＋位移量]。段寄存器:[基址寄存器+位移量]。物理地址&#x3D;段寄存器内容×16+基址寄存器+位移量<br>变址寻址 [SI+位移量],[DI+位移量]。<br>基址+变址寻址 [BX+SI],[BX+DI],[BP+SI]，[BP+DI]</p>
-</li>
-<li><p>常用伪指令<br>数据字义伪指令 DB DW DD（一字节二字节四字节）<br>等值伪指令 EQU &#x3D;</p>
-</li>
-<li><p>常用运算符<br>$运算符：当前汇编计数器的值。通常$-地址，可以求长度<br>SEG运算符：获取段的基地址，SEG DATA<br>OFFSET运算符：相对于段首的基地址<br>PTR运算符：修改属性<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-2.png"></p>
-</li>
-<li><p>目标程序的生成<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425716_POWERPNT_1065x313.png"></p>
-</li>
-<li><p>16进制数加法及标志位的影响<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668425885_POWERPNT_1101x202.png">80486基本指令集<br><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426216_POWERPNT_1132x505.png">  </p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426445_POWERPNT_1002x554.png">  </p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/1668426487_POWERPNT_1014x818.png"></p>
-</li>
-</ol>
-<h2 id="第四章"><a href="#第四章" class="headerlink" title="第四章"></a>第四章</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/image-3-1024x461.png"></p>
-]]></content>
-      <categories>
-        <category>我爱学习</category>
-      </categories>
-      <tags>
-        <tag>求生指南</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>《信息安全数学基础》求生指南</title>
     <url>/2022/01/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%B1%82%E7%94%9F%E6%8C%87%E5%8D%97/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/%E5%9B%BE%E7%89%87-300x181.png"></p>
@@ -1047,90 +1083,31 @@
       </tags>
   </entry>
   <entry>
-    <title>右键程序文件夹卡死问题的解决</title>
-    <url>/2022/01/16/%E5%8F%B3%E9%94%AE%E7%A8%8B%E5%BA%8F%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252137988.jpg"></p>
-<p>困扰我半年多的老毛病了</p>
-<p>右键管理中删掉百度网盘就行了，出生啊百度网盘</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252138140.png"></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>资源管理器</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>右键菜单，用VSCode打开文件和文件夹</title>
-    <url>/2021/06/18/%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%EF%BC%8C%E7%94%A8vscode%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252139401.jpg"></p>
-<p>由于之前在安装VSCODE的时候，没注意详细阅读提示，而且第一次安装比较随意，只是带着想试一下VSCODE才安装的，所以安装的时候漏了勾选open with code这个非常好用的功能！</p>
-<p>那么我们应该怎么解决这个问题呢？？？<br>看了看网上的方法，分为两种：</p>
-<ul>
-<li>重装VSCODE，重装大法好啊有没有？(不，重装了好多插件要重新装很麻烦的)</li>
-<li>修改注册表(一点都不难，但是要仔细一点)</li>
-</ul>
-<p>重装我就不讲了，谁都会的了吧?</p>
-<p>那么我来讲一下修改注册表</p>
-<p>首先新建一个文本文件。在文本文件中输入以下代码修改注册表，这里要注意一下，<strong>里面的路径要修改为自己电脑里VSCODE的绝对路径，而且注意路径的书写，因为在字符串中，所以注意 \ 的转义</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\*\shell\VSCode]</span><br><span class="line">@=&quot;Open with Code&quot;</span><br><span class="line">&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\*\shell\VSCode\command]</span><br><span class="line">@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%1\&quot;&quot;</span><br><span class="line">    </span><br><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\Directory\shell\VSCode]</span><br><span class="line">@=&quot;Open with Code&quot;</span><br><span class="line">&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\Directory\shell\VSCode\command]</span><br><span class="line">@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;</span><br><span class="line"></span><br><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode]</span><br><span class="line">@=&quot;Open with Code&quot;</span><br><span class="line">&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode\command]</span><br><span class="line">@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;</span><br></pre></td></tr></table></figure>
+    <title>Nekobot开发心得：Silk4j食用笔记</title>
+    <url>/2021/10/11/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97%EF%BC%9Asilk4j%E9%A3%9F%E7%94%A8%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252204000.png"></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>在进行mirai机器人Nekobot的开发过程中，在论坛中发现了大佬写的silk4j–JVM的语音编码组件，觉得用起来挺不错的，于是去对应的仓库进行了一个习的学，感觉收获挺大的</p>
+<p>仓库链接奉上：<a href="https://github.com/mzdluo123/silk4j">https://github.com/mzdluo123/silk4j</a></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252205994.png"></p>
+<h2 id="0x01导入依赖"><a href="#0x01导入依赖" class="headerlink" title="0x01导入依赖"></a>0x01导入依赖</h2><p>我是kotlin编译的，需要在你的build.gradle.kts里面加上一些东西</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 要使用maven仓库导入，需要先为你的账号生成一个访问token才能正常拉取</span><br><span class="line">repositories &#123;</span><br><span class="line">   maven &#123; </span><br><span class="line">     url &#x27;https://maven.pkg.github.com/mzdluo123/silk4j&#x27;</span><br><span class="line">     credentials &#123;</span><br><span class="line">            username = &#x27;你的用户名&#x27;</span><br><span class="line">            password = &#x27;你的token&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">dependencies &#123;</span><br><span class="line">    implementation(&quot;io.github.mzdluo123:silk4j:版本号&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>保存文件，随便放在哪里都可以，然后命名为： vsCodeOpenFolder.reg，这里你命名为什么都没关系，但是后缀必须要为 <strong>.reg</strong>最后，双击点开该文件，注册完成！</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252140939.png"></p>
-<hr>
-<p>参考文章：VSCODE添加open with code功能，实现右键打开文件夹 <a href="https://blog.csdn.net/qq_37810453/article/details/88101745">https://blog.csdn.net/qq_37810453&#x2F;article&#x2F;details&#x2F;88101745</a></p>
-]]></content>
+<p>token的获取方式是在github的<a href="https://github.com/settings/profile">Settings</a> &#x2F; <a href="https://github.com/settings/tokens">Developer settings</a> ，里面的话，会有一个Personal access tokens，点进去，自己取个标识，然后注意一下期限，我是选择永不过期，最后范围我是全勾上了。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252205155.png"></p>
+<p>好，最后会生成一个token，把它复制粘贴到相应位置（切勿泄露！！！）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252205415.png"></p>
+<h2 id="0x02食用"><a href="#0x02食用" class="headerlink" title="0x02食用"></a>0x02食用</h2><p>其实官方说明已经讲的很清楚了</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 请使用这个类完成编码</span><br><span class="line">// 所有的编码默认都只使用左声道</span><br><span class="line">public class AudioUtils &#123;</span><br><span class="line">//使用之前需要初始化</span><br><span class="line">public static void init() throws IOException &#123;</span><br><span class="line">&#125;</span><br><span class="line">// 初始化时可选指定缓存目录，未指定则使用系统目录</span><br><span class="line">public static void init(File tmpDir) throws IOException &#123;</span><br><span class="line">&#125;</span><br><span class="line">// 以下为编码函数，只可以同时进行一个编码任务，如需pcm文件请看源代码</span><br><span class="line">// 返回的文件在缓存目录内，使用完毕请删除</span><br><span class="line">public static File mp3ToSilk(File mp3File) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">public static File mp3ToSilk(InputStream mp3FileStream) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static File silkToMp3(File silkFile) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static File silkToMp3(InputStream silkFileStream) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实本地很好处理。那就以我最近使用的文字转语音api为例，返回的一条mp3文件的下载链接。与之前返回图片类似，将网络的资源转化为InputStream流，再使用silk4j组件的方法</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//获取网络图片</span><br><span class="line">    fun getNetImg(urlstr: String): InputStream? &#123;</span><br><span class="line">        val url = URL(urlstr)</span><br><span class="line">//        return try &#123;  实有异常了再说</span><br><span class="line">        return url.openConnection().getInputStream()</span><br><span class="line">//        &#125;catch(err:java.io.IOException)&#123;</span><br><span class="line">//            null</span><br><span class="line">//        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">getNetImg(mp3str).use &#123;</span><br><span class="line">                        if (it != null) &#123;//暂时使用img方法获取流</span><br><span class="line">                            AudioUtils.init()</span><br><span class="line">                            val silk: File = AudioUtils.mp3ToSilk(it)</span><br><span class="line">                            group.sendMessage(silk.toExternalResource().uploadAsVoice(group))</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>野生技术协会</category>
       </categories>
       <tags>
-        <tag>VSCode</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Web网页小项目——天气预报Web页面的踩坑笔记</title>
-    <url>/2021/01/23/web%E7%BD%91%E9%A1%B5%E5%B0%8F%E9%A1%B9%E7%9B%AE%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5web%E9%A1%B5%E9%9D%A2/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252141067.jpg"></p>
-<p>寒假是个学习和提升技能的好时机，今年寒假我就参加了SAST2020前端组的WOC（Winter Of Code）项目，来借此好时机来锻炼自己的开发能力。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252142254.png"></p>
-<p>目前第一阶段我是写了一个天气预报Web页面，本以为，不就用ajax调用个api吗，在处理一下数据，调一个好看的式样，不就大功告成了吗？确实，理论上是这么简单，但是实际花了我三天时间，才写出了这么个小小的demo。很多东西根本不是我想象的那么简单的，我是踩一个坑学一些新东西，才做好一个模块的（悲）。</p>
-<h2 id="一、json跨域问题"><a href="#一、json跨域问题" class="headerlink" title="一、json跨域问题"></a>一、json跨域问题</h2><p>第一天就是和这个api斗智斗勇的一天，本来我在网上找到了百度定位api，进展颇为顺利，就是百度api配上谷歌内核的浏览器（比如chrome，qq浏览器），它的具体定位就很不准，而且比较慢，但是定位到城市还是没有问题的。后来要找个天气预报的api，这里选择了心知天气api，选了十五天试用套餐，一共可接入10000次。嘛，我就写个小demo，问题不大，又不是长期用。</p>
-<p>一开始我一直使用的是json调用方式，结果浏览器可以直接访问，但是用到我写的项目里，用jQuery的getJSON（“xxx”）发现获取不到数据。我一直以为自己的js代码哪里出了问题，知道晚上我才发现：json跨域的话，现在的浏览器会自动拦截。</p>
-<h3 id="（一）何为跨域？"><a href="#（一）何为跨域？" class="headerlink" title="（一）何为跨域？"></a>（一）何为跨域？</h3><p><strong>只要协议，端口，域名有一个不同，即为跨域！</strong></p>
-<p>首先，先了解浏览器有一个很重要安全性限制，即为同源策略：不同域的客户端脚本在无明确授权的情况下不能读些对方资源。</p>
-<p>然而，当进行一些api接口调用时，那肯定不可避免地需要进行跨域操作，这时候“同源策略”就显得过于苛刻。</p>
-<h3 id="（二）怎样解决"><a href="#（二）怎样解决" class="headerlink" title="（二）怎样解决"></a>（二）怎样解决</h3><p>我又花了一晚上的时间去百度这个方法那个方法，发现纯前端的话，json是根本行不通的，但我仍不死心，去请教了一下前段组的大仙贝：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143365.jpg"></p>
-<p>好，这波我死心了，老老实实用jsonp吧（悲）</p>
-<p>好在心知天气本身就有jsonp的调用方式，也有官方的demo。就是比较麻烦，这其中涉及密钥+公钥生成签名验证的机制，我硬着头皮的学习了一下，试着自己搞了一下，最后竟然成功了。好耶耶耶耶耶耶耶耶耶耶！</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252143816.jpg"></p>
-<h2 id="二、Echarts绘制与适配问题"><a href="#二、Echarts绘制与适配问题" class="headerlink" title="二、Echarts绘制与适配问题"></a>二、Echarts绘制与适配问题</h2><p>Echarts是一个使用 JavaScript 实现的开源可视化库，涵盖各行业图表，非常的不错。但是这里还是踩到了两个坑：</p>
-<h3 id="（一）Echarts无法绘制图标"><a href="#（一）Echarts无法绘制图标" class="headerlink" title="（一）Echarts无法绘制图标"></a>（一）Echarts无法绘制图标</h3><p>当我打开网页调试时，控制台传入了如下错误：【Echarts】Uncaught TypeError: Cannot read property ‘getAttribute’ of null</p>
-<p>一开始我还以为是Echarts cdn解析出了错，后来才得知，Echarts是没有找到所要绘制的div，不是说我没有在HTML里写到它，而是js在body生成前就调用了，所以才会出现获取不到属性。解决方法就是把js扔到页脚：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144259.png"></p>
-<h3 id="（二）Echarts适配问题"><a href="#（二）Echarts适配问题" class="headerlink" title="（二）Echarts适配问题"></a>（二）Echarts适配问题</h3><p>这个就有点麻烦了，当你设置div的width为100%时，愚蠢的Echarts会自动识别为100px，其效果极其鬼畜：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252144298.png"></p>
-<p>那咋办？网上给的方案都是echarts初始化之前再用js获取当前屏幕的大小，然后再给他设置宽度就可以了。而我只接给他设了个90vw的具体长度，问题也能解决（</p>
-<p>总的来说踩了不少的坑，当然也学了不少东西，比如ajax+jquery，bootstrap4的响应式界面搭建，当然啊，调css的过程也是坠痛苦的。</p>
-<p>项目地址：<a href="https://github.com/picpo/weather-demo">https://github.com/picpo/weather-demo</a></p>
-<p>大家可以将里面的key换成自己的玩玩，因为我的次数也估计只剩下6000多次了。</p>
-<ul>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145373.png"></p>
-</li>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252145325.png"></p>
-</li>
-<li><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252146972.png"></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>ajax</tag>
-        <tag>bootstrap</tag>
-        <tag>jQuery</tag>
+        <tag>Kotlin</tag>
+        <tag>Java</tag>
+        <tag>Mirai</tag>
       </tags>
   </entry>
   <entry>
@@ -2190,45 +2167,134 @@
       </tags>
   </entry>
   <entry>
-    <title>树莓派搭建Mirai QQ机器人</title>
-    <url>/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png"></p>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直以来，我都有一个搭建qq机器人的想法。可惜酷Q早已被腾讯橄榄，但好在还有Mirai这个框架。在翻出我用了五年的树莓派后，我打算在上面自己搭建一个qq机器人，以后或许还会写一写插件啥的（</p>
-<p>本文可能会时不时偶尔更新一下，做到哪步是哪步（咕咕咕预订</p>
-<p>项目地址：<a href="https://github.com/mamoe/mirai">https://github.com/mamoe/mirai</a></p>
-<h2 id="0x01下载Mirai控制台"><a href="#0x01下载Mirai控制台" class="headerlink" title="0x01下载Mirai控制台"></a>0x01下载Mirai控制台</h2><p><a href="https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md">https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md</a></p>
-<p>因为树莓派是arm架构的，所以我选择了arm的版本</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200411.png"></p>
-<p>建立文件夹，进入，并chmod一下</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pi@raspberrypi:~/mirai $ ls</span><br><span class="line">mcl-installer-72b890d-linux-arm</span><br><span class="line">pi@raspberrypi:~/mirai $ sudo chmod +x ./mcl-installer-72b890d-linux-arm</span><br><span class="line">pi@raspberrypi:~/mirai $ ls</span><br><span class="line">mcl-installer-72b890d-linux-arm</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200451.png"></p>
-<p>然后无脑回车就是了</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200333.png"></p>
-<p>可以看到，目录下多了不少东西，先chmod运行mcl再说</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201423.png"></p>
-<p>第一次运行会初始化</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201727.png"></p>
-<h2 id="0x02下载和安装插件"><a href="#0x02下载和安装插件" class="headerlink" title="0x02下载和安装插件"></a>0x02下载和安装插件</h2><p>刚刚装好的 Mirai Console 是没有任何功能的。功能将由插件提供。</p>
-<p>Mirai 官方提供两个插件：</p>
-<ul>
-<li><a href="https://github.com/project-mirai/chat-command">chat-command</a>: 允许在聊天环境通过以 “&#x2F;“ 起始的消息执行指令</li>
-<li><a href="https://github.com/project-mirai/mirai-api-http">mirai-api-http</a>：提供 HTTP 支持，允许使用其他编程语言的插件</li>
-</ul>
-<p>打开命令行 (Windows 系统按住Shift+鼠标右键，点击”在此处打开 PowerShell”),<br>可以使用 MCL 自动安装这些插件如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./mcl --update-package net.mamoe:mirai-api-http --type plugin --channel stable</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201808.png"></p>
-<p>如果是 JAR 文件的插件，放入 <code>plugins</code> 即可。其他插件一般都有特殊说明如何使用，请参考它们的说明。</p>
-<h2 id="0x03使用控制台指令"><a href="#0x03使用控制台指令" class="headerlink" title="0x03使用控制台指令"></a>0x03使用控制台指令</h2><p>启动 <code>mcl.cmd</code> 就会看到控制台。在控制台可以输入指令，按回车执行这条指令。</p>
-<p>Mirai Console 内置一些指令，输入 <code>?</code> 并回车可以查看指令列表。</p>
+    <title>服务器更新指南</title>
+    <url>/2024/10/22/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222307533.png"></p>
+<h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>之前的nas太菜了，MC服务器带不动，功耗也高，正好之前断头+碎显示屏的yoga14c2021已经在家里吃灰一年多了，说实话1135G7就算再菜他也是比4160强，功耗还低，并且多了个电池做内部UPS（</p>
+<h2 id="0x01去头"><a href="#0x01去头" class="headerlink" title="0x01去头"></a>0x01去头</h2><p>屏幕碎了，其原因是转轴寄了（再次奉劝任何想买联想机器的朋友，你即使不怕计划报废买了后也记得延保），必须得把这玩意整下来才方便我后续操作。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222312531.jpeg"></p>
+<p>我是很想把下图的在机身的转轴铰链搞下来的，但问题是他被主板压着，而主板又是被散热器+模块+电池压着，所以总的来说施工风险很高，也很麻烦，我就直接把屏幕从铰链上拆下来了，所以最后还会留着两边两个小铰链，不过无伤大雅。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222345692.jpeg"></p>
+<p>排线也拔了，最后效果还不错，已经是我想要的状态了</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222318762.jpeg"></p>
+<h2 id="0x02系统迁移"><a href="#0x02系统迁移" class="headerlink" title="0x02系统迁移"></a>0x02系统迁移</h2><p>这个本来没啥好说的，主要是被联想bios坑了。我无论是在liveCD里用GParted快速迁移还是dd缓慢迁移，他的BIOS都不认我的盘，查了半天也确实是GPT引导完全没有问题。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222323308.jpeg"></p>
+<p>搞半天试了一下修复分区就好了，我服了。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222324164.jpeg"></p>
+<p>新机器的效能还是很不错的，发一下前后对比：</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222329215.png"></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222330804.png"></p>
+<h2 id="0x03服务恢复"><a href="#0x03服务恢复" class="headerlink" title="0x03服务恢复"></a>0x03服务恢复</h2><p>记录一下恢复服务时踩的坑吧：</p>
+<p>第一个就是桌面的锅了，一开始测试时进的就是桌面，结果MC服务器测试15分钟时断开链接了，一拍脑袋才发现忘记关了15分钟休眠的选项。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222334301.png"></p>
+<p>第二天早上起来发现service19个failed，问了一下群友这sddm不disable不行。重启之后就没报过错了；而且之前有个核心偶尔会占用100%，内存占用也是一口气吃了8G，我怀疑都是桌面导致的，现在cpu内存占用都很低了。</p>
+<p>第二个坑就是迁移nextcloud和navidrome时发生的了，这两个服务的数据文件都在我的raid1阵列上，但是我现在只有一个硬盘盒，易驱线明天才到。</p>
+<p>我一开始打算在Windows上读取单个盘，但是花了很多时间还失败了（在此之前我尝试连到Mac上，但是无法识别，这也是导致我步入windows上歧途的原因）。随后直接挂载服务器上得了，没想到一下子就读取到了</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222338850.png"></p>
+<p>后面迁移nextcloud服务时出现了读写问题，原因是文件夹owner是www-data，而我sudo cp下直接导致变成了root，解决方法也简单，加个-p就能保留源文件的权限、所有者和时间戳信息。</p>
+<h2 id="0x04硬件堆放"><a href="#0x04硬件堆放" class="headerlink" title="0x04硬件堆放"></a>0x04硬件堆放</h2><p>硬盘这块，买的是亚克力板子+泡沫海绵垫，用的是易驱线+12V3A圆口电源。</p>
+<p><strong><u>注意！这并不是一个很好的方案，可能会导致硬盘升天数据丢失，请勿模仿。</u></strong></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410231203826.jpeg"></p>
+<p>另外一开始买的是USB2.0，收货后发现的问题是USB2.0只能驱动2TB以下的硬盘，很神奇。USB2.0很便宜一根几块钱，但是3.0就很贵了得25元。</p>
+<p>装的过程中还遇到了电源大小问题，如图所见这个玩意插上去后会导致相邻的插座无法插任何东西，好在旁边还有个拖线板，可以把电脑的电源插到那块儿去。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410251830644.png"></p>
+<p>好了之后测试了一下，发现速度不敢恭维，只有30-50MB&#x2F;s，不如以前插在SATA线快。但是这也没办法，另外同样有群友也有类似的问题，也是在Linux下限速但是Windows就正常了。不过这些都是小问题，总之我觉得这一套下来功耗和性能都有加强，只是灵车程度也比之前灵车多了，或许过段时间我会整篇新文章来说说翻车后抢救过程（bushi</p>
+<h2 id="0x05-已老实"><a href="#0x05-已老实" class="headerlink" title="0x05 已老实"></a>0x05 已老实</h2><p>昨天的我：先相信</p>
+<p>今天的我：已投降</p>
+<p>先说原因：第一点是易驱线质量很差，4T的盘没问题，8T的盘隔一会儿就会掉盘；其次是Linux下使用外接HDD速度奇慢，我和身边的朋友以及网络上都有同样的案例，同样的外接硬盘在Windows上能跑满速度，但是接在Linux上只有30MB&#x2F;s，跑不到lsusb里5Gbps的USB3.0协议（当然这个问题出现的人很多，也有朋友没有这个问题，这个我就不得而知了）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271504160.png"></p>
+<p>现在换成sata了，速度正常了，那么老机器就用来刷pt了。</p>
 ]]></content>
       <categories>
         <category>野生技术协会</category>
       </categories>
       <tags>
-        <tag>Mirai</tag>
-        <tag>树莓派</tag>
+        <tag>服务器</tag>
+        <tag>Linux</tag>
+        <tag>运维</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>stable-diffusion-webui的食用方法</title>
+    <url>/2022/10/08/stable-diffusion-webui%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252157828.png"></p>
+<h2 id="0x01-Anaconda安装"><a href="#0x01-Anaconda安装" class="headerlink" title="0x01 Anaconda安装"></a>0x01 Anaconda安装</h2><p>这个没啥好说的，主要是要记住你的安装路径</p>
+<h2 id="0x02-安装CUDA"><a href="#0x02-安装CUDA" class="headerlink" title="0x02 安装CUDA"></a>0x02 安装CUDA</h2><p>到官网：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://developer.nvidia.com/cuda-downloads?target_os=Windows&amp;target_arch=x86_64&amp;target_version=10&amp;target_type=exe_local</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158948.png"></p>
+<h2 id="0x03-安装stable-diffusion-webui"><a href="#0x03-安装stable-diffusion-webui" class="headerlink" title="0x03 安装stable-diffusion-webui"></a>0x03 安装stable-diffusion-webui</h2><h3 id="1-sd-webui"><a href="#1-sd-webui" class="headerlink" title="1.sd-webui"></a>1.sd-webui</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/sd-webui/stable-diffusion-webui.git</span><br></pre></td></tr></table></figure>
+
+<p>安装后按他所说的在根目录建立<strong>custom-conda-path.txt</strong>，并写上自己的Anaconda根目录</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252158626.png"></p>
+<p>下载模型文件，放在<strong>\stable-diffusion-webui\models\ldm\stable-diffusion-v1</strong>下</p>
+<p>其实也可以mklink，不过我没试过，因为我的novelaileak文件在下载盘里，下载盘是个远古机械，速度不是很快</p>
+<h3 id="2-另一个更好的web-ui"><a href="#2-另一个更好的web-ui" class="headerlink" title="2.另一个更好的web-ui"></a>2.另一个更好的web-ui</h3><p>这个更好，可以过滤一些negative prompt</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone  https://github.com/AUTOMATIC1111/stable-diffusion-webui.git</span><br></pre></td></tr></table></figure>
+
+<p>安装过程过于缓慢，建议先pip安装他的requirements.txt</p>
+<h3 id="3-泄露模型"><a href="#3-泄露模型" class="headerlink" title="3.泄露模型"></a>3.泄露模型</h3><p>我这里用的是novelaileak的，你也可以用其他的</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">magnet:?xt=urn:btih:5bde442da86265b670a3e5ea3163afad2c6f8ecc&amp;dn=novelaileak&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2F9.rarbg.com%3A2810%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A6969%2Fannounce&amp;tr=http%3A%2F%2Ftracker.openbittorrent.com%3A80%2Fannounce&amp;tr=udp%3A%2F%2Fopentracker.i2p.rocks%3A6969%2Fannounce</span><br></pre></td></tr></table></figure>
+
+<p>第二版（125G）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">magnet:?xt=urn:btih:a20087e7807f28476dd7b0b2e0174981709d89cd&amp;dn=novelaileakpt2&amp;tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&amp;tr=http%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&amp;tr=https%3a%2f%2ftracker.nanoha.org%3a443%2fannounce</span><br></pre></td></tr></table></figure>
+
+<p>今天流出的新版本，效果更好但是空间占用更大</p>
+<h2 id="0x04-食用"><a href="#0x04-食用" class="headerlink" title="0x04 食用"></a>0x04 食用</h2><p>到根目录，运行一下webui的cmd，会自动安装环境</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png"></p>
+<p>我的GTX1060 6G生成速度不是很快，我这有块Tesla p4，不知道加上去会不会加快点速度</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252159861.png"></p>
+<p>更多关键词请见：</p>
+<p><a href="https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords">https://wiki.installgentoo.com/wiki/Stable_Diffusion#Keywords</a></p>
+<p><a href="https://gelbooru.com/index.php?page=tags&s=list">https://gelbooru.com/index.php?page=tags&s=list</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>右键程序文件夹卡死问题的解决</title>
+    <url>/2022/01/16/%E5%8F%B3%E9%94%AE%E7%A8%8B%E5%BA%8F%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252137988.jpg"></p>
+<p>困扰我半年多的老毛病了</p>
+<p>右键管理中删掉百度网盘就行了，出生啊百度网盘</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252138140.png"></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>资源管理器</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>右键菜单，用VSCode打开文件和文件夹</title>
+    <url>/2021/06/18/%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%EF%BC%8C%E7%94%A8vscode%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252139401.jpg"></p>
+<p>由于之前在安装VSCODE的时候，没注意详细阅读提示，而且第一次安装比较随意，只是带着想试一下VSCODE才安装的，所以安装的时候漏了勾选open with code这个非常好用的功能！</p>
+<p>那么我们应该怎么解决这个问题呢？？？<br>看了看网上的方法，分为两种：</p>
+<ul>
+<li>重装VSCODE，重装大法好啊有没有？(不，重装了好多插件要重新装很麻烦的)</li>
+<li>修改注册表(一点都不难，但是要仔细一点)</li>
+</ul>
+<p>重装我就不讲了，谁都会的了吧?</p>
+<p>那么我来讲一下修改注册表</p>
+<p>首先新建一个文本文件。在文本文件中输入以下代码修改注册表，这里要注意一下，<strong>里面的路径要修改为自己电脑里VSCODE的绝对路径，而且注意路径的书写，因为在字符串中，所以注意 \ 的转义</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\*\shell\VSCode]</span><br><span class="line">@=&quot;Open with Code&quot;</span><br><span class="line">&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\*\shell\VSCode\command]</span><br><span class="line">@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%1\&quot;&quot;</span><br><span class="line">    </span><br><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\Directory\shell\VSCode]</span><br><span class="line">@=&quot;Open with Code&quot;</span><br><span class="line">&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\Directory\shell\VSCode\command]</span><br><span class="line">@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;</span><br><span class="line"></span><br><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode]</span><br><span class="line">@=&quot;Open with Code&quot;</span><br><span class="line">&quot;Icon&quot;=&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe&quot;</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode\command]</span><br><span class="line">@=&quot;\&quot;C:\\Users\\picpo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\&quot; \&quot;%V\&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>保存文件，随便放在哪里都可以，然后命名为： vsCodeOpenFolder.reg，这里你命名为什么都没关系，但是后缀必须要为 <strong>.reg</strong>最后，双击点开该文件，注册完成！</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252140939.png"></p>
+<hr>
+<p>参考文章：VSCODE添加open with code功能，实现右键打开文件夹 <a href="https://blog.csdn.net/qq_37810453/article/details/88101745">https://blog.csdn.net/qq_37810453&#x2F;article&#x2F;details&#x2F;88101745</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>VSCode</tag>
       </tags>
   </entry>
   <entry>
@@ -2317,46 +2383,6 @@
       </tags>
   </entry>
   <entry>
-    <title>记一次文件上传类型渗透</title>
-    <url>/2022/05/07/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%B1%BB%E5%9E%8B%E6%B8%97%E9%80%8F/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252151241.jpg"></p>
-<p>仅用于信息安全教学和演示，请勿用于其他用途</p>
-<blockquote>
-<p>“从未如此美妙的开局！”</p>
-</blockquote>
-<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>很久没有做安全相关的事了，昨天在好奇心的驱使下，尝试挖了一个比较简单的洞，过程不复杂，但是对于以后的可能进行的后端开发敲响了警钟。</p>
-<h2 id="0x01过程"><a href="#0x01过程" class="headerlink" title="0x01过程"></a><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252151117.png">0x01过程</h2><p>这个网站是一个某类表情包（一眼丁真）的分享网站，有随机表情包、按照id搜索表情包、按照id点赞表情包、上传表情包等功能。显然，有上传就一定有审核，有审核就一定有管理员端，而且这是肯定进不去的。（下图为按照id点赞表情包的api，没啥用其实）</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152233.png"></p>
-<p>还是看看他的主界面吧，有一个上传，看看源码</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div id=&quot;upload-pic-box&quot;&gt;</span><br><span class="line">    &lt;a id=&quot;pic-path&quot;&gt;上传一张图片吧&lt;/a&gt;</span><br><span class="line">    &lt;form id=&quot;upload-form&quot;&gt;</span><br><span class="line">        &lt;input onchange=&quot;validateFileType()&quot; type=&quot;file&quot; accept=&quot;image/gif,image/jpeg,image/jpg,image/png,image/svg&quot; name=&quot;user-upload&quot; id=&quot;user-upload&quot;&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">//...此处省略114514行~</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    var fileName = document.getElementById(&quot;user-upload&quot;).value;</span><br><span class="line">    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();</span><br><span class="line">    if (extFile == &quot;jpg&quot;  extFile == &quot;jpeg&quot;  extFile == &quot;png&quot;  extFile == &#x27;gif&#x27;) &#123;</span><br><span class="line">        showfilename();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        alert(&quot;你怎么骗我，\n哼，上传点正常格式的照片！（jpg/png/gif）&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看出，如果服务端没做验证的话，这里的前端校验就是马奇诺防线，轻松上传我们的🐴</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152111.png"></p>
-<p>然后我们需要定位我们的🐴在哪里了，本来这有些棘手，毕竟万一人家后端有个杀🐴程序呢？（虽然能上传成功的话就说明大概率不会有了233）</p>
-<p>然鹅，在审查其他api时，我发现了有个叫做&#x2F;admin-get.php的get请求。我试着直接curl了一下，结果大跌眼镜的是，这玩意谁都能访问，而且一堆较为敏感的信息，虽然没有标识，但是能一眼看出有些字段是图片id和<strong>图片地址</strong>的。这极为致命，因为这就告诉了我上传的🐴的位置。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152329.png"></p>
-<p>这就离谱了嗷xdm，让我们连一下蚁剑</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152852.png"></p>
-<p><img src="http://192.168.1.35/wp-content/uploads/2022/05/%E5%9B%BE%E7%89%87-7-1024x168.png"></p>
-<p>xswl</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152256.png"></p>
-<p>不过还是要提issue的，这是道德底线</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152256.png"></p>
-<p>作者也在后面做了补救措施，看得出来还是个比较核善的人😋😋😋</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252153180.png"></p>
-<h2 id="0x02后记"><a href="#0x02后记" class="headerlink" title="0x02后记"></a>0x02后记</h2><p>实际上，我一直是在做黑盒测试，我是在拿到shell后才注意到它原来本身就开源了（离谱，那我浪费时间干嘛）。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252153366.png"></p>
-<p>可以看出来作者本人真的强，但是再强的人也难免有些地方不如成熟框架做的细致。想起我这种彩笔以前直接用几个组件拼接了一个后端，还自以为是地写了个恶心人的黑盒，就以为能抵御95%的入侵了，结果某个“阿喀琉斯之踵”被别人（plusls）拒绝服务攻击了，寄。</p>
-]]></content>
-      <categories>
-        <category>安全</category>
-      </categories>
-      <tags>
-        <tag>PHP</tag>
-        <tag>文件上传</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>远程桌面（RDP）的迷思</title>
     <url>/2022/09/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%EF%BC%88rdp%EF%BC%89%E7%9A%84%E8%BF%B7%E6%80%9D/</url>
     <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242340599.jpg"></p>
@@ -2401,17 +2427,85 @@
       </tags>
   </entry>
   <entry>
-    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
-    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg"></p>
-<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">apt install open-vm-tools</span><br><span class="line">apt install open-vm-tools-desktop</span><br></pre></td></tr></table></figure>]]></content>
+    <title>树莓派搭建Mirai QQ机器人</title>
+    <url>/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png"></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>一直以来，我都有一个搭建qq机器人的想法。可惜酷Q早已被腾讯橄榄，但好在还有Mirai这个框架。在翻出我用了五年的树莓派后，我打算在上面自己搭建一个qq机器人，以后或许还会写一写插件啥的（</p>
+<p>本文可能会时不时偶尔更新一下，做到哪步是哪步（咕咕咕预订</p>
+<p>项目地址：<a href="https://github.com/mamoe/mirai">https://github.com/mamoe/mirai</a></p>
+<h2 id="0x01下载Mirai控制台"><a href="#0x01下载Mirai控制台" class="headerlink" title="0x01下载Mirai控制台"></a>0x01下载Mirai控制台</h2><p><a href="https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md">https://github.com/mamoe/mirai/blob/dev/docs/UserManual.md</a></p>
+<p>因为树莓派是arm架构的，所以我选择了arm的版本</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200411.png"></p>
+<p>建立文件夹，进入，并chmod一下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pi@raspberrypi:~/mirai $ ls</span><br><span class="line">mcl-installer-72b890d-linux-arm</span><br><span class="line">pi@raspberrypi:~/mirai $ sudo chmod +x ./mcl-installer-72b890d-linux-arm</span><br><span class="line">pi@raspberrypi:~/mirai $ ls</span><br><span class="line">mcl-installer-72b890d-linux-arm</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200451.png"></p>
+<p>然后无脑回车就是了</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200333.png"></p>
+<p>可以看到，目录下多了不少东西，先chmod运行mcl再说</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201423.png"></p>
+<p>第一次运行会初始化</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201727.png"></p>
+<h2 id="0x02下载和安装插件"><a href="#0x02下载和安装插件" class="headerlink" title="0x02下载和安装插件"></a>0x02下载和安装插件</h2><p>刚刚装好的 Mirai Console 是没有任何功能的。功能将由插件提供。</p>
+<p>Mirai 官方提供两个插件：</p>
+<ul>
+<li><a href="https://github.com/project-mirai/chat-command">chat-command</a>: 允许在聊天环境通过以 “&#x2F;“ 起始的消息执行指令</li>
+<li><a href="https://github.com/project-mirai/mirai-api-http">mirai-api-http</a>：提供 HTTP 支持，允许使用其他编程语言的插件</li>
+</ul>
+<p>打开命令行 (Windows 系统按住Shift+鼠标右键，点击”在此处打开 PowerShell”),<br>可以使用 MCL 自动安装这些插件如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./mcl --update-package net.mamoe:mirai-api-http --type plugin --channel stable</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252201808.png"></p>
+<p>如果是 JAR 文件的插件，放入 <code>plugins</code> 即可。其他插件一般都有特殊说明如何使用，请参考它们的说明。</p>
+<h2 id="0x03使用控制台指令"><a href="#0x03使用控制台指令" class="headerlink" title="0x03使用控制台指令"></a>0x03使用控制台指令</h2><p>启动 <code>mcl.cmd</code> 就会看到控制台。在控制台可以输入指令，按回车执行这条指令。</p>
+<p>Mirai Console 内置一些指令，输入 <code>?</code> 并回车可以查看指令列表。</p>
+]]></content>
       <categories>
         <category>野生技术协会</category>
       </categories>
       <tags>
-        <tag>ubuntu</tag>
-        <tag>Vmware</tag>
+        <tag>Mirai</tag>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记一次文件上传类型渗透</title>
+    <url>/2022/05/07/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%B1%BB%E5%9E%8B%E6%B8%97%E9%80%8F/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252151241.jpg"></p>
+<p>仅用于信息安全教学和演示，请勿用于其他用途</p>
+<blockquote>
+<p>“从未如此美妙的开局！”</p>
+</blockquote>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>很久没有做安全相关的事了，昨天在好奇心的驱使下，尝试挖了一个比较简单的洞，过程不复杂，但是对于以后的可能进行的后端开发敲响了警钟。</p>
+<h2 id="0x01过程"><a href="#0x01过程" class="headerlink" title="0x01过程"></a><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252151117.png">0x01过程</h2><p>这个网站是一个某类表情包（一眼丁真）的分享网站，有随机表情包、按照id搜索表情包、按照id点赞表情包、上传表情包等功能。显然，有上传就一定有审核，有审核就一定有管理员端，而且这是肯定进不去的。（下图为按照id点赞表情包的api，没啥用其实）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152233.png"></p>
+<p>还是看看他的主界面吧，有一个上传，看看源码</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div id=&quot;upload-pic-box&quot;&gt;</span><br><span class="line">    &lt;a id=&quot;pic-path&quot;&gt;上传一张图片吧&lt;/a&gt;</span><br><span class="line">    &lt;form id=&quot;upload-form&quot;&gt;</span><br><span class="line">        &lt;input onchange=&quot;validateFileType()&quot; type=&quot;file&quot; accept=&quot;image/gif,image/jpeg,image/jpg,image/png,image/svg&quot; name=&quot;user-upload&quot; id=&quot;user-upload&quot;&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">//...此处省略114514行~</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    var fileName = document.getElementById(&quot;user-upload&quot;).value;</span><br><span class="line">    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();</span><br><span class="line">    if (extFile == &quot;jpg&quot;  extFile == &quot;jpeg&quot;  extFile == &quot;png&quot;  extFile == &#x27;gif&#x27;) &#123;</span><br><span class="line">        showfilename();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        alert(&quot;你怎么骗我，\n哼，上传点正常格式的照片！（jpg/png/gif）&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，如果服务端没做验证的话，这里的前端校验就是马奇诺防线，轻松上传我们的🐴</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152111.png"></p>
+<p>然后我们需要定位我们的🐴在哪里了，本来这有些棘手，毕竟万一人家后端有个杀🐴程序呢？（虽然能上传成功的话就说明大概率不会有了233）</p>
+<p>然鹅，在审查其他api时，我发现了有个叫做&#x2F;admin-get.php的get请求。我试着直接curl了一下，结果大跌眼镜的是，这玩意谁都能访问，而且一堆较为敏感的信息，虽然没有标识，但是能一眼看出有些字段是图片id和<strong>图片地址</strong>的。这极为致命，因为这就告诉了我上传的🐴的位置。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152329.png"></p>
+<p>这就离谱了嗷xdm，让我们连一下蚁剑</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152852.png"></p>
+<p><img src="http://192.168.1.35/wp-content/uploads/2022/05/%E5%9B%BE%E7%89%87-7-1024x168.png"></p>
+<p>xswl</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152256.png"></p>
+<p>不过还是要提issue的，这是道德底线</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252152256.png"></p>
+<p>作者也在后面做了补救措施，看得出来还是个比较核善的人😋😋😋</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252153180.png"></p>
+<h2 id="0x02后记"><a href="#0x02后记" class="headerlink" title="0x02后记"></a>0x02后记</h2><p>实际上，我一直是在做黑盒测试，我是在拿到shell后才注意到它原来本身就开源了（离谱，那我浪费时间干嘛）。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252153366.png"></p>
+<p>可以看出来作者本人真的强，但是再强的人也难免有些地方不如成熟框架做的细致。想起我这种彩笔以前直接用几个组件拼接了一个后端，还自以为是地写了个恶心人的黑盒，就以为能抵御95%的入侵了，结果某个“阿喀琉斯之踵”被别人（plusls）拒绝服务攻击了，寄。</p>
+]]></content>
+      <categories>
+        <category>安全</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+        <tag>文件上传</tag>
       </tags>
   </entry>
   <entry>
@@ -2437,111 +2531,17 @@
       </tags>
   </entry>
   <entry>
-    <title>ARM64（M1版）架构下macOS运行ALAS脚本</title>
-    <url>/2024/10/15/ARM64%EF%BC%88M1%E7%89%88%EF%BC%89%E6%9E%B6%E6%9E%84%E4%B8%8BmacOS%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152008286.png"></p>
-<h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>首先感谢Github上面MAA以及AzurLaneAutoScript的开发组，让我们有工具可用。再感谢@吕明珠LmeSzinc 、@binss以及chenhuan20123 大佬，他们的教程让我受益良多。</p>
-<h2 id="0x01模拟器"><a href="#0x01模拟器" class="headerlink" title="0x01模拟器"></a>0x01模拟器</h2><p>安卓官方的模拟器能用，安装吧，我也想运行原生游戏安装包，但是alas似乎只能用adb进行一些操作</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://github.com/google/android-emulator-m1-preview/releases/download/0.3/android-emulator-m1-preview.dmg</span><br></pre></td></tr></table></figure>
-
-<p>这个不用下载android studio，非常好（</p>
-<p>安装后不能直接打开，需要提前进入 <code>Android Emulator.app/Contents/MacOS/api30-gphone-arm64-v8a/config.ini</code>这里面进行一些修改（非常抽象的是，如果你运行后再试图进行修改无论如何也是失效的，只能重新安装），以下是一些需要更改的字段</p>
-<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line">硬盘空间：<span class="attr">disk.dataPartition.size</span>=<span class="number">20480</span>M   //我直接加了个<span class="number">0</span>，因为游戏下载所有资源后也差不多这么大</span><br><span class="line">运行内存：<span class="attr">hw.ramSize</span>=<span class="number">4096</span> //我觉得<span class="number">4</span>G够了</span><br><span class="line">DPI：<span class="attr">hw.lcd.density</span>=<span class="number">420</span> //这个不变</span><br><span class="line">显示高度：<span class="attr">hw.lcd.height</span>=<span class="number">720</span></span><br><span class="line">显示宽度：<span class="attr">hw.lcd.width</span>=<span class="number">1280</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>运行后可能无法直接将游戏安装包拖动到窗口进行安装，说明你缺少adb，可以使用以下命令在macOS安装这些组件</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">brew install android-platform-tools</span><br><span class="line">//安装成功后可以输入以下命令获取位置</span><br><span class="line">adb version</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152022899.png"></p>
-<p>记得到这个界面给模拟器加上adb路径</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152024442.png"></p>
-<h2 id="0x02脚本安装"><a href="#0x02脚本安装" class="headerlink" title="0x02脚本安装"></a>0x02脚本安装</h2><p>先去项目原地址把代码全部git clone下来到某个位置，保留用。</p>
-<p>其次去拉取binss大佬做的镜像<code>binss/azurlaneautoscript:arm64</code>（本质是为了mxnet1.9.0这个东西，你愿意的话也可以自己编译），然后你就可以运行一下容器了：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it -e TZ=Asia/Shanghai --volume=你自己放alas的文件夹:/app/AzurLaneAutoScript:rw -p 22267:22267 --name azurlaneautoscript binss/azurlaneautoscript:arm64</span><br></pre></td></tr></table></figure>
-
-<p>第一次运行时可以运行试试，这个镜像是半年前的，所以里面有些东西确实很正常，你可以在docker桌面端的程序里pip，也可以直接docker exec -it。我看了一下大概缺少了<code>onepush==1.3.0</code>、<code>pydantic==1.10.2</code>、<code>uiautomator2cache==0.3.0.1</code>等这几个。版本号不要照抄，对着requrements.txt文件查；也别一上来就直接安装整个requrements.txt，这会把<a href="https://binsitepublic-10018028.file.myqcloud.com/mxnet-1.9.1-py3-none-any.whl">mxnet-1.9.1</a>顶掉为1.6.0，相当于镜像白装了。</p>
-<h2 id="0x03使用"><a href="#0x03使用" class="headerlink" title="0x03使用"></a>0x03使用</h2><p>经过几次重启容器，这次大概率可以正常使用了：serial设置为<code>host.docker.internal:5555</code>，截图方案和点击方案我都是ADB。打开webUI后可以测试一下，看看有没有问题。</p>
-<p>有人推荐点击方案是Hermit，但我这偶尔出问题后会自动转为另一个根本不可用的方案，我无语了，目前切换为ADB一点问题都没，后面出了状况再说吧。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152051428.png"></p>
-]]></content>
+    <title>解决Vmware中Ubuntu22.04的vm-tools无法安装的问题</title>
+    <url>/2022/09/09/%E8%A7%A3%E5%86%B3vmware%E4%B8%ADubuntu22-04%E7%9A%84vm-tools%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242323435.jpg"></p>
+<p>谷歌了一下，vm-tools无法安装初步判定是Vmware 的版本对Ubuntu22.04不兼容造成的，安装open-vm-tools可以解决：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">apt install open-vm-tools</span><br><span class="line">apt install open-vm-tools-desktop</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>野生技术协会</category>
       </categories>
       <tags>
-        <tag>macOS</tag>
-        <tag>碧蓝航线</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>服务器更新指南</title>
-    <url>/2024/10/22/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222307533.png"></p>
-<h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>之前的nas太菜了，MC服务器带不动，功耗也高，正好之前断头+碎显示屏的yoga14c2021已经在家里吃灰一年多了，说实话1135G7就算再菜他也是比4160强，功耗还低，并且多了个电池做内部UPS（</p>
-<h2 id="0x01去头"><a href="#0x01去头" class="headerlink" title="0x01去头"></a>0x01去头</h2><p>屏幕碎了，其原因是转轴寄了（再次奉劝任何想买联想机器的朋友，你即使不怕计划报废买了后也记得延保），必须得把这玩意整下来才方便我后续操作。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222312531.jpeg"></p>
-<p>我是很想把下图的在机身的转轴铰链搞下来的，但问题是他被主板压着，而主板又是被散热器+模块+电池压着，所以总的来说施工风险很高，也很麻烦，我就直接把屏幕从铰链上拆下来了，所以最后还会留着两边两个小铰链，不过无伤大雅。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222345692.jpeg"></p>
-<p>排线也拔了，最后效果还不错，已经是我想要的状态了</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222318762.jpeg"></p>
-<h2 id="0x02系统迁移"><a href="#0x02系统迁移" class="headerlink" title="0x02系统迁移"></a>0x02系统迁移</h2><p>这个本来没啥好说的，主要是被联想bios坑了。我无论是在liveCD里用GParted快速迁移还是dd缓慢迁移，他的BIOS都不认我的盘，查了半天也确实是GPT引导完全没有问题。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222323308.jpeg"></p>
-<p>搞半天试了一下修复分区就好了，我服了。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222324164.jpeg"></p>
-<p>新机器的效能还是很不错的，发一下前后对比：</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222329215.png"></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222330804.png"></p>
-<h2 id="0x03服务恢复"><a href="#0x03服务恢复" class="headerlink" title="0x03服务恢复"></a>0x03服务恢复</h2><p>记录一下恢复服务时踩的坑吧：</p>
-<p>第一个就是桌面的锅了，一开始测试时进的就是桌面，结果MC服务器测试15分钟时断开链接了，一拍脑袋才发现忘记关了15分钟休眠的选项。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222334301.png"></p>
-<p>第二天早上起来发现service19个failed，问了一下群友这sddm不disable不行。重启之后就没报过错了；而且之前有个核心偶尔会占用100%，内存占用也是一口气吃了8G，我怀疑都是桌面导致的，现在cpu内存占用都很低了。</p>
-<p>第二个坑就是迁移nextcloud和navidrome时发生的了，这两个服务的数据文件都在我的raid1阵列上，但是我现在只有一个硬盘盒，易驱线明天才到。</p>
-<p>我一开始打算在Windows上读取单个盘，但是花了很多时间还失败了（在此之前我尝试连到Mac上，但是无法识别，这也是导致我步入windows上歧途的原因）。随后直接挂载服务器上得了，没想到一下子就读取到了</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222338850.png"></p>
-<p>后面迁移nextcloud服务时出现了读写问题，原因是文件夹owner是www-data，而我sudo cp下直接导致变成了root，解决方法也简单，加个-p就能保留源文件的权限、所有者和时间戳信息。</p>
-<h2 id="0x04硬件堆放"><a href="#0x04硬件堆放" class="headerlink" title="0x04硬件堆放"></a>0x04硬件堆放</h2><p>硬盘这块，买的是亚克力板子+泡沫海绵垫，用的是易驱线+12V3A圆口电源。</p>
-<p><strong><u>注意！这并不是一个很好的方案，可能会导致硬盘升天数据丢失，请勿模仿。</u></strong></p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410231203826.jpeg"></p>
-<p>另外一开始买的是USB2.0，收货后发现的问题是USB2.0只能驱动2TB以下的硬盘，很神奇。USB2.0很便宜一根几块钱，但是3.0就很贵了得25元。</p>
-<p>装的过程中还遇到了电源大小问题，如图所见这个玩意插上去后会导致相邻的插座无法插任何东西，好在旁边还有个拖线板，可以把电脑的电源插到那块儿去。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410251830644.png"></p>
-<p>好了之后测试了一下，发现速度不敢恭维，只有30-50MB&#x2F;s，不如以前插在SATA线快。但是这也没办法，另外同样有群友也有类似的问题，也是在Linux下限速但是Windows就正常了。不过这些都是小问题，总之我觉得这一套下来功耗和性能都有加强，只是灵车程度也比之前灵车多了，或许过段时间我会整篇新文章来说说翻车后抢救过程（bushi</p>
-<h2 id="0x05-已老实"><a href="#0x05-已老实" class="headerlink" title="0x05 已老实"></a>0x05 已老实</h2><p>昨天的我：先相信</p>
-<p>今天的我：已投降</p>
-<p>先说原因：第一点是易驱线质量很差，4T的盘没问题，8T的盘隔一会儿就会掉盘；其次是Linux下使用外接HDD速度奇慢，我和身边的朋友以及网络上都有同样的案例，同样的外接硬盘在Windows上能跑满速度，但是接在Linux上只有30MB&#x2F;s，跑不到lsusb里5Gbps的USB3.0协议（当然这个问题出现的人很多，也有朋友没有这个问题，这个我就不得而知了）</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271504160.png"></p>
-<p>现在换成sata了，速度正常了，那么老机器就用来刷pt了。</p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>服务器</tag>
-        <tag>Linux</tag>
-        <tag>运维</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>linux下的crazydiskinfo</title>
-    <url>/2024/10/27/linux%E4%B8%8B%E7%9A%84crazydiskinfo/</url>
-    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271701465.jpg"></p>
-<p>CrazyDiskInfo是一款用于Unix类系统的交互式TUI S.M.A.R.T查看器，可以查看硬盘健康情况，是否有坏扇区等。</p>
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271705139.png"></p>
-<p>然而国内的教程太垃圾了，多少年前的还在互相抄，抄来抄去的还只有自己编译这条路。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://github.com/otakuto/crazydiskinfo</span><br></pre></td></tr></table></figure>
-
-<p>本文并不反对你去源码编译，只作为存档记录一下获取安装包的方法。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://ftp.debian.org/debian/pool/main/c/crazydiskinfo/</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271705493.png"></p>
-]]></content>
-      <categories>
-        <category>野生技术协会</category>
-      </categories>
-      <tags>
-        <tag>服务器</tag>
-        <tag>Linux</tag>
-        <tag>运维</tag>
+        <tag>ubuntu</tag>
+        <tag>Vmware</tag>
       </tags>
   </entry>
 </search>
