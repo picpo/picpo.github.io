@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Nekobot开发心得 | PiCpo的阁楼</title><meta name="author" content="PiCpo"><meta name="copyright" content="PiCpo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="0x00写在前面 开一个帖，记录一下Nekobot的开发心得吧（主要是自己认为比较重要的某些功能的代码实现方法，写给自己，以免忘记）  不过，如果笔记里的这些内容对你有所帮助，那就更好了2333.  0x01通过Get方式请求来获取网页源码 1 2 3 4 5 6 7 8 9 10   fun httpget(url: String): String? {         val client &#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nekobot开发心得">
+<meta property="og:url" content="https://picpo.top/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/index.html">
+<meta property="og:site_name" content="PiCpo的阁楼">
+<meta property="og:description" content="0x00写在前面 开一个帖，记录一下Nekobot的开发心得吧（主要是自己认为比较重要的某些功能的代码实现方法，写给自己，以免忘记）  不过，如果笔记里的这些内容对你有所帮助，那就更好了2333.  0x01通过Get方式请求来获取网页源码 1 2 3 4 5 6 7 8 9 10   fun httpget(url: String): String? {         val client &#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png">
+<meta property="article:published_time" content="2021-07-04T16:14:06.000Z">
+<meta property="article:modified_time" content="2024-09-16T18:35:01.000Z">
+<meta property="article:author" content="PiCpo">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Mirai">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png"><link rel="shortcut icon" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202409170244220.png"><link rel="canonical" href="https://picpo.top/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Nekobot开发心得',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-09-17 02:35:01'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="PiCpo的阁楼" type="application/atom+xml">
+</head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+document.addEventListener('pjax:send', () => {
+  Pace.restart()
+})
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/33993624?s=400&amp;u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&amp;v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">43</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于咱</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png')"><nav id="nav"><span id="blog-info"><a href="/" title="PiCpo的阁楼"><img class="site-icon" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202409170244220.png"/><span class="site-name">PiCpo的阁楼</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于咱</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Nekobot开发心得</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-04T16:14:06.000Z" title="发表于 2021-07-05 00:14:06">2021-07-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-09-16T18:35:01.000Z" title="更新于 2024-09-17 02:35:01">2024-09-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%87%8E%E7%94%9F%E6%8A%80%E6%9C%AF%E5%8D%8F%E4%BC%9A/">野生技术协会</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">739</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Nekobot开发心得"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png"></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>开一个帖，记录一下Nekobot的开发心得吧（主要是自己认为比较重要的某些功能的代码实现方法，写给自己，以免忘记）</p>
+<p>不过，如果笔记里的这些内容对你有所帮助，那就更好了2333.</p>
+<h2 id="0x01通过Get方式请求来获取网页源码"><a href="#0x01通过Get方式请求来获取网页源码" class="headerlink" title="0x01通过Get方式请求来获取网页源码"></a>0x01通过Get方式请求来获取网页源码</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">fun httpget(url: String): String? &#123;</span><br><span class="line">        val client = OkHttpClient()</span><br><span class="line">        val request = Request.Builder().get()</span><br><span class="line">            .url(url)</span><br><span class="line">            .build()</span><br><span class="line">        val call = client.newCall(request)</span><br><span class="line">        val response = call.execute()</span><br><span class="line">        val HTML = response.body?.string()</span><br><span class="line">        return HTML</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>肯定要有的，不然网页api以及爬虫都做不了了</p>
+<h2 id="0x02读取本地文件夹的文件名"><a href="#0x02读取本地文件夹的文件名" class="headerlink" title="0x02读取本地文件夹的文件名"></a>0x02读取本地文件夹的文件名</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fun getImgList(path: String): MutableList&lt;String&gt; &#123;</span><br><span class="line">            val files: MutableList&lt;String&gt; = mutableListOf()</span><br><span class="line">            val fileTree: FileTreeWalk = File(path).walk()</span><br><span class="line">            fileTree.maxDepth(1)</span><br><span class="line">                .filter &#123; it.isFile &#125;</span><br><span class="line">                .forEach &#123; files.add(it.name) &#125;</span><br><span class="line">            return files</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例是读取本地文件夹的图片，通过类似的思路做了个黑名单读取</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fun getList(path: String): MutableList&lt;Long&gt; &#123;</span><br><span class="line">            val files: MutableList&lt;Long&gt; = mutableListOf()</span><br><span class="line">            val fileTree: FileTreeWalk = File(path).walk()</span><br><span class="line">            fileTree.maxDepth(1)</span><br><span class="line">                .filter &#123; it.isFile &#125;</span><br><span class="line">                .forEach &#123; files.add(it.name.toLong()) &#125;</span><br><span class="line">            return files</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>读取时转换为id（类型为Long），一般来说这个添加方式比修改服务器上的黑名单列表文件内容方便多了，我只要新建个文件，文件名为屏蔽的id就是了；想要移除，删掉就是了。</p>
+<p>为什么不在QQ上直接指示机器人屏蔽某个QQid？对不起，我对本人的编程水平极不自信，虽然源文件泄露导致发现漏洞然后攻击的可能性极微。但是给mirai以root权限对服务器的文件进行创建删除写入，我不太敢这样做。</p>
+<p>顺便一提.filter是选择器而.forEach是循环，类似与if和for，不过咱只有在这块使用了这个kotlin推荐（？）使用的选择语句和循环语句，其他地方一般就是if和for，有的时候还是when（选择语句），语法相当混乱（捂脸）</p>
+<h2 id="0x03获取网络资源并转换为流"><a href="#0x03获取网络资源并转换为流" class="headerlink" title="0x03获取网络资源并转换为流"></a>0x03获取网络资源并转换为流</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//获取网络图片</span><br><span class="line">fun getNetImg(urlstr: String): InputStream? &#123;</span><br><span class="line">        val url = URL(urlstr)</span><br><span class="line">//        return try &#123;  实有异常了再说</span><br><span class="line">        return url.openConnection().getInputStream()</span><br><span class="line">//        &#125;catch(err:java.io.IOException)&#123;</span><br><span class="line">//            null</span><br><span class="line">//        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>学会这个的契机是想发送网络上的图片来着的</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203015.png"></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252203912.png"></p>
+<p><a target="_blank" rel="noopener" href="https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97">https://mirai.mamoe.net/topic/337/%E8%AF%B7%E9%97%AE%E5%A4%A7%E4%BD%AC%E4%BB%AC%E6%9C%89%E4%BB%80%E4%B9%88%E5%8F%91%E9%80%81%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E6%80%9D%E8%B7%AF%E5%90%97</a></p>
+<p>就是这个思路，另外提一下mirai的具体食用方法吧</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">getNetImg(imgurl).use &#123;</span><br><span class="line">                        if (it != null) &#123;</span><br><span class="line">//方法一，最原始的发送图片的方法，就是先uploadImage 然后sendMessage</span><br><span class="line">                            val img = it.toExternalResource()</span><br><span class="line">                            group.sendMessage(group.uploadImage(img))</span><br><span class="line">//方法二，sendImage相当于先进行uploadImage然后再sendMessage</span><br><span class="line">                            group.sendImage(img)</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x05发送语音"><a href="#0x05发送语音" class="headerlink" title="0x05发送语音"></a>0x05发送语音</h2><p>其实也没啥，不过注意，<strong>只支持 <code>amr</code> 和 <code>silk</code> 格式</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">group.sendMessage(File(&quot;$&#123;voiceDir&#125;Av845256252.silk&quot;).toExternalResource().uploadAsVoice(group))</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://picpo.top">PiCpo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://picpo.top/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/">https://picpo.top/2021/07/05/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://picpo.top" target="_blank">PiCpo的阁楼</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Kotlin/">Kotlin</a><a class="post-meta__tags" href="/tags/Java/">Java</a><a class="post-meta__tags" href="/tags/Mirai/">Mirai</a></div><div class="post_share"><div class="social-share" data-image="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/07/19/ubuntu18%E4%BB%A5%E4%B8%8A%E7%B3%BB%E7%BB%9F64%E4%BD%8D%E7%9A%84glibc%E7%9A%84payload%E8%B0%83%E7%94%A8system%E5%87%BD%E6%95%B0%E6%97%B6%EF%BC%8C%E6%89%80%E9%9C%80%E6%B3%A8%E6%84%8F%E7%9A%84%E5%A0%86/" title="Ubuntu18以上系统64位的glibc的payload调用system函数时，所需注意的堆栈平衡问题"><img class="cover" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252147635.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Ubuntu18以上系统64位的glibc的payload调用system函数时，所需注意的堆栈平衡问题</div></div></a></div><div class="next-post pull-right"><a href="/2021/06/18/%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%EF%BC%8C%E7%94%A8vscode%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9/" title="右键菜单，用VSCode打开文件和文件夹"><img class="cover" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252139401.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">右键菜单，用VSCode打开文件和文件夹</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/10/11/nekobot%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97%EF%BC%9Asilk4j%E9%A3%9F%E7%94%A8%E7%AC%94%E8%AE%B0/" title="Nekobot开发心得：Silk4j食用笔记"><img class="cover" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252204000.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-11</div><div class="title">Nekobot开发心得：Silk4j食用笔记</div></div></a></div><div><a href="/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/" title="Fastjson对JSON字符串、对象及数组进行转换"><img class="cover" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252126633.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-12</div><div class="title">Fastjson对JSON字符串、对象及数组进行转换</div></div></a></div><div><a href="/2021/05/07/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BAmirai-qq%E6%9C%BA%E5%99%A8%E4%BA%BA/" title="树莓派搭建Mirai QQ机器人"><img class="cover" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252200217.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-07</div><div class="title">树莓派搭建Mirai QQ机器人</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://avatars.githubusercontent.com/u/33993624?s=400&amp;u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&amp;v=4" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">PiCpo</div><div class="author-info__description">猜猜里面有什么(=・ω・=)</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">43</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/picpo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:picpo233@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://nya.one/@PiCpo" target="_blank" title="喵窝"><i class="fa-brands fa-mastodon"></i></a><a class="social-icon" href="https://t.me/picpo233" target="_blank" title="Telegram"><i class="fa-brands fa-telegram"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">0x00写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01%E9%80%9A%E8%BF%87Get%E6%96%B9%E5%BC%8F%E8%AF%B7%E6%B1%82%E6%9D%A5%E8%8E%B7%E5%8F%96%E7%BD%91%E9%A1%B5%E6%BA%90%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">0x01通过Get方式请求来获取网页源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02%E8%AF%BB%E5%8F%96%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%A4%B9%E7%9A%84%E6%96%87%E4%BB%B6%E5%90%8D"><span class="toc-number">3.</span> <span class="toc-text">0x02读取本地文件夹的文件名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03%E8%8E%B7%E5%8F%96%E7%BD%91%E7%BB%9C%E8%B5%84%E6%BA%90%E5%B9%B6%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%B5%81"><span class="toc-number">4.</span> <span class="toc-text">0x03获取网络资源并转换为流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05%E5%8F%91%E9%80%81%E8%AF%AD%E9%9F%B3"><span class="toc-number">5.</span> <span class="toc-text">0x05发送语音</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/02/10/macOS%E5%88%A0%E9%99%A4%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E4%B8%AD%E7%9A%84%E5%A4%9A%E4%BD%99%E6%88%96%E6%98%AF%E6%97%A0%E6%95%88%E7%9A%84%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F/" title="macOS清理右键菜单中的打开方式"><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202502101744051.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="macOS清理右键菜单中的打开方式"/></a><div class="content"><a class="title" href="/2025/02/10/macOS%E5%88%A0%E9%99%A4%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E4%B8%AD%E7%9A%84%E5%A4%9A%E4%BD%99%E6%88%96%E6%98%AF%E6%97%A0%E6%95%88%E7%9A%84%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F/" title="macOS清理右键菜单中的打开方式">macOS清理右键菜单中的打开方式</a><time datetime="2025-02-10T09:39:06.000Z" title="发表于 2025-02-10 17:39:06">2025-02-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/27/linux%E4%B8%8B%E7%9A%84crazydiskinfo/" title="linux下的crazydiskinfo"><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271701465.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux下的crazydiskinfo"/></a><div class="content"><a class="title" href="/2024/10/27/linux%E4%B8%8B%E7%9A%84crazydiskinfo/" title="linux下的crazydiskinfo">linux下的crazydiskinfo</a><time datetime="2024-10-27T09:00:23.000Z" title="发表于 2024-10-27 17:00:23">2024-10-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/22/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%8C%87%E5%8D%97/" title="服务器更新指南"><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222307533.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="服务器更新指南"/></a><div class="content"><a class="title" href="/2024/10/22/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%8C%87%E5%8D%97/" title="服务器更新指南">服务器更新指南</a><time datetime="2024-10-22T14:59:16.000Z" title="发表于 2024-10-22 22:59:16">2024-10-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/15/ARM64%EF%BC%88M1%E7%89%88%EF%BC%89%E6%9E%B6%E6%9E%84%E4%B8%8BmacOS%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/" title="ARM64（M1版）架构下macOS运行ALAS脚本"><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152008286.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ARM64（M1版）架构下macOS运行ALAS脚本"/></a><div class="content"><a class="title" href="/2024/10/15/ARM64%EF%BC%88M1%E7%89%88%EF%BC%89%E6%9E%B6%E6%9E%84%E4%B8%8BmacOS%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/" title="ARM64（M1版）架构下macOS运行ALAS脚本">ARM64（M1版）架构下macOS运行ALAS脚本</a><time datetime="2024-10-15T12:00:29.000Z" title="发表于 2024-10-15 20:00:29">2024-10-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/30/Linux%E5%85%A8%E7%9B%98%E5%A4%87%E4%BB%BD%E6%8C%87%E5%8D%97/" title="Linux全盘备份指南"><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202407301307619.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux全盘备份指南"/></a><div class="content"><a class="title" href="/2024/07/30/Linux%E5%85%A8%E7%9B%98%E5%A4%87%E4%BB%BD%E6%8C%87%E5%8D%97/" title="Linux全盘备份指南">Linux全盘备份指南</a><time datetime="2024-07-30T04:53:28.000Z" title="发表于 2024-07-30 12:53:28">2024-07-30</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252202247.png')"><div id="footer-wrap"><div class="copyright">&copy;2018 - 2025 By PiCpo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><a href="https://icp.gov.moe/?keyword=20222047" target="_blank">萌ICP备20222047号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

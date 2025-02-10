@@ -1,0 +1,223 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>记一次Flask后端被渗透的经历 | PiCpo的阁楼</title><meta name="author" content="PiCpo"><meta name="copyright" content="PiCpo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="0x00写在前面 2021-11-04中午，在flask文档的帮助下，我成功在一小时内搭建起一个带有沙盒的可以执行部分python语句的后端脚本，并第一次将项目部署在docker上。NekoBot新功能+1，在某十几个群开放了此功能，并特别标注为菜单的第-1项，开始期待几个群聊里做渗透的师傅们对其进行攻击。  接下来的20多天里，如此明显的功能几乎没有人使用，这些人几乎全他妈的都在用Bot在看色图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次Flask后端被渗透的经历">
+<meta property="og:url" content="https://picpo.top/2021/11/27/%E8%AE%B0%E4%B8%80%E6%AC%A1flask%E5%90%8E%E7%AB%AF%E8%A2%AB%E6%B8%97%E9%80%8F%E7%9A%84%E7%BB%8F%E5%8E%86/index.html">
+<meta property="og:site_name" content="PiCpo的阁楼">
+<meta property="og:description" content="0x00写在前面 2021-11-04中午，在flask文档的帮助下，我成功在一小时内搭建起一个带有沙盒的可以执行部分python语句的后端脚本，并第一次将项目部署在docker上。NekoBot新功能+1，在某十几个群开放了此功能，并特别标注为菜单的第-1项，开始期待几个群聊里做渗透的师傅们对其进行攻击。  接下来的20多天里，如此明显的功能几乎没有人使用，这些人几乎全他妈的都在用Bot在看色图">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154649.png">
+<meta property="article:published_time" content="2021-11-27T14:29:38.000Z">
+<meta property="article:modified_time" content="2024-09-16T18:33:04.000Z">
+<meta property="article:author" content="PiCpo">
+<meta property="article:tag" content="Flask">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154649.png"><link rel="shortcut icon" href="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202409170244220.png"><link rel="canonical" href="https://picpo.top/2021/11/27/%E8%AE%B0%E4%B8%80%E6%AC%A1flask%E5%90%8E%E7%AB%AF%E8%A2%AB%E6%B8%97%E9%80%8F%E7%9A%84%E7%BB%8F%E5%8E%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '记一次Flask后端被渗透的经历',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-09-17 02:33:04'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="PiCpo的阁楼" type="application/atom+xml">
+</head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+document.addEventListener('pjax:send', () => {
+  Pace.restart()
+})
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/33993624?s=400&amp;u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&amp;v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">43</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于咱</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154649.png')"><nav id="nav"><span id="blog-info"><a href="/" title="PiCpo的阁楼"><img class="site-icon" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202409170244220.png"/><span class="site-name">PiCpo的阁楼</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于咱</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">记一次Flask后端被渗透的经历</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-27T14:29:38.000Z" title="发表于 2021-11-27 22:29:38">2021-11-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-09-16T18:33:04.000Z" title="更新于 2024-09-17 02:33:04">2024-09-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%AE%89%E5%85%A8/">安全</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="记一次Flask后端被渗透的经历"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154649.png"></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>2021-11-04中午，在flask文档的帮助下，我成功在一小时内搭建起一个带有沙盒的可以执行部分python语句的后端脚本，并第一次将项目部署在docker上。NekoBot新功能+1，在某十几个群开放了此功能，并特别标注为菜单的<strong>第-1项</strong>，开始期待几个群聊里做渗透的师傅们对其进行攻击。</p>
+<p>接下来的20多天里，如此明显的功能几乎没有人使用，这些人几乎全他妈的都在用Bot在看色图、犯病。不过好在有些人注意到了，其中有几位也是打CTF的师傅，可惜他们几乎都在瞎搞（）这期间有个南信大的朋友，对bot进行了一些列攻击，可惜这些方式都在我的预判之内，并没成功。但是单纯的部分绕过都做到了，因为真的很简单（）</p>
+<p>2021-11-27凌晨，在持续几个小时的尝试下，这个后端被巨佬<a target="_blank" rel="noopener" href="https://blog.plusls.com/">plusls</a>（我也是从前小绿草的腿腿acdxvfsvd大仙贝那得知这位巨佬的）读取了源码，读取到了环境信息，最终利用flask的拒绝服务打了下来（我超我怎么不知道flask还有这个后门）。并在几个小时后发现了最后某几个关键字的绕过方法，基本就能get shell了。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154451.png"></p>
+<p>在写waf的时候我预先留了个open方法，这就能让所有人对任意文件进行读操作，还有dir()啥的也没过滤（要是过滤了很多东西也没法用了x）；当然还有一些然后以我浅薄的认知，封掉了几个可以利用os模块进行RCE的方法和关键词。我想看看，巨佬是怎么在这些阴间过滤的条件下成功get shell。很幸运，plusls的攻击过程十分精彩，让我学到许多，这波熬夜值了。记录一下记录一下.jpg</p>
+<p>（虽然说最后plusls师傅似乎发现了非常不错的绕过方式，但是我被他打掉的脚本不敢重启了，万一他手里有逃出docker的0day呢（害怕.jpg））</p>
+<h2 id="0x01文件源码"><a href="#0x01文件源码" class="headerlink" title="0x01文件源码"></a>0x01文件源码</h2><p>这么屑的源码有公开的必要吗（恼），直接<code>open(&#39;/proc/self/cwd/app/app.py&#39;, &#39;r&#39;).read()</code>，请。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">#coding=utf-8</span><br><span class="line">from flask import Flask, request</span><br><span class="line">import random</span><br><span class="line"></span><br><span class="line">wrong_msg = [&quot;嘤嘤嘤，听不懂吖QAQ~&quot;, &quot;呜呜呜~咱好笨~&quot;, &quot;咱看不懂这些呀……&quot;, &quot;咿呀，好像出错了……&quot;, &quot;这超出窝的理解范围了QwQ&quot;, &quot;好难~咱听不懂~&quot;]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def keyword_filter(keyword, msg):</span><br><span class="line">    for i in keyword:</span><br><span class="line">        if i not in msg:</span><br><span class="line">            return False</span><br><span class="line">    return True</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def py_filter(msg):</span><br><span class="line">    for keyword in [&quot;class&quot;, &quot;import&quot;, &quot;eval&quot;, &quot;exec&quot;, &quot;sys&quot;, &quot;globals&quot;, &quot;_&quot;, &quot;builtins&quot;, &quot;getattr&quot;, &quot;pow&quot;, &quot;&quot;,</span><br><span class="line">                    &quot;&amp;&quot;,]:</span><br><span class="line">        if keyword_filter(keyword, msg):</span><br><span class="line">            return False</span><br><span class="line">    if &quot;**&quot; in msg:</span><br><span class="line">        return False</span><br><span class="line"></span><br><span class="line">    return True</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def do_python(msg):</span><br><span class="line">    try:</span><br><span class="line">        if py_filter(msg):</span><br><span class="line">            temp = eval(msg)</span><br><span class="line">        else:</span><br><span class="line">            return &quot;Hacking for fun~&quot;</span><br><span class="line"></span><br><span class="line">        return str(temp)</span><br><span class="line">    except:</span><br><span class="line">        return random.choice(wrong_msg)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&quot;/submit&quot;, methods=[&quot;GET&quot;])</span><br><span class="line">def submit():</span><br><span class="line">    data = request.args.get(&quot;text&quot;)</span><br><span class="line">    print(data)</span><br><span class="line">    return do_python(data)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    app.run(host=&quot;0.0.0.0&quot;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x02文件源码读取原理和-proc"><a href="#0x02文件源码读取原理和-proc" class="headerlink" title="0x02文件源码读取原理和&#x2F;proc"></a>0x02文件源码读取原理和&#x2F;proc</h2><p>我们都知道可以通过&#x2F;proc&#x2F;$pid&#x2F;来获取指定进程的信息，例如内存映射、CPU绑定信息等等。如果某个进程想要获取本进程的系统信息，就可以通过进程的pid来访问&#x2F;proc&#x2F;$pid&#x2F;目录。但是这个方法还需要获取进程pid，在fork、daemon等情况下pid还可能发生变化。为了更方便的获取本进程的信息，linux提供了&#x2F;proc&#x2F;self&#x2F;目录，这个目录比较独特，不同的进程访问该目录时获得的信息是不同的，内容等价于&#x2F;proc&#x2F;本进程pid&#x2F;。进程可以通过访问&#x2F;proc&#x2F;self&#x2F;目录来获取自己的系统信息，而不用每次都获取pid。</p>
+<p>Linux 内核提供了一种通过 &#x2F;proc 文件系统，在运行时访问内核内部数据结构、改变内核设置的机制。proc文件系统是一个伪文件系统，它只存在内存当中，而不占用外存空间。它以文件系统的方式为访问系统内核数据的操作提供接口。</p>
+<p>还有的是一些以数字命名的目录，他们是进程目录。系统中当前运行的每一个进程都有对应的一个目录在&#x2F;proc下，以进程的PID号为目录名，他们是读取进程信息的接口。而self目录则是读取进程本身的信息接口，是一个link</p>
+<p>巨佬在做了一些常见的信息获取方式后，也试了一些关键字，然后就直接上手<code>/proc/self/</code>这个目录了（不愧是bin巨佬）</p>
+<p>读取&#x2F;proc&#x2F;self&#x2F;maps可以得到当前进程的内存映射关系，通过读该文件的内容可以得到内存代码段基址。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154096.png"></p>
+<p>&#x2F;proc&#x2F;self&#x2F;mem是进程的内存内容，通过修改该文件相当于直接修改当前进程的内存。</p>
+<p>（同样的，我们也可以通过写入mem文件来直接写入内存，例如直接修改代码段，放入我们的shellcode，从而在程序流程执行到这一步时执行shellcode来拿shell）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155528.png"></p>
+<p>覆写got表我只在一些pwn题见过，python的PWN相关我一无所知（甚至没有我对pyc文件的逆向了解的多，乐），感觉非常难非常硬核，感觉现在以我的智商可能难以掌握（）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155689.png"></p>
+<p>巨佬一直在尝试compile，并且试图向<code>/proc/self/mem</code>写入巨大多垃圾数据，应该是要搞堆栈溢出啥的，但好像没有什么太好的反馈（当然其他还有一些操作咱也看不懂QAQ）</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155838.png"></p>
+<p>说回读取文件目录的方法，一开始我看巨佬的操作我以为是通过<code>/proc/self/exe</code>啥的（毕竟c的话，确实可以用readlink这个函数），但是佬用的方法事利用format函数和八进制绕过，最后采取了lambda表达式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&#123;0.__globals__&#125;&quot;.format(lambda x:x)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155959.png"></p>
+<p>不仅地址泄露了，函数什么的都泄露了（地址泄露了open也能用这些不是迟早的事吗x）</p>
+<h2 id="0x03Flask框架问题"><a href="#0x03Flask框架问题" class="headerlink" title="0x03Flask框架问题"></a>0x03Flask框架问题</h2><h3 id="debug模式"><a href="#debug模式" class="headerlink" title="debug模式"></a>debug模式</h3><p>Flask在生产环境中开启debug模式是一件非常危险的事，主要有3点原因：</p>
+<p>1、会泄露当前报错页面的源码，可供审计挖掘其他漏洞</p>
+<p>2、会泄露Web应用的绝对路径，及Python解释器的路径（可以配合写文件漏洞向指定目录的文件内写入构造好的恶意代码，利用方式可以参考安全客的这篇文章：<a href="https://link.zhihu.com/?target=https://www.anquanke.com/post/id/86961">文件解压之过 Python中的代码执行</a>）</p>
+<p>3、<strong>debug页面中包含Python的交互式shell，可以执行任意Python代码</strong></p>
+<p>但是，进入这个Python shell是需要输入一个PIN码的。PIN码的生成和几个与机器以及脚本的参数有关，比较难；当然，Debug模式要是没开启PIN码验证的话，是可以直接进入shell的</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252155210.png"></p>
+<h3 id="request-environ"><a href="#request-environ" class="headerlink" title="request.environ"></a>request.environ</h3><p>在Flask的官方文档中是这样介绍request的：对于 Web 应用，与客户端发送给服务器的数据交互至关重要。在 Flask 中由全局的 request 对象来提供这些信息。</p>
+<p>从Flask模块导入request：from flask import request</p>
+<p>request的属性众多，其中的environ，官方文档给出的描述是：WSGI隐含的环境配置。</p>
+<p>好啊</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156624.png"></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156130.png"></p>
+<h3 id="werkzeug-server-shutdown"><a href="#werkzeug-server-shutdown" class="headerlink" title="werkzeug.server.shutdown"></a>werkzeug.server.shutdown</h3><p>request.environ字典中一个名为 shutdown_server 的方法名分配的键为 werkzeug.server.shutdown</p>
+<p>注射request.environ[‘werkzeug.server.shutdown’]()会造成拒绝服务。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156023.png"></p>
+<p>捏麻麻滴，我是真的之前不知道flask的这些细节😅😅😅</p>
+<p>我真的操了，最无语的是，<code>request.environ[&#39;werkzeug.server.shutdown&#39;]()</code>这玩意在我的过滤规则下根本不用绕过😅。</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156231.png"></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252156972.png"></p>
+<p>😅😅😅😅😅😅😅😅😅😅😅😅😅😅😅😅</p>
+<hr>
+<h2 id="0x04参考资料"><a href="#0x04参考资料" class="headerlink" title="0x04参考资料"></a>0x04参考资料</h2><ol>
+<li>Linux的&#x2F;proc&#x2F;self&#x2F;学习: <a target="_blank" rel="noopener" href="https://blog.csdn.net/cjdgg/article/details/119860355">https://blog.csdn.net/cjdgg/article/details/119860355</a></li>
+<li>-—-已搬运——-Linux的&#x2F;proc&#x2F;self&#x2F;学习 ++ CTF例题: <a target="_blank" rel="noopener" href="https://blog.csdn.net/Zero_Adam/article/details/114853022">https://blog.csdn.net/Zero_Adam&#x2F;article&#x2F;details&#x2F;114853022</a></li>
+<li>渗透系列之flask框架开启debug模式漏洞分析: <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1726330">https://cloud.tencent.com/developer/article/1726330</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://picpo.top">PiCpo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://picpo.top/2021/11/27/%E8%AE%B0%E4%B8%80%E6%AC%A1flask%E5%90%8E%E7%AB%AF%E8%A2%AB%E6%B8%97%E9%80%8F%E7%9A%84%E7%BB%8F%E5%8E%86/">https://picpo.top/2021/11/27/%E8%AE%B0%E4%B8%80%E6%AC%A1flask%E5%90%8E%E7%AB%AF%E8%A2%AB%E6%B8%97%E9%80%8F%E7%9A%84%E7%BB%8F%E5%8E%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://picpo.top" target="_blank">PiCpo的阁楼</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Flask/">Flask</a><a class="post-meta__tags" href="/tags/Python/">Python</a></div><div class="post_share"><div class="social-share" data-image="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154649.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/12/12/fastjson%E5%AF%B9json%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%81%E5%AF%B9%E8%B1%A1%E5%8F%8A%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2/" title="Fastjson对JSON字符串、对象及数组进行转换"><img class="cover" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252126633.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Fastjson对JSON字符串、对象及数组进行转换</div></div></a></div><div class="next-post pull-right"><a href="/2021/11/19/selenium%E7%88%AC%E8%99%AB%E5%85%A5%E9%97%A8/" title="Selenium爬虫入门"><img class="cover" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252135855.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Selenium爬虫入门</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/11/04/dockerflask%E6%9E%84%E5%BB%BA%E5%90%8E%E7%AB%AF%E7%9A%84%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/" title="Docker+Flask构建后端的踩坑记录"><img class="cover" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252206491.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-04</div><div class="title">Docker+Flask构建后端的踩坑记录</div></div></a></div><div><a href="/2021/11/04/flask%E7%9A%84%E9%A3%9F%E7%94%A8%E6%96%B9%E6%B3%95/" title="Flask的食用方法"><img class="cover" src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252214256.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-04</div><div class="title">Flask的食用方法</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://avatars.githubusercontent.com/u/33993624?s=400&amp;u=fef5f5d3d0e117d28c6a6addf608d1f8ef741cdc&amp;v=4" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">PiCpo</div><div class="author-info__description">猜猜里面有什么(=・ω・=)</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">43</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/picpo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:picpo233@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://nya.one/@PiCpo" target="_blank" title="喵窝"><i class="fa-brands fa-mastodon"></i></a><a class="social-icon" href="https://t.me/picpo233" target="_blank" title="Telegram"><i class="fa-brands fa-telegram"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">0x00写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01%E6%96%87%E4%BB%B6%E6%BA%90%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">0x01文件源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02%E6%96%87%E4%BB%B6%E6%BA%90%E7%A0%81%E8%AF%BB%E5%8F%96%E5%8E%9F%E7%90%86%E5%92%8C-proc"><span class="toc-number">3.</span> <span class="toc-text">0x02文件源码读取原理和&#x2F;proc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03Flask%E6%A1%86%E6%9E%B6%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">0x03Flask框架问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#debug%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.1.</span> <span class="toc-text">debug模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#request-environ"><span class="toc-number">4.2.</span> <span class="toc-text">request.environ</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#werkzeug-server-shutdown"><span class="toc-number">4.3.</span> <span class="toc-text">werkzeug.server.shutdown</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">5.</span> <span class="toc-text">0x04参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/02/10/macOS%E5%88%A0%E9%99%A4%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E4%B8%AD%E7%9A%84%E5%A4%9A%E4%BD%99%E6%88%96%E6%98%AF%E6%97%A0%E6%95%88%E7%9A%84%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F/" title="macOS清理右键菜单中的打开方式"><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202502101744051.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="macOS清理右键菜单中的打开方式"/></a><div class="content"><a class="title" href="/2025/02/10/macOS%E5%88%A0%E9%99%A4%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E4%B8%AD%E7%9A%84%E5%A4%9A%E4%BD%99%E6%88%96%E6%98%AF%E6%97%A0%E6%95%88%E7%9A%84%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F/" title="macOS清理右键菜单中的打开方式">macOS清理右键菜单中的打开方式</a><time datetime="2025-02-10T09:39:06.000Z" title="发表于 2025-02-10 17:39:06">2025-02-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/27/linux%E4%B8%8B%E7%9A%84crazydiskinfo/" title="linux下的crazydiskinfo"><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410271701465.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux下的crazydiskinfo"/></a><div class="content"><a class="title" href="/2024/10/27/linux%E4%B8%8B%E7%9A%84crazydiskinfo/" title="linux下的crazydiskinfo">linux下的crazydiskinfo</a><time datetime="2024-10-27T09:00:23.000Z" title="发表于 2024-10-27 17:00:23">2024-10-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/22/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%8C%87%E5%8D%97/" title="服务器更新指南"><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410222307533.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="服务器更新指南"/></a><div class="content"><a class="title" href="/2024/10/22/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%8C%87%E5%8D%97/" title="服务器更新指南">服务器更新指南</a><time datetime="2024-10-22T14:59:16.000Z" title="发表于 2024-10-22 22:59:16">2024-10-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/15/ARM64%EF%BC%88M1%E7%89%88%EF%BC%89%E6%9E%B6%E6%9E%84%E4%B8%8BmacOS%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/" title="ARM64（M1版）架构下macOS运行ALAS脚本"><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202410152008286.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ARM64（M1版）架构下macOS运行ALAS脚本"/></a><div class="content"><a class="title" href="/2024/10/15/ARM64%EF%BC%88M1%E7%89%88%EF%BC%89%E6%9E%B6%E6%9E%84%E4%B8%8BmacOS%E8%BF%90%E8%A1%8CALAS%E8%84%9A%E6%9C%AC/" title="ARM64（M1版）架构下macOS运行ALAS脚本">ARM64（M1版）架构下macOS运行ALAS脚本</a><time datetime="2024-10-15T12:00:29.000Z" title="发表于 2024-10-15 20:00:29">2024-10-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/30/Linux%E5%85%A8%E7%9B%98%E5%A4%87%E4%BB%BD%E6%8C%87%E5%8D%97/" title="Linux全盘备份指南"><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202407301307619.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux全盘备份指南"/></a><div class="content"><a class="title" href="/2024/07/30/Linux%E5%85%A8%E7%9B%98%E5%A4%87%E4%BB%BD%E6%8C%87%E5%8D%97/" title="Linux全盘备份指南">Linux全盘备份指南</a><time datetime="2024-07-30T04:53:28.000Z" title="发表于 2024-07-30 12:53:28">2024-07-30</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212252154649.png')"><div id="footer-wrap"><div class="copyright">&copy;2018 - 2025 By PiCpo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><a href="https://icp.gov.moe/?keyword=20222047" target="_blank">萌ICP备20222047号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
