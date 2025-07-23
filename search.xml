@@ -2413,4 +2413,21 @@
         <tag>青年大学习</tag>
       </tags>
   </entry>
+  <entry>
+    <title>记录pixie焊接和验机记录</title>
+    <url>/2025/07/23/%E8%AE%B0%E5%BD%95pixie%E7%84%8A%E6%8E%A5%E5%92%8C%E9%AA%8C%E6%9C%BA%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202507231248337.jpg"></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>今天验机了，很遗憾大失败。主要的问题有两个：一个是未发射就有杂波；第二个是杂散未能小于-30db（测试下大概16左右）。负责人跟我说之前也有一些人来测试自制pixie套件，但是只有一位通过了验机。这位用的是自己的改进方案而非公版，而公版方案虽说几十年了但是在验机方面也不甚理想。但唯一可庆幸（嘴硬）的是，机器至少能运行（</p>
+<p>由于验机失败，所以笔者不建议新手ham通过自制pixie进行短波执照办理。</p>
+<h2 id="0x01制作过程"><a href="#0x01制作过程" class="headerlink" title="0x01制作过程"></a>0x01制作过程</h2><p>套件是在淘宝上买的，价格不贵，20元以内。以下是焊接过程参考（由于传照片麻烦就直接附上我在焊接时的参考了）</p>
+<p><a href="https://www.kechuang.org/s/dt3r06ps">古人新年新作品之HAM篇：PIXIE QRP CW 收发信机制作</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>HAM</tag>
+        <tag>业余无线电</tag>
+      </tags>
+  </entry>
 </search>
