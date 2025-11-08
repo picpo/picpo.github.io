@@ -6,7 +6,7 @@
   <link href="https://picpo.top/atom.xml" rel="self"/>
   
   <link href="https://picpo.top/"/>
-  <updated>2025-11-05T09:13:31.600Z</updated>
+  <updated>2025-11-08T17:31:43.203Z</updated>
   <id>https://picpo.top/</id>
   
   <author>
@@ -15,6 +15,43 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Steam主页美化指南</title>
+    <link href="https://picpo.top/2025/11/09/Steam%E4%B8%BB%E9%A1%B5%E7%BE%8E%E5%8C%96%E6%8C%87%E5%8D%97/"/>
+    <id>https://picpo.top/2025/11/09/Steam%E4%B8%BB%E9%A1%B5%E7%BE%8E%E5%8C%96%E6%8C%87%E5%8D%97/</id>
+    <published>2025-11-08T16:38:22.000Z</published>
+    <updated>2025-11-08T17:31:43.203Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202511090128861.jpg"></p><h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>前段时间玩了《魔裁》，B站各种推荐相关的视频，偶然刷到一个相关的Steam个人主页美化视频。于是尝试自己也抄一下作业，其间有些功能是通过前端绕过实现的，开个贴记录一下以免之后想修改却忘记了如何做。</p><div style="position: relative; width: 100%; height: 0; padding-bottom: 75%;"><iframe src="//player.bilibili.com/player.html?bvid=BV1NsWbzAEHA&high_quality=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolute; width: 100%; height: 100%; Left: 0; top: 0;" ></iframe></div> <h2 id="0x01用前须知"><a href="#0x01用前须知" class="headerlink" title="0x01用前须知"></a>0x01用前须知</h2><p>整理了一些美化过程中的小问题</p><h3 id="个人资料背景全透明"><a href="#个人资料背景全透明" class="headerlink" title="个人资料背景全透明"></a>个人资料背景全透明</h3><p>这个只能通过点数商店花费10000点数购买消光2的游戏资料主题</p><p><a href="https://store.steampowered.com/points/shop/app/534380">https://store.steampowered.com/points/shop/app/534380</a></p><h3 id="展柜相关"><a href="#展柜相关" class="headerlink" title="展柜相关"></a>展柜相关</h3><p>等级&gt;10，steam每10级一个展柜位置。也可以点数商城购买。</p><p>升级您的展柜：选定的展柜可进行至多两次升级，您会有更多地方来炫耀徽章，更多空间来展示艺术作品，以及其他特权。</p><p>额外展柜：有时候升级一个展柜是不够的。用 Steam 点数获得额外展柜，获取更多展示空间！</p><p>升级Steam等级的最好方式是先完成社区任务，这个做完了一般能到10级；其次是花费点数（可以通过购买游戏获得，也可以购物平台购入），购入季节性徽章来增长等级（1000点数对应100经验）：最次是通过收集集换式卡牌来合成徽章获取经验，性价比较低（几年前不懂事用余额收集卡片合了几个徽章玩玩）</p><h2 id="0x02创意工坊作品"><a href="#0x02创意工坊作品" class="headerlink" title="0x02创意工坊作品"></a>0x02创意工坊作品</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202511090055737.png"></p><p>原理为将一个gif切为五等份（详细教程请自行检索）。成图依此上传到右侧艺术作品里，上传时需要在终端输入以下JS代码处理（否则无法选择并展示）</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$J(<span class="string">&#x27;[name=consumer_app_id]&#x27;</span>).<span class="title function_">val</span>(<span class="number">480</span>);</span><br><span class="line">$J(<span class="string">&#x27;[name=file_type]&#x27;</span>).<span class="title function_">val</span>(<span class="number">0</span>);</span><br><span class="line">$J(<span class="string">&#x27;[name=visibility]&#x27;</span>).<span class="title function_">val</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure><h2 id="0x03精选艺术作品展柜"><a href="#0x03精选艺术作品展柜" class="headerlink" title="0x03精选艺术作品展柜"></a>0x03精选艺术作品展柜</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202511090059156.png"></p><p>如果和前者一样直接上传，在展示时会在下面显示作品名称，很碍眼；但是在上传时不填作品名也无法顺利上传，可以用以下代码在前端绕过（后端并未进行校验）：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">v_trim = <span class="function"><span class="params">_</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> _;</span><br><span class="line">&#125;;</span><br><span class="line">$J(<span class="string">&#x27;#title&#x27;</span>).<span class="title function_">val</span>(<span class="string">&#x27; \n&#x27;</span> + <span class="title class_">Array</span>.<span class="title function_">from</span>(<span class="title class_">Array</span>(<span class="number">126</span>), <span class="function"><span class="params">_</span> =&gt;</span> <span class="string">&#x27;\t&#x27;</span>).<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>));</span><br></pre></td></tr></table></figure><p>另外需要对作品进行剪裁，否则其边框过大，不会很好看：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$J(<span class="string">&#x27;#image_width&#x27;</span>).<span class="title function_">val</span>(<span class="number">1000</span>).<span class="title function_">attr</span>(<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">$J(<span class="string">&#x27;#image_height&#x27;</span>).<span class="title function_">val</span>(<span class="number">1</span>).<span class="title function_">attr</span>(<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;&#x27;</span>);</span><br></pre></td></tr></table></figure><p>在b站搜索教程时也找到类似的等价代码：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> num= <span class="variable language_">document</span>.<span class="title function_">getElementsByName</span>(<span class="string">&quot;image_width&quot;</span>)[<span class="number">0</span>].<span class="property">value</span>;</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByName</span>(<span class="string">&quot;image_height&quot;</span>)[<span class="number">0</span>].<span class="property">value</span> = num-(num-<span class="number">1</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByName</span>(<span class="string">&quot;image_width&quot;</span>)[<span class="number">0</span>].<span class="property">value</span>= num*<span class="number">100</span>;</span><br></pre></td></tr></table></figure><h2 id="0x04参考致谢"><a href="#0x04参考致谢" class="headerlink" title="0x04参考致谢"></a>0x04参考致谢</h2><p><a href="https://blog.yuki.sh/posts/daf9288c81ba/#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86">https://blog.yuki.sh/posts/daf9288c81ba/#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86</a></p>]]></content>
+    
+    
+    <summary type="html">0x00写在前面
+前段时间玩了《魔裁》，B站各种推荐相关的视频，偶然刷到一个相关的Steam个人主页美化视频。于是尝试自己也抄一下作业，其间有些功能是通过前端绕过实现的，开个贴记录一下以免之后想修改却忘记了如何做。
+
+0x01用前须知
+整理了一些美化过程中的小问题
+
+个人资料背景全透明
+这个只能通过点数商店花费10000点数购买消光2的游戏资料主题
+
+https://store.steampowered.com/points/shop/app/534380
+
+展柜相关
+等级&gt;10，steam每10级一个展柜位置。也可以点数商城购买。
+
+升级您的展柜：选定的展柜可进行至多两次升级，您会有更多地方</summary>
+    
+    
+    
+    <category term="野生技术协会" scheme="https://picpo.top/categories/%E9%87%8E%E7%94%9F%E6%8A%80%E6%9C%AF%E5%8D%8F%E4%BC%9A/"/>
+    
+    
+    <category term="Steam" scheme="https://picpo.top/tags/Steam/"/>
+    
+    <category term="前端" scheme="https://picpo.top/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
   
   <entry>
     <title>《魔法少女的魔女审判》个人测评</title>
@@ -754,67 +791,6 @@ apt install open-vm-tools-desktop</summary>
     <category term="HTTP" scheme="https://picpo.top/tags/HTTP/"/>
     
     <category term="青年大学习" scheme="https://picpo.top/tags/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>git cz和合乎Angular规范的git commit message</title>
-    <link href="https://picpo.top/2022/02/13/git-cz%E5%92%8C%E5%90%88%E4%B9%8Eangular%E8%A7%84%E8%8C%83%E7%9A%84git-commit-message/"/>
-    <id>https://picpo.top/2022/02/13/git-cz%E5%92%8C%E5%90%88%E4%B9%8Eangular%E8%A7%84%E8%8C%83%E7%9A%84git-commit-message/</id>
-    <published>2022-02-13T10:20:22.000Z</published>
-    <updated>2024-09-16T18:35:11.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242334513.jpg"></p><h2 id="配置git-cz"><a href="#配置git-cz" class="headerlink" title="配置git cz"></a>配置git cz</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g commitizen</span><br></pre></td></tr></table></figure><h2 id="使用git-cz"><a href="#使用git-cz" class="headerlink" title="使用git cz"></a>使用git cz</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">git cz</span><br><span class="line"></span><br><span class="line">cz-cli@4.1.2, cz-conventional-changelog@3.2.0</span><br><span class="line"></span><br><span class="line">#指定commit的类型，约定了feat、fix两个主要type，以及docs、style、build、refactor、revert五个特殊type</span><br><span class="line">? **Select the type of change that you&#x27;re committing:** fix:   A bug fix</span><br><span class="line"></span><br><span class="line">#用于描述改动的范围，格式为项目名/模块名</span><br><span class="line">? **What is the scope of this change (e.g. component or file name): (press enter t**</span><br><span class="line">**o skip)** index.html</span><br><span class="line"></span><br><span class="line">#对改动进行简短的描述</span><br><span class="line">? **Write a short, imperative tense description of the change (max 83 chars):**</span><br><span class="line"> (11) add a blank</span><br><span class="line"></span><br><span class="line">#对改动进行长的描述</span><br><span class="line">? **Provide a longer description of the change: (press enter to skip)**</span><br><span class="line"></span><br><span class="line">#是破坏性的改动吗</span><br><span class="line">? **Are there any breaking changes?** No</span><br><span class="line"></span><br><span class="line">#影响了哪个issue吗，如果选是，接下来要输入issue号</span><br><span class="line">? **Does this change affect any open issues?** No</span><br></pre></td></tr></table></figure><h2 id="Angular规范"><a href="#Angular规范" class="headerlink" title="Angular规范"></a>Angular规范</h2><h3 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h3><h4 id="（1）type"><a href="#（1）type" class="headerlink" title="（1）type"></a><strong>（1）type</strong></h4><p><code>type</code> 用于说明 commit 的类别，只允许使用下面 7 个标识。</p><ul><li>feat：新功能（feature）</li><li>fix：修补 bug</li><li>docs：文档（documentation）</li><li>style： 格式（不影响代码运行的变动）</li><li>refactor：重构（即不是新增功能，也不是修改 bug 的代码变动）</li><li>test：增加测试</li><li>chore：构建过程或辅助工具的变动</li></ul><p>如果 <code>type</code> 为 <code>feat</code> 和 <code>fix</code>，则该 commit 将肯定出现在 Change log 之中。其他情况（<code>docs</code>、<code>chore</code>、<code>style</code>、<code>refactor</code>、<code>test</code>）由你决定，要不要放入 Change log，建议是不要。</p><h4 id="（2）scope"><a href="#（2）scope" class="headerlink" title="（2）scope"></a><strong>（2）scope</strong></h4><p><code>scope</code> 用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。</p><h4 id="（3）subject"><a href="#（3）subject" class="headerlink" title="（3）subject"></a><strong>（3）subject</strong></h4><p><code>subject</code> 是 commit 目的的简短描述，不超过 50 个字符。</p><ul><li>以动词开头，使用第一人称现在时，比如 <code>change</code>，而不是 <code>changed</code> 或 <code>changes</code></li><li>第一个字母小写</li><li>结尾不加句号（<code>.</code>）</li></ul><h3 id="Body"><a href="#Body" class="headerlink" title="Body"></a>Body</h3><p>有两个注意点。</p><p>（1）使用第一人称现在时，比如使用 <code>change</code> 而不是 <code>changed</code> 或 <code>changes</code>。</p><p>（2）应该说明代码变动的动机，以及与以前行为的对比。</p><h3 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h3><p>Footer 部分只用于两种情况。</p><h4 id="（1）不兼容变动"><a href="#（1）不兼容变动" class="headerlink" title="（1）不兼容变动"></a><strong>（1）不兼容变动</strong></h4><p>如果当前代码与上一个版本不兼容，则 Footer 部分以 <code>BREAKING CHANGE</code> 开头，后面是对变动的描述、以及变动理由和迁移方法。</p><h4 id="（2）关闭-Issue"><a href="#（2）关闭-Issue" class="headerlink" title="（2）关闭 Issue"></a><strong>（2）关闭 Issue</strong></h4><p>如果当前 commit 针对某个 issue，那么可以在 Footer 部分关闭这个 issue 。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Closes #234</span><br></pre></td></tr></table></figure><p>也可以一次关闭多个 issue 。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Closes #123, #245, #992</span><br></pre></td></tr></table></figure><h3 id="Revert"><a href="#Revert" class="headerlink" title="Revert"></a>Revert</h3><p>还有一种特殊情况，如果当前 commit 用于撤销以前的 commit，则必须以 <code>revert:</code> 开头，后面跟着被撤销 Commit 的 Header。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">revert: feat(pencil): add &#x27;graphiteWidth&#x27; option</span><br><span class="line"></span><br><span class="line">This reverts commit 667ecc1654a317a13331b17617d973392f415f02.</span><br></pre></td></tr></table></figure><p>Body 部分的格式是固定的，必须写成 <code>This reverts commit &lt;hash&gt;.</code>，其中的 <code>hash</code> 是被撤销 commit 的 SHA 标识符。</p><p>如果当前 commit 与被撤销的 commit，在同一个发布（release）里面，那么它们都不会出现在 Change log 里面。如果两者在不同的发布，那么当前 commit，会出现在 Change log 的 <code>Reverts</code> 小标题下面。</p>]]></content>
-    
-    
-    <summary type="html">配置git cz
-1
-
-
-npm install -g commitizen
-
-
-使用git cz
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-
-
-git cz
-
-cz-cli@4.1.2, cz-conventional-changelog@3.2.0
-
-#指定commit的类型，约定了feat、fix两个主要type，以及docs、style、build、refactor、revert五个特殊type
-? **Select the type of change that you&#39;re committing:** f</summary>
-    
-    
-    
-    <category term="野生技术协会" scheme="https://picpo.top/categories/%E9%87%8E%E7%94%9F%E6%8A%80%E6%9C%AF%E5%8D%8F%E4%BC%9A/"/>
-    
-    
-    <category term="Angular" scheme="https://picpo.top/tags/Angular/"/>
-    
-    <category term="git" scheme="https://picpo.top/tags/git/"/>
     
   </entry>
   

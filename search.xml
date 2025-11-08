@@ -2611,4 +2611,43 @@
         <tag>青年大学习</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Steam主页美化指南</title>
+    <url>/2025/11/09/Steam%E4%B8%BB%E9%A1%B5%E7%BE%8E%E5%8C%96%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202511090128861.jpg"></p>
+<h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>前段时间玩了《魔裁》，B站各种推荐相关的视频，偶然刷到一个相关的Steam个人主页美化视频。于是尝试自己也抄一下作业，其间有些功能是通过前端绕过实现的，开个贴记录一下以免之后想修改却忘记了如何做。</p>
+<div style="position: relative; width: 100%; height: 0; padding-bottom: 75%;">
+<iframe src="//player.bilibili.com/player.html?bvid=BV1NsWbzAEHA&high_quality=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolute; width: 100%; height: 100%; Left: 0; top: 0;" ></iframe></div> 
+
+<h2 id="0x01用前须知"><a href="#0x01用前须知" class="headerlink" title="0x01用前须知"></a>0x01用前须知</h2><p>整理了一些美化过程中的小问题</p>
+<h3 id="个人资料背景全透明"><a href="#个人资料背景全透明" class="headerlink" title="个人资料背景全透明"></a>个人资料背景全透明</h3><p>这个只能通过点数商店花费10000点数购买消光2的游戏资料主题</p>
+<p><a href="https://store.steampowered.com/points/shop/app/534380">https://store.steampowered.com/points/shop/app/534380</a></p>
+<h3 id="展柜相关"><a href="#展柜相关" class="headerlink" title="展柜相关"></a>展柜相关</h3><p>等级&gt;10，steam每10级一个展柜位置。也可以点数商城购买。</p>
+<p>升级您的展柜：选定的展柜可进行至多两次升级，您会有更多地方来炫耀徽章，更多空间来展示艺术作品，以及其他特权。</p>
+<p>额外展柜：有时候升级一个展柜是不够的。用 Steam 点数获得额外展柜，获取更多展示空间！</p>
+<p>升级Steam等级的最好方式是先完成社区任务，这个做完了一般能到10级；其次是花费点数（可以通过购买游戏获得，也可以购物平台购入），购入季节性徽章来增长等级（1000点数对应100经验）：最次是通过收集集换式卡牌来合成徽章获取经验，性价比较低（几年前不懂事用余额收集卡片合了几个徽章玩玩）</p>
+<h2 id="0x02创意工坊作品"><a href="#0x02创意工坊作品" class="headerlink" title="0x02创意工坊作品"></a>0x02创意工坊作品</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202511090055737.png"></p>
+<p>原理为将一个gif切为五等份（详细教程请自行检索）。成图依此上传到右侧艺术作品里，上传时需要在终端输入以下JS代码处理（否则无法选择并展示）</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$J(<span class="string">&#x27;[name=consumer_app_id]&#x27;</span>).<span class="title function_">val</span>(<span class="number">480</span>);</span><br><span class="line">$J(<span class="string">&#x27;[name=file_type]&#x27;</span>).<span class="title function_">val</span>(<span class="number">0</span>);</span><br><span class="line">$J(<span class="string">&#x27;[name=visibility]&#x27;</span>).<span class="title function_">val</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x03精选艺术作品展柜"><a href="#0x03精选艺术作品展柜" class="headerlink" title="0x03精选艺术作品展柜"></a>0x03精选艺术作品展柜</h2><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202511090059156.png"></p>
+<p>如果和前者一样直接上传，在展示时会在下面显示作品名称，很碍眼；但是在上传时不填作品名也无法顺利上传，可以用以下代码在前端绕过（后端并未进行校验）：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">v_trim = <span class="function"><span class="params">_</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> _;</span><br><span class="line">&#125;;</span><br><span class="line">$J(<span class="string">&#x27;#title&#x27;</span>).<span class="title function_">val</span>(<span class="string">&#x27; \n&#x27;</span> + <span class="title class_">Array</span>.<span class="title function_">from</span>(<span class="title class_">Array</span>(<span class="number">126</span>), <span class="function"><span class="params">_</span> =&gt;</span> <span class="string">&#x27;\t&#x27;</span>).<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>另外需要对作品进行剪裁，否则其边框过大，不会很好看：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$J(<span class="string">&#x27;#image_width&#x27;</span>).<span class="title function_">val</span>(<span class="number">1000</span>).<span class="title function_">attr</span>(<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">$J(<span class="string">&#x27;#image_height&#x27;</span>).<span class="title function_">val</span>(<span class="number">1</span>).<span class="title function_">attr</span>(<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在b站搜索教程时也找到类似的等价代码：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> num= <span class="variable language_">document</span>.<span class="title function_">getElementsByName</span>(<span class="string">&quot;image_width&quot;</span>)[<span class="number">0</span>].<span class="property">value</span>;</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByName</span>(<span class="string">&quot;image_height&quot;</span>)[<span class="number">0</span>].<span class="property">value</span> = num-(num-<span class="number">1</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByName</span>(<span class="string">&quot;image_width&quot;</span>)[<span class="number">0</span>].<span class="property">value</span>= num*<span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x04参考致谢"><a href="#0x04参考致谢" class="headerlink" title="0x04参考致谢"></a>0x04参考致谢</h2><p><a href="https://blog.yuki.sh/posts/daf9288c81ba/#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86">https://blog.yuki.sh/posts/daf9288c81ba/#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86</a></p>
+]]></content>
+      <categories>
+        <category>野生技术协会</category>
+      </categories>
+      <tags>
+        <tag>Steam</tag>
+        <tag>前端</tag>
+      </tags>
+  </entry>
 </search>
