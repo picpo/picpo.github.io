@@ -2640,7 +2640,10 @@
 <p>在b站搜索教程时也找到类似的等价代码：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> num= <span class="variable language_">document</span>.<span class="title function_">getElementsByName</span>(<span class="string">&quot;image_width&quot;</span>)[<span class="number">0</span>].<span class="property">value</span>;</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByName</span>(<span class="string">&quot;image_height&quot;</span>)[<span class="number">0</span>].<span class="property">value</span> = num-(num-<span class="number">1</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByName</span>(<span class="string">&quot;image_width&quot;</span>)[<span class="number">0</span>].<span class="property">value</span>= num*<span class="number">100</span>;</span><br></pre></td></tr></table></figure>
 
-<h2 id="0x04参考致谢"><a href="#0x04参考致谢" class="headerlink" title="0x04参考致谢"></a>0x04参考致谢</h2><p><a href="https://blog.yuki.sh/posts/daf9288c81ba/#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86">https://blog.yuki.sh/posts/daf9288c81ba/#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86</a></p>
+<h2 id="0x04最终效果"><a href="#0x04最终效果" class="headerlink" title="0x04最终效果"></a>0x04最终效果</h2><p>非常满意</p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202511221613354.jpg"></p>
+<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202511221613965.jpg"></p>
+<h2 id="0x05参考致谢"><a href="#0x05参考致谢" class="headerlink" title="0x05参考致谢"></a>0x05参考致谢</h2><p><a href="https://blog.yuki.sh/posts/daf9288c81ba/#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86">https://blog.yuki.sh/posts/daf9288c81ba/#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86</a></p>
 ]]></content>
       <categories>
         <category>野生技术协会</category>
