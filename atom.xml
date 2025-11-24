@@ -6,7 +6,7 @@
   <link href="https://picpo.top/atom.xml" rel="self"/>
   
   <link href="https://picpo.top/"/>
-  <updated>2025-11-22T08:13:46.807Z</updated>
+  <updated>2025-11-24T09:03:31.616Z</updated>
   <id>https://picpo.top/</id>
   
   <author>
@@ -15,6 +15,52 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>战地6刷枪用OCR脚本</title>
+    <link href="https://picpo.top/2025/11/24/%E6%88%98%E5%9C%B06%E5%88%B7%E6%9E%AA%E7%94%A8OCR%E8%84%9A%E6%9C%AC/"/>
+    <id>https://picpo.top/2025/11/24/%E6%88%98%E5%9C%B06%E5%88%B7%E6%9E%AA%E7%94%A8OCR%E8%84%9A%E6%9C%AC/</id>
+    <published>2025-11-24T08:50:49.000Z</published>
+    <updated>2025-11-24T09:03:31.616Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202511241702563.png"></p><p>（这几天本来想分析一下战地6门户的协议，但是和朋友梳理了前端流程做了些测试后发现bug没想象中那么好利用，分析到头疼都没找到如何绕过后端检测的办法，于是转头又去折腾一下刷枪相关的东西）</p><p>战地6刷枪比较烦，不能刷一半看看具体等级多少，整了个实时OCR的脚本来判定等级是否达到要求，达到了就发出提示音。想到OCR就直接在mac上做了，调用mac系统的OCR，战地6在PC上运行那就开了个远程桌面（给人一种DMA从机的感觉）。</p><p>设定的识别区域和频率（20FPS），测试下来效果挺好的。</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202511241658857.png"></p><p>备份一下代码，AI糊弄的，写得很垃圾就不往git传了。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> Quartz</span><br><span class="line"><span class="keyword">import</span> objc</span><br><span class="line"><span class="keyword">from</span> AppKit <span class="keyword">import</span> NSBitmapImageRep</span><br><span class="line"><span class="keyword">import</span> Vision</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">alert_sound</span>():</span><br><span class="line">    os.system(<span class="string">&quot;afplay /System/Library/Sounds/Ping.aiff&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">capture_screen_region</span>(<span class="params">x, y, width, height</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;截取屏幕指定区域&quot;&quot;&quot;</span></span><br><span class="line">    region = Quartz.CGRectMake(x, y, width, height)</span><br><span class="line">    cg_image = Quartz.CGWindowListCreateImage(</span><br><span class="line">        region,</span><br><span class="line">        Quartz.kCGWindowListOptionOnScreenOnly,</span><br><span class="line">        Quartz.kCGNullWindowID,</span><br><span class="line">        Quartz.kCGWindowImageDefault</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">if</span> cg_image <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">raise</span> RuntimeError(<span class="string">&quot;无法截屏&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> cg_image</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">perform_ocr</span>(<span class="params">cg_image</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;对 CGImage 执行中文 OCR&quot;&quot;&quot;</span></span><br><span class="line">    results_list = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">callback</span>(<span class="params">request, error</span>):</span><br><span class="line">        <span class="keyword">if</span> error:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;OCR Error:&quot;</span>, error)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        observations = request.results()</span><br><span class="line">        <span class="keyword">for</span> obs <span class="keyword">in</span> observations:</span><br><span class="line">            candidates = obs.topCandidates_(<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">if</span> candidates:</span><br><span class="line">                results_list.append(candidates[<span class="number">0</span>].string())</span><br><span class="line"></span><br><span class="line">    VNRecognizeTextRequest = objc.lookUpClass(<span class="string">&#x27;VNRecognizeTextRequest&#x27;</span>)</span><br><span class="line">    request = VNRecognizeTextRequest.alloc().initWithCompletionHandler_(callback)</span><br><span class="line">    request.setRecognitionLanguages_([<span class="string">&quot;zh-Hans&quot;</span>])  <span class="comment"># 只识别中文</span></span><br><span class="line">    request.setRecognitionLevel_(Vision.VNRequestTextRecognitionLevelAccurate)</span><br><span class="line"></span><br><span class="line">    VNImageRequestHandler = objc.lookUpClass(<span class="string">&#x27;VNImageRequestHandler&#x27;</span>)</span><br><span class="line">    handler = VNImageRequestHandler.alloc().initWithCGImage_options_(cg_image, <span class="literal">None</span>)</span><br><span class="line">    handler.performRequests_error_([request], <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> results_list</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) &lt; <span class="number">5</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;用法: python ocr_screen_live.py x y width height [interval_seconds]&quot;</span>)</span><br><span class="line">        sys.exit(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    x, y, w, h = <span class="built_in">map</span>(<span class="built_in">int</span>, sys.argv[<span class="number">1</span>:<span class="number">5</span>])</span><br><span class="line">    interval = <span class="built_in">float</span>(sys.argv[<span class="number">5</span>]) <span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) &gt; <span class="number">5</span> <span class="keyword">else</span> <span class="number">0.5</span>  <span class="comment"># 默认 0.5 秒刷新一次</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;实时 OCR 启动，区域: (<span class="subst">&#123;x&#125;</span>,<span class="subst">&#123;y&#125;</span>,<span class="subst">&#123;w&#125;</span>,<span class="subst">&#123;h&#125;</span>)，刷新间隔: <span class="subst">&#123;interval&#125;</span>s&quot;</span>)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            cg_image = capture_screen_region(x, y, w, h)</span><br><span class="line">            texts = perform_ocr(cg_image)</span><br><span class="line">            <span class="keyword">if</span> texts:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;识别结果：&quot;</span>)</span><br><span class="line">                <span class="keyword">for</span> t <span class="keyword">in</span> texts:</span><br><span class="line">                    <span class="built_in">print</span>(t)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;-&quot;</span> * <span class="number">30</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&quot;势不可挡&quot;</span> <span class="keyword">in</span> texts:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;检测到关键字 &#x27;势不可挡&#x27;！&quot;</span>)</span><br><span class="line">                alert_sound()</span><br><span class="line">            time.sleep(interval)</span><br><span class="line">    <span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;已停止实时 OCR&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#python ./OCR.py 40 260 200 200 0.05</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">（这几天本来想分析一下战地6门户的协议，但是和朋友梳理了前端流程做了些测试后发现bug没想象中那么好利用，分析到头疼都没找到如何绕过后端检测的办法，于是转头又去折腾一下刷枪相关的东西）
+
+战地6刷枪比较烦，不能刷一半看看具体等级多少，整了个实时OCR的脚本来判定等级是否达到要求，达到了就发出提示音。想到OCR就直接在mac上做了，调用mac系统的OCR，战地6在PC上运行那就开了个远程桌面（给人一种DMA从机的感觉）。
+
+设定的识别区域和频率（20FPS），测试下来效果挺好的。
+
+
+
+备份一下代码，AI糊弄的，写得很垃圾就不往git传了。
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</summary>
+    
+    
+    
+    <category term="野生技术协会" scheme="https://picpo.top/categories/%E9%87%8E%E7%94%9F%E6%8A%80%E6%9C%AF%E5%8D%8F%E4%BC%9A/"/>
+    
+    
+    <category term="macOS" scheme="https://picpo.top/tags/macOS/"/>
+    
+    <category term="OCR" scheme="https://picpo.top/tags/OCR/"/>
+    
+    <category term="战地6" scheme="https://picpo.top/tags/%E6%88%98%E5%9C%B06/"/>
+    
+  </entry>
   
   <entry>
     <title>Steam主页美化指南</title>
@@ -760,37 +806,6 @@ apt install open-vm-tools-desktop</summary>
     <category term="PHP" scheme="https://picpo.top/tags/PHP/"/>
     
     <category term="文件上传" scheme="https://picpo.top/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>青年大学习（江苏）的HTTP请求分析</title>
-    <link href="https://picpo.top/2022/04/05/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0%EF%BC%88%E6%B1%9F%E8%8B%8F%EF%BC%89%E7%9A%84http%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90/"/>
-    <id>https://picpo.top/2022/04/05/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0%EF%BC%88%E6%B1%9F%E8%8B%8F%EF%BC%89%E7%9A%84http%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90/</id>
-    <published>2022-04-05T06:20:35.000Z</published>
-    <updated>2024-09-16T18:32:39.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242318378.png"></p><h2 id="0x01抓包"><a href="#0x01抓包" class="headerlink" title="0x01抓包"></a>0x01抓包</h2><p>江苏省青年大学习的接口：<a href="https://service.jiangsugqt.org/youth/lesson">https://service.jiangsugqt.org/youth/lesson</a></p><p><strong>确认课程</strong>的接口：<a href="https://service.jiangsugqt.org/youth/lesson/confirm">https://service.jiangsugqt.org/youth/lesson/confirm</a></p><p>微信打开xweb调试界面，打开就行：<a href="http://debugxweb.qq.com/?inspector=true">http://debugxweb.qq.com/?inspector=true</a></p><h2 id="0x02获取cookie"><a href="#0x02获取cookie" class="headerlink" title="0x02获取cookie"></a>0x02获取cookie</h2><p>青年大学习是通过cookie中的laravel_session来获取用户信息的，现在微信早就不支持vconsole了（要是支持我还这么抓包干嘛？），需要手机usb连接电脑，用Google chrome（建议edge浏览器，Google的有些资源加载不出来，或者很慢）的chrome:&#x2F;&#x2F;inspect&#x2F;#devices里面进行调试</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242319220.png"></p><h2 id="0x03发送请求"><a href="#0x03发送请求" class="headerlink" title="0x03发送请求"></a>0x03发送请求</h2><p>我们只要发送两个请求，一个是江苏省青年大学习的接口，还有一个是<strong>确认课程</strong>的接口。</p><p>江苏省青年大学习的接口是用于获取课程信息的，里面能解析到下一个接口所需的_token和lesson_id字段</p><p>然后就是发post请求啦</p><p><img src="https://raw.githubusercontent.com/picpo/blog-PicGo/master/202212242320313.png"></p>]]></content>
-    
-    
-    <summary type="html">0x01抓包
-江苏省青年大学习的接口：https://service.jiangsugqt.org/youth/lesson
-
-确认课程的接口：https://service.jiangsugqt.org/youth/lesson/confirm
-
-微信打开xweb调试界面，打开就行：http://debugxweb.qq.com/?inspector=true
-
-0x02获取cookie
-青年大学习是通过cookie中的laravel_session来获取用户信息的，现在微信早就不支持vconsole了（要是支持我还这么抓包干嘛？），需要手机usb连接电脑，用Google chrome（建议</summary>
-    
-    
-    
-    <category term="野生技术协会" scheme="https://picpo.top/categories/%E9%87%8E%E7%94%9F%E6%8A%80%E6%9C%AF%E5%8D%8F%E4%BC%9A/"/>
-    
-    
-    <category term="HTTP" scheme="https://picpo.top/tags/HTTP/"/>
-    
-    <category term="青年大学习" scheme="https://picpo.top/tags/%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
